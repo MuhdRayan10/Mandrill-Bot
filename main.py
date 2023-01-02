@@ -14,18 +14,15 @@ async def load_cogs():
         if file.endswith('.py'):
             await bot.load_extension(f'cogs.{file[:-3]}')
 
-
-
-@bot.event
+@bot.event()
 async def on_ready():
     await load_cogs()
     print(f"Connected to discord as {bot.user}")
     await bot.change_presence(activity=discord.Game(name="Exploring..."))
     
 async def main():
-
     load_dotenv()
-    TOKEN = os.getenv('TOKEN')
+    TOKEN = os.getenv('DISCTOKEN')
     await bot.start(TOKEN)
 
 asyncio.run(main())
