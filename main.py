@@ -2,9 +2,8 @@ from discord.ext import commands
 import discord
 import os
 from dotenv import load_dotenv
-import asyncio
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.message_content = True
 
 bot = commands.Bot(intents=intents, command_prefix='+', application_id="1059476420977504378")
@@ -20,9 +19,6 @@ async def on_ready():
     print(f"Connected to discord as {bot.user}")
     await bot.change_presence(activity=discord.Game(name="Exploring..."))
     
-async def main():
-    load_dotenv()
-    TOKEN = os.getenv('DISCTOKEN')
-    await bot.start(TOKEN)
-
-asyncio.run(main())
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
+bot.run(TOKEN)
