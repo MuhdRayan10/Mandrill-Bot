@@ -13,7 +13,7 @@ async def load_cogs():
         if file.endswith('.py'):
             await bot.load_extension(f'cogs.{file[:-3]}')
 
-@bot.event()
+@bot.event
 async def on_ready():
     await load_cogs()
     print(f"Connected to discord as {bot.user}")
