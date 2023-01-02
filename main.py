@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import asyncio
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.message_content = True
 
 bot = commands.Bot(intents=intents, command_prefix='+', application_id="1059476420977504378")
