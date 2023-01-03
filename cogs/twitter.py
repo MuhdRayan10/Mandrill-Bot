@@ -11,8 +11,6 @@ load_dotenv()
 
 from var import twitter_post_channel_id as CHANNEL_ID
 
-0 #TODO: Rayan chagne this later to the other thing
-
 #cog
 class TwitterCog(commands.Cog):
     def __init__(self, bot):
@@ -28,7 +26,7 @@ class TwitterCog(commands.Cog):
         self.headers = {
             'Authorization': f'Bearer {self.bearer_token}'
         }
-        self.screen_name = 'NivedVenugopal1' # this is the name of the thing the other thing
+        self.screen_name = 'TheMandrillsNFT' # this is the name of the thing the other thing
 
         # vairables
         self.most_recent_tweet_id = 0 #TODO move this into the database
