@@ -69,10 +69,10 @@ class TwitterCog(commands.Cog):
             # Send the tweet link to the Discord channel
             await channel.send(tweet_link)
     
-    @app_commands.command(name="connect", description="Connect your Discord Account to your Twitter and Wallet Adresses")
+    @app_commands.command(name="link", description="Link your Discord Account to your Twitter and Wallet Adresses")
     @app_commands.describe(twitter="Your Twitter Username")
     @app_commands.describe(wallet="Your Crypto wallet Adress")
-    async def connect(self, interaction, twitter:str, wallet:str):
+    async def link(self, interaction, twitter:str, wallet:str):
         
         db = Database("./data/data")
 

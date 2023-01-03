@@ -18,14 +18,14 @@ async def create_image(user):
 
     profile = Editor(profile_image).resize((150, 150)).circle_image()
     
-    poppins = Font.poppins(size=50, variant="bold")
+    poppins = Font.poppins(size=30, variant="bold")
     poppins_small = Font.poppins(size=20, variant="light")
 
-    bg.pase(profile, (325, 90))
-    bg.ellipse((325, 90), 150, 150, outline="white", stroke_width=5)
+    bg.paste(profile, (225, 100))
+    bg.ellipse((225, 100), 150, 150, outline="white", stroke_width=5)
 
-    bg.text((400, 260), f"WELCOME TO {user.guild.name}", color="white", font=poppins, align="center")
-    bg.text((400, 325), f"{user.display_name}", color="white", font=poppins_small, align="center")
+    bg.text((300, 275), f"WELCOME TO {user.guild.name}", color="white", font=poppins, align="center")
+    bg.text((300, 325), f"{user.display_name}", color="white", font=poppins_small, align="center")
 
     return bg.image_bytes
 
@@ -63,15 +63,17 @@ class Verification(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
         
-        role = member.guild.get_role(StaticVariables.mute_role)
+        role = member.guild.get_role(1)
         if not role:
-            pass
+            await member.guild.create_role(name="Muted", permissions=discord.Permissions(send_messages=False))
 
+        role = discord.utils.get(member.guild.roles, name="Muted")
         await member.add_roles(role)
-        channel = await self.bot.get_channel(StaticVariables.welcome_channel)
+        channel = self.bot.get_channel(1058732377087676477)
+        img = await create_image(member)
 
-        welcome_file = discord.File(fp=create_image(member), filename="welcome.png")
-        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at #verify", file=welcome_file)
+        welcome_file = discord.File(fp=img, filename="welcome.png")
+        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at <#1059799460605083658>", file=welcome_file)
 
 
 
