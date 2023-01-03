@@ -2,8 +2,9 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 from easy_sqlite3 import *
-from var import rendrill_role
 
+# import stored variables
+from helpers import StaticVariables
 
 class Criteria(commands.Cog):
     def __init__(self, bot):
@@ -38,7 +39,7 @@ class Criteria(commands.Cog):
 
         db.insert("role", (user.id, a1, a2, a3, role))
 
-        role = interaction.guild.get_role(rendrill_role)
+        role = interaction.guild.get_role(StaticVariables.rendrill_role)
         await user.add_roles(role)
 
         await interaction.response.send_message(f"Updated.")
