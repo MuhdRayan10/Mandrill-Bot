@@ -66,9 +66,6 @@ class Verification(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
-<<<<<<< Updated upstream
-        await member.add_roles(mute_role)
-=======
         
         role = member.guild.get_role(mute_role)
         if not role:
@@ -81,7 +78,6 @@ class Verification(commands.Cog):
         await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at #verify", file=welcome_file)
 
 
->>>>>>> Stashed changes
 
     # TODO: rayan add a permission check here
     @app_commands.command(name="start_verification")
