@@ -9,7 +9,9 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-CHANNEL_ID = 1058732377087676480 #TODO: Rayan chagne this later to the other thing
+from var import twitter_post_channel_id as CHANNEL_ID
+
+0 #TODO: Rayan chagne this later to the other thing
 
 #cog
 class TwitterCog(commands.Cog):
@@ -18,32 +20,34 @@ class TwitterCog(commands.Cog):
 
         # Database stuff
         self.db = Database("data/data")
-        self.db.create_table("users", {"user":INT, "name": STR, "twitter":STR, "wallet":STR})
+        self.db.create_table("users", {"user":'INTEGER', "name": 'TEXT', "twitter":'TEXT', "wallet":'TEXT'})
+        # self.db.create_table("")
 
         # API STUFF
         self.bearer_token = os.getenv('APIBEARER')
         self.headers = {
-            'Authorization': f'Bearer {self.bearer_token}',
-            'User-Agent': 'MyApp/1.0'
+            'Authorization': f'Bearer {self.bearer_token}'
         }
-        screen_name = 'NivedVenugopal1' # this is the name of the thing the other thing
-        self.url = f'https://api.twitter.com/2/tweets/search/recent?query=from:{screen_name}'
+        self.screen_name = 'NivedVenugopal1' # this is the name of the thing the other thing
 
         # vairables
-        self.most_recent_tweet_id = 0
+        self.most_recent_tweet_id = 0 #TODO move this into the database
 
         # start the task
-        #self.check_tweets.start()
+        self.check_tweets.start()
 
     @tasks.loop(minutes=5)
     async def check_tweets(self):
-        response = requests.get(self.url, headers=self.headers)
+        url = f'https://api.twitter.com/2/tweets/search/recent?query=from:{self.screen_name}'
+        response = requests.get(url, headers=self.headers)
 
         try:
             tweets = response.json()['data']
         except KeyError:
             print("User has no posts!")
             return
+        
+        print(type(self.bot))
 
         if tweets and tweets[0]['id'] != self.most_recent_tweet_id:
             self.most_recent_tweet_id = tweets[0]['id']
@@ -55,7 +59,8 @@ class TwitterCog(commands.Cog):
             tweet_link = f'New tweet from @{self.screen_name}: {tweet_url}'
 
             # Get the channel object
-            channel = self.bot.get_channel(CHANNEL_ID)
+            channel = self.bot.get_channel(1058732377087676480)
+            print(channel)
 
             # Send the tweet link to the Discord channel
             await channel.send(tweet_link)
@@ -65,12 +70,12 @@ class TwitterCog(commands.Cog):
     @app_commands.describe(wallet="Your Crypto wallet Adress")
     async def connect(self, interaction, twitter:str, wallet:str):
         
-
-        valid = self.validify_twitter(twitter)
-
-        if not valid:
+        # check if the twitter is valid
+        if not self.validify_twitter(twitter):
             await interaction.response.send_message("Twitter account not valid.")
             return
+
+        print(twitter, wallet)
 
         # Checking if twitter / walled account / user already exists db
         if not self.db.if_exists("users", {"twitter":twitter, "wallet":wallet, "user":interaction.user.id}, separator="OR"):
@@ -83,8 +88,20 @@ class TwitterCog(commands.Cog):
     
 
     def validify_twitter(self, twitter):
-        return True # TODO Nived
+        url = f"https://api.twitter.com/2/users/by/username/{twitter}"
+        response = requests.get(url, headers=self.headers)
 
+        data = response.json()
+        print(data)
+
+        try:
+            if data["data"]["id"].isdigit(): # checks if id exists, and id int
+                return True
+        except KeyError:
+            return False
+                                    
+    def validify_wallet(self, wallet):
+        pass # TODO
     
 
 async def setup(bot):
