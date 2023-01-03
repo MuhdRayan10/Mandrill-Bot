@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord import app_commands
 import discord, random, os
-from var import mute_role
+from var import mute_role, mute_time, verification_channel, base_color
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
@@ -46,7 +46,6 @@ class Verification(commands.Cog):
         
         await member.add_roles(mute_role)
 
-
     @app_commands.command(name="verify")
     async def verify(self, interaction):
 
@@ -55,7 +54,7 @@ class Verification(commands.Cog):
         cache[interaction.user.id] = ""
         correct = ''.join(random.choices(['A', 'B', 'C', 'D'], k=4))
 
-        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct seqence to verify.")
+        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct seqence to verify.", color=discord.Color(base_color))
 
         img = ImageCaptcha(width=280, height=90)
         img.generate(correct)
@@ -70,7 +69,6 @@ class Verification(commands.Cog):
         
 
         def check(i):
-            print(i.data["component_type"] == 2 and "custom_id" in i.data.keys() and i.user.id == interaction.user.id)
             return i.data["component_type"] == 2 and "custom_id" in i.data.keys() and i.user.id == interaction.user.id
 
         embed = self.update_embed(embed, interaction.user.id)
@@ -95,7 +93,7 @@ class Verification(commands.Cog):
 
             count -= 1
 
-        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!")
+        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!", color=discord.Color(base_color))
         completed_embed.set_image(url="attachment://captcha.png")
 
         if correct == cache[interaction.user.id]:
@@ -113,14 +111,15 @@ class Verification(commands.Cog):
 
         return embed
 
+    async def verified(self, user):
+        await user.timeout(timedelta(minutes=mute_time))
+        await user.remove_roles(mute_role)
+
     @commands.command()
     async def sync(self, ctx):
         fmt = await ctx.bot.tree.sync()
 
         await ctx.send(f"Synced {len(fmt)} commands.")
-
-        
-
 
 async def setup(bot):
     await bot.add_cog(Verification(bot))
