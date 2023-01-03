@@ -61,7 +61,7 @@ class Verification(commands.Cog):
         view.add_item(verify_button)
 
         await channel.send(embed=embed, view=view)
-        await interaction.channel.send("Added verification app, to <#{channel.id}>")
+        await interaction.channel.send(f"Added verification app, to <#{channel.id}>")
 
     async def verify(self, interaction):
         # TODO: add exception to check if user is already verified
