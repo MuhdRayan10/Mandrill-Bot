@@ -57,7 +57,7 @@ class TwitterCog(commands.Cog):
             tweet_link = f'New tweet from @{self.screen_name}: {tweet_url}'
 
             # Get the channel object
-            channel = self.bot.get_channel(1058732377087676480)
+            channel = self.bot.get_channel(CHANNEL_ID)
             print(channel)
 
             # Send the tweet link to the Discord channel

@@ -19,6 +19,7 @@ async def on_ready():
     print(f"Connected to discord as {bot.user}")
     await bot.change_presence(activity=discord.Game(name="Exploring..."))
     
+    
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 bot.run(TOKEN)

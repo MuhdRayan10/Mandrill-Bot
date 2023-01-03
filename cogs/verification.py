@@ -1,7 +1,8 @@
 from discord.ext import commands
 from discord import app_commands
+from discord.ui import Button, View
 import discord, random, os
-from var import mute_role, mute_time, verification_channel, base_color
+from var import mute_role, mute_time, base_color
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
@@ -39,15 +40,31 @@ class Captcha(View):
 
 class Verification(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot = bot   
 
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
-        
         await member.add_roles(mute_role)
 
-    @app_commands.command(name="verify")
+    # TODO: rayan add a permission check here
+    @app_commands.command(name="start_verification")
+    async def start_verification(self, interaction, channel: discord.TextChannel):
+        await interaction.response.defer()
+        
+        embed = discord.Embed(title='Verify', description='Click the button to verify yourself.')
+        verify_button = Button(
+            label="Verify",
+            style=discord.ButtonStyle.green
+        )
+        verify_button.callback = self.verify
+        view = View()
+        view.add_item(verify_button)
+
+        await channel.send(embed=embed, view=view)
+        await interaction.channel.send("Added verification app, to <#{channel.id}>")
+
     async def verify(self, interaction):
+        # TODO: add exception to check if user is already verified
 
         await interaction.response.defer()
 
@@ -64,9 +81,7 @@ class Verification(commands.Cog):
         f = discord.File(f"./data/captcha/{interaction.user.id}.png", filename="captcha.png")
         embed.set_image(url="attachment://captcha.png")
 
-        msg = await interaction.followup.send(embed=embed, view=Captcha(interaction.user.id), file=f)
-
-        
+        msg = await interaction.followup.send(embed=embed, view=Captcha(interaction.user.id), file=f, ephemeral=True)
 
         def check(i):
             return i.data["component_type"] == 2 and "custom_id" in i.data.keys() and i.user.id == interaction.user.id
@@ -79,7 +94,7 @@ class Verification(commands.Cog):
             result = await self.bot.wait_for("interaction", check=check, timeout=30)
             
             if result is None:
-                await interaction.followup.edit_message(msg.id, "Timeout", embed=None, view=None)
+                await interaction.followup.edit_message(msg.id, "Timeout", embed=None, view=None, ephemeral=True)
                 return
 
             await result.response.defer()
@@ -87,7 +102,6 @@ class Verification(commands.Cog):
             embed = self.update_embed(embed, interaction.user.id)
 
             await interaction.followup.edit_message(msg.id, embed=embed, view=Captcha(interaction.user.id))
-
             
             print(cache[interaction.user.id])
 
