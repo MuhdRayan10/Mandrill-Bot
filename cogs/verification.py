@@ -2,11 +2,12 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import Button, View
 import discord, random, os
-from var import mute_role, mute_time, base_color
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
 
+# import stored variables
+from helpers import StaticVariables
 
 cache = {}
 
@@ -44,7 +45,7 @@ class Verification(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
-        await member.add_roles(mute_role)
+        await member.add_roles(StaticVariables.mute_role)
 
     # TODO: rayan add a permission check here
     @app_commands.command(name="start_verification")
@@ -71,7 +72,7 @@ class Verification(commands.Cog):
         cache[interaction.user.id] = ""
         correct = ''.join(random.choices(['A', 'B', 'C', 'D'], k=4))
 
-        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct seqence to verify.", color=discord.Color(base_color))
+        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct seqence to verify.", color=discord.Color(StaticVariables.base_color))
 
         img = ImageCaptcha(width=280, height=90)
         img.generate(correct)
@@ -107,7 +108,7 @@ class Verification(commands.Cog):
 
             count -= 1
 
-        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!", color=discord.Color(base_color))
+        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!", color=discord.Color(StaticVariables.base_color))
         completed_embed.set_image(url="attachment://captcha.png")
 
         if correct == cache[interaction.user.id]:
@@ -126,8 +127,8 @@ class Verification(commands.Cog):
         return embed
 
     async def verified(self, user):
-        await user.timeout(timedelta(minutes=mute_time))
-        await user.remove_roles(mute_role)
+        await user.timeout(timedelta(minutes=StaticVariables.mute_time))
+        await user.remove_roles(StaticVariables.mute_role)
 
     @commands.command()
     async def sync(self, ctx):
