@@ -6,6 +6,7 @@ from easy_sqlite3 import *
 # API STUFF
 import requests
 import os
+from web3 import Web3
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -72,8 +73,11 @@ class TwitterCog(commands.Cog):
         if not self.validify_twitter(twitter):
             await interaction.response.send_message("Twitter account not valid.")
             return
-
-        print(twitter, wallet)
+        
+        # checks if it is a valid wallet id
+        if not self.validify_wallet(wallet):
+            await interaction.response.send_message("Wallet ID not valid.")
+            return
 
         # Checking if twitter / walled account / user already exists db
         if not self.db.if_exists("users", {"twitter":twitter, "wallet":wallet, "user":interaction.user.id}, separator="OR"):
@@ -97,9 +101,13 @@ class TwitterCog(commands.Cog):
                 return True
         except KeyError:
             return False
-                                    
+
     def validify_wallet(self, wallet):
-        pass # TODO
+        infra_url = f"https://mainnet.infura.io/v3/{os.getenv('INFRAAPIKEY')}"
+        w3 = Web3(Web3.HTTPProvider(infra_url))
+        return w3.isAddress(wallet)
+
+
     
 
 async def setup(bot):
