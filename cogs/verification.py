@@ -2,6 +2,7 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import Button, View
 import discord, random, os
+from easy_pil import Editor, load_image_async, Font
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
@@ -10,6 +11,23 @@ from discord.ui import View
 from helpers import StaticVariables
 
 cache = {}
+
+async def create_image(user):
+    bg = Editor("./data/images/bg.png")
+    profile_image = await load_image_async(str(user.avatar.url))
+
+    profile = Editor(profile_image).resize((150, 150)).circle_image()
+    
+    poppins = Font.poppins(size=50, variant="bold")
+    poppins_small = Font.poppins(size=20, variant="light")
+
+    bg.pase(profile, (325, 90))
+    bg.ellipse((325, 90), 150, 150, outline="white", stroke_width=5)
+
+    bg.text((400, 260), f"WELCOME TO {user.guild.name}", color="white", font=poppins, align="center")
+    bg.text((400, 325), f"{user.display_name}", color="white", font=poppins_small, align="center")
+
+    return bg.image_bytes
 
 
 class Captcha(View):
@@ -38,14 +56,24 @@ class Captcha(View):
             child.disabled = True
 
 
-
 class Verification(commands.Cog):
     def __init__(self, bot):
         self.bot = bot   
 
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
-        await member.add_roles(StaticVariables.mute_role)
+        
+        role = member.guild.get_role(StaticVariables.mute_role)
+        if not role:
+            pass
+
+        await member.add_roles(role)
+        channel = await self.bot.get_channel(StaticVariables.welcome_channel)
+
+        welcome_file = discord.File(fp=create_image(member), filename="welcome.png")
+        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at #verify", file=welcome_file)
+
+
 
     # TODO: rayan add a permission check here
     @app_commands.command(name="start_verification")
@@ -92,7 +120,7 @@ class Verification(commands.Cog):
         count = 4
         while count != 0:
 
-            result = await self.bot.wait_for("interaction", check=check, timeout=30)
+            result = await self.bot.wait_for("interaction", check=check)
             
             if result is None:
                 await interaction.followup.edit_message(msg.id, "Timeout", embed=None, view=None, ephemeral=True)
