@@ -18,8 +18,10 @@ class TwitterCog(commands.Cog):
         self.bot = bot
 
         # Database stuff
-        self.db = Database("data/data")
-        self.db.create_table("users", {"user":'INTEGER', "name": 'TEXT', "twitter":'TEXT', "wallet":'TEXT'})
+        db = Database("data/data")
+        db.create_table("users", {"user":'INTEGER', "name": 'TEXT', "twitter":'TEXT', "wallet":'TEXT'})
+        
+        db.close()
         # self.db.create_table("")
 
         # API STUFF
@@ -69,6 +71,8 @@ class TwitterCog(commands.Cog):
     @app_commands.describe(wallet="Your Crypto wallet Adress")
     async def connect(self, interaction, twitter:str, wallet:str):
         
+        db = Database("./data/data")
+
         # check if the twitter is valid
         if not self.validify_twitter(twitter):
             await interaction.response.send_message("Twitter account not valid.")
@@ -80,13 +84,15 @@ class TwitterCog(commands.Cog):
             return
 
         # Checking if twitter / walled account / user already exists db
-        if not self.db.if_exists("users", {"twitter":twitter, "wallet":wallet, "user":interaction.user.id}, separator="OR"):
+        if not db.if_exists("users", {"twitter":twitter, "wallet":wallet, "user":interaction.user.id}, separator="OR"):
             await interaction.response.send_message("Twitter account / Wallet ID already registered...")
             return
 
         # Adding name to db
-        self.db.insert("users", (interaction.user.id, interaction.user.name, twitter, wallet))
+        db.insert("users", (interaction.user.id, interaction.user.name, twitter, wallet))
         await interaction.response.send_message("Added")
+
+        db.close()
     
 
     def validify_twitter(self, twitter):
@@ -94,7 +100,6 @@ class TwitterCog(commands.Cog):
         response = requests.get(url, headers=self.headers)
 
         data = response.json()
-        print(data)
 
         try:
             if data["data"]["id"].isdigit(): # checks if id exists, and id int

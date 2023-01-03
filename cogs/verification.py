@@ -2,19 +2,13 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import Button, View
 import discord, random, os
-<<<<<<< Updated upstream
-from var import mute_role, mute_time, base_color
-=======
 from easy_pil import Editor, load_image_async, Font
 from var import mute_role, mute_time, base_color, welcome_channel
->>>>>>> Stashed changes
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
 
-
 cache = {}
-
 
 async def create_image(user):
     bg = Editor("./data/images/bg.png")
