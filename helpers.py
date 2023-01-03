@@ -4,7 +4,6 @@ class StaticVariables:
     def __init__(self) -> None:        
         with open('var.json', 'r') as f:
             self.data = json.load(f)
-
         # preprocess
         self.base_color = int(self.data['base_color'], 16)
 

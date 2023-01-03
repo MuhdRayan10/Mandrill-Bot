@@ -80,15 +80,6 @@ class Criteria(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
 
-
-        
-
-        
-
-
-
-
-
 async def setup(bot):
     await bot.add_cog(Criteria(bot))
 
