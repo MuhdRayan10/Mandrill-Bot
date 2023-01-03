@@ -1,11 +1,11 @@
 from discord.ext import commands
 from discord import app_commands
-import discord, random
-from var import verification_channel, mute_role
+import discord, random, os
+from var import mute_role
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
-import asyncio
+
 
 cache = {}
 
@@ -49,33 +49,69 @@ class Verification(commands.Cog):
 
     @app_commands.command(name="verify")
     async def verify(self, interaction):
+
+        await interaction.response.defer()
+
         cache[interaction.user.id] = ""
         correct = ''.join(random.choices(['A', 'B', 'C', 'D'], k=4))
 
-        embed = discord.Embed(title="Embed", description=correct)
+        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct seqence to verify.")
+
+        img = ImageCaptcha(width=280, height=90)
+        img.generate(correct)
+
+        img.write(correct, f"./data/captcha/{interaction.user.id}.png")
+
+        f = discord.File(f"./data/captcha/{interaction.user.id}.png", filename="captcha.png")
+        embed.set_image(url="attachment://captcha.png")
+
+        msg = await interaction.followup.send(embed=embed, view=Captcha(interaction.user.id), file=f)
+
         
-        await interaction.response.send_message(embed=embed, view=Captcha(interaction.user.id))
 
-        def check(m):
-            return True
+        def check(i):
+            print(i.data["component_type"] == 2 and "custom_id" in i.data.keys() and i.user.id == interaction.user.id)
+            return i.data["component_type"] == 2 and "custom_id" in i.data.keys() and i.user.id == interaction.user.id
 
-        print(cache[interaction.user.id])
+        embed = self.update_embed(embed, interaction.user.id)
 
-        count = 3
+        count = 4
         while count != 0:
-            result = await self.bot.wait_for("button", check=check, timeout=15)
+
+            result = await self.bot.wait_for("interaction", check=check, timeout=30)
+            
             if result is None:
-                await interaction.response.edit_message("Timeout", embed=None, view=None)
+                await interaction.followup.edit_message(msg.id, "Timeout", embed=None, view=None)
                 return
-            await interaction.response.edit_message(embed=embed, view=Captcha(interaction.user.id))
+
+            await result.response.defer()
+
+            embed = self.update_embed(embed, interaction.user.id)
+
+            await interaction.followup.edit_message(msg.id, embed=embed, view=Captcha(interaction.user.id))
+
+            
             print(cache[interaction.user.id])
+
             count -= 1
+
+        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!")
+        completed_embed.set_image(url="attachment://captcha.png")
 
         if correct == cache[interaction.user.id]:
             del cache[interaction.user.id]
-            await interaction.response.edit_message("Verified", view=None, embed=None)
+            await interaction.followup.edit_message(msg.id, view=None, embed=completed_embed)
         else:
-            await interaction.response.edit_message("Not Verified", view=None, embed=None)
+            await interaction.followup.edit_message(msg.id, view=None, embed=completed_embed)
+        
+        del f
+        os.remove(f"./data/captcha/{interaction.user.id}.png")
+        
+    def update_embed(self, embed:discord.Embed, user):
+        embed.clear_fields()
+        embed.add_field(name="User Input", value=cache[user])
+
+        return embed
 
     @commands.command()
     async def sync(self, ctx):
