@@ -1,8 +1,8 @@
 import json
 
-class StaticVariables:
+class Var:
     def __init__(self) -> None:        
-        with open('var.json', 'r') as f:
+        with open('./data/var.json', 'r') as f:
             self.data = json.load(f)
         # preprocess
         self.base_color = int(self.data['base_color'], 16)
@@ -21,5 +21,5 @@ class StaticVariables:
         else:
             object.__setattr__(self, __name, __value)
 
-        with open('var.json', 'w') as f:
+        with open('./data/var.json', 'w') as f:
             json.dump(self.data, f)
