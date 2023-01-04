@@ -69,10 +69,9 @@ class TwitterCog(commands.Cog):
             print(channel)
 
             embed = discord.Embed(title="New Tweet!", description=f"New Tweet from @{self.screen_name}",color=discord.Color(Var.base_color))
-            embed.add_field(name=f"{tweet_link}", value="ㅤ", inline=False)
 
             # Send the tweet link to the Discord channel
-            await channel.send(tweet_link)
+            await channel.send(tweet_link, embed=embed)
     
     @app_commands.command(name="link", description="Link your Discord Account to your Twitter and Wallet Adresses")
     @app_commands.describe(twitter="Your Twitter Username")
