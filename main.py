@@ -12,7 +12,7 @@ bot = commands.Bot(intents=intents, command_prefix='+', application_id="10594764
 # Loading the cog files from cogs folder
 async def load_cogs():
     for file in os.listdir('./cogs'):
-        if file.endswith('.py') and "twitter" not in file:
+        if file.endswith('.py'):
             await bot.load_extension(f'cogs.{file[:-3]}')
 
 @bot.event

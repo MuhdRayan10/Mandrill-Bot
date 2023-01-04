@@ -27,6 +27,8 @@ class Criteria(commands.Cog):
         app_commands.Choice(name="True", value=1),
         app_commands.Choice(name="False", value=0)
     ])
+    @app_commands.describe(activity="What the user has done")
+    @app_commands.describe(done="Whether the user was successful in completing the task")
 
     async def req(self, interaction, user:discord.Member, activity:int, done:int):
         
@@ -51,7 +53,8 @@ class Criteria(commands.Cog):
 
         if_role = 1 if a1 and a2 and a3 else 0
 
-        db.update("role", (user.id, a1, a2, a3, if_role))
+        db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":if_role},
+             where={"user":user.id})
         db.close()
 
         # Giving Rendrill role if criteria satisfied

@@ -34,8 +34,8 @@ class CreateTicket(View):
         overwrites = {
             interaction.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             interaction.guild.me: discord.PermissionOverwrite(read_messages=True),
-            interaction.user: discord.PermissionOverwrite(read_messages=True)#,
-            #other_role: discord.PermissionOverwrite(read_messages=True)
+            interaction.user: discord.PermissionOverwrite(read_messages=True),
+            other_role: discord.PermissionOverwrite(read_messages=True)
         }
 
         # Get Tickets category and create a new channel
@@ -57,7 +57,7 @@ class Tickets(commands.Cog):
     @app_commands.checks.has_permissions(manage_guild=True)
     @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
     @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
-    async def setup_tickets(self, interaction, channel: discord.TextChannel):
+    async def setup_tickets(self, _, channel: discord.TextChannel):
         
         embed = discord.Embed(title="Create a Ticket!", description="Click on the `Create Ticket` button below to create a ticket. The server's staff will be notified and shortly aid you with your problem.")
         await channel.send(embed=embed, view=CreateTicket())

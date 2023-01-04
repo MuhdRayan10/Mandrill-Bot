@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # import stored variables
-from helpers import StaticVariables
+from helpers import Var
 
 #cog
 class TwitterCog(commands.Cog):
@@ -34,7 +34,7 @@ class TwitterCog(commands.Cog):
         self.screen_name = 'TheMandrillsNFT' # this is the name of the thing the other thing
 
         # vairables
-        self.most_recent_tweet_id = StaticVariables.most_recent_tweet_id
+        self.most_recent_tweet_id = Var.most_recent_tweet_id
 
         # start the task
         self.check_tweets.start()
@@ -55,7 +55,7 @@ class TwitterCog(commands.Cog):
         if tweets and tweets[0]['id'] != self.most_recent_tweet_id:
             tweet_id = tweets[0]['id']
             self.most_recent_tweet_id = tweet_id
-            StaticVariables.most_recent_tweet_id = tweet_id
+            Var.most_recent_tweet_id = tweet_id
 
             # Get the tweet URL
             tweet_url = f'https://twitter.com/{self.screen_name}/status/{self.most_recent_tweet_id}'
@@ -64,7 +64,7 @@ class TwitterCog(commands.Cog):
             tweet_link = f'New tweet from @{self.screen_name}: {tweet_url}'
 
             # Get the channel object
-            channel = self.bot.get_channel(StaticVariables.tweet_channel_id)
+            channel = self.bot.get_channel(Var.tweet_channel_id)
             print(channel)
 
             # Send the tweet link to the Discord channel
