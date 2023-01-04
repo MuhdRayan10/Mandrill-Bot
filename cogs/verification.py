@@ -105,7 +105,7 @@ class Verification(commands.Cog):
     # Sets up the interface for the Verification in a channel
     # Only for Moderators
     @app_commands.checks.has_permissions(manage_guild=True)
-    @app_commands.command(name="start_verification", description="[MODS] Create verification interface in specified channel.")
+    @app_commands.command(name="setup-verification", description="[MODS] Create verification interface in specified channel.")
     @app_commands.describe(channel="The channel in which Verification should be set up")
     async def start_verification(self, interaction, channel: discord.TextChannel):
         await interaction.response.defer()

@@ -12,7 +12,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # import stored variables
-from helpers import Var
+from helpers import Var as V
+
+Var = V()
 
 #cog
 class TwitterCog(commands.Cog):

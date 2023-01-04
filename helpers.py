@@ -4,8 +4,6 @@ class Var:
     def __init__(self) -> None:        
         with open('./data/var.json', 'r') as f:
             self.data = json.load(f)
-        # preprocess
-        self.base_color = int(self.data['base_color'], 16)
 
     def __getitem__(self, __name: str) -> any:
         return self.data[__name]
