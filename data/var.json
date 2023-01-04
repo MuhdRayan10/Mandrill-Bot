@@ -1,1 +1,14 @@
-{"mute_time": 1, "tweet_channel_id": 1058732377087676480, "base_color": 15544212, "emoji_id": 1, "most_recent_tweet_id": 0, "welcome_channel": 1058732377087676480, "rendrill_role": 1059652016391082004, "mute_role": 1059794772149149796, "guardrill_role": 10293092913012093, "twitter_loop_time": 1}
+{
+    "mute_time": 1,
+    "tweet_channel_id": 1060158535012454410,
+    "base_color": 15544212,
+    "most_recent_tweet_id": "1610602543297744897",
+    "welcome_channel": 1060158307425333249,
+    "rendrill_role": 1060159729852219392,
+    "mute_role": 1060159820113653820,
+    "guardrill_role": 1060159808885506211,
+    "twitter_loop_time": 5,
+    "twitter_account": "NivedVenugopal1",
+    "verification_channel": 1060158322386419804,
+    "exprorill_role": 1060165193897877566
+}

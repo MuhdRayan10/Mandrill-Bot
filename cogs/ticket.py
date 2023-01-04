@@ -3,7 +3,9 @@ from discord.ui import View
 from discord import app_commands
 import discord
 
-from helpers import Var
+from helpers import Var as V
+
+Var = V()
 
 # Ticket settings Interface buttons
 class TicketSettings(View):
@@ -39,7 +41,7 @@ class CreateTicket(View):
         }
 
         # Get Tickets category and create a new channel
-        category = discord.utils.get(interaction.guild.categories, name='Tickets')
+        category = discord.utils.get(interaction.guild.categories, name='TICKETS')
         channel = await interaction.guild.create_text_channel(f"[TICKET]-{interaction.user.name}",
                 overwrites=overwrites, category=category)
 
@@ -57,9 +59,11 @@ class Tickets(commands.Cog):
     @app_commands.checks.has_permissions(manage_guild=True)
     @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
     @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
-    async def setup_tickets(self, _, channel: discord.TextChannel):
+    async def setup_tickets(self, interaction, channel: discord.TextChannel):
         
         embed = discord.Embed(title="Create a Ticket!", description="Click on the `Create Ticket` button below to create a ticket. The server's staff will be notified and shortly aid you with your problem.")
+        await interaction.response.send_message(channel.mention)
+        
         await channel.send(embed=embed, view=CreateTicket())
 
 # Cog setup function

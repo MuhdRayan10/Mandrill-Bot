@@ -5,8 +5,6 @@ class Var:
         with open('./data/var.json', 'r') as f:
             self.data = json.load(f)
 
-        print(self.data)
-
     def __getitem__(self, __name: str) -> any:
         return self.data[__name]
     
@@ -22,4 +20,4 @@ class Var:
             object.__setattr__(self, __name, __value)
 
         with open('./data/var.json', 'w') as f:
-            json.dump(self.data, f)
+            json.dump(self.data, f, indent=4)

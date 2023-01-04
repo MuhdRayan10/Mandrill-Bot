@@ -13,7 +13,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # import stored variables
-from helpers import Var
+from helpers import Var as V
+
+Var = V()
 
 #cog
 class TwitterCog(commands.Cog):
@@ -32,7 +34,7 @@ class TwitterCog(commands.Cog):
         self.headers = {
             'Authorization': f'Bearer {self.bearer_token}'
         }
-        self.screen_name = 'TheMandrillsNFT' # this is the name of the thing the other thing
+        self.screen_name = Var.twitter_account # this is the name of the thing the other thing
 
         # vairables
         self.most_recent_tweet_id = Var.most_recent_tweet_id
