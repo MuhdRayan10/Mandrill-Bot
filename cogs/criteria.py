@@ -3,9 +3,10 @@ from discord import app_commands
 import discord
 from easy_sqlite3 import *
 
-# import stored variables
-from helpers import StaticVariables
+# Import stored variables
+from helpers import Var
 
+# Cog class
 class Criteria(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -15,7 +16,7 @@ class Criteria(commands.Cog):
 
         db.close()
 
-
+    # Command for Moderator to update user's criteria stats
     @app_commands.command(name="req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Help Exprorills", value=1),
@@ -29,8 +30,12 @@ class Criteria(commands.Cog):
 
     async def req(self, interaction, user:discord.Member, activity:int, done:int):
         
-        db = Database("./data/criteria")
+        """
+            This function allows the mods to update a user's criteria stats
+        """
 
+        # Getting data from database 
+        db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
 
         if not data:
@@ -39,29 +44,31 @@ class Criteria(commands.Cog):
 
         data = data[0]
         
+        # Status of all 3 activites and whether role should be given and updating
         a1 = 1 if (done and activity==1) or data[1] else 0
         a2 = 1 if (done and activity==2) or data[2] else 0
         a3 = 1 if (done and activity==3) or data[3] else 0
 
-        role = 1 if a1 and a2 and a3 else 0
+        if_role = 1 if a1 and a2 and a3 else 0
 
-        print(a1, a2, a3, role)
-
-        db.update("role", (user.id, a1, a2, a3, role))
-
-        role = interaction.guild.get_role(1059870181096169503)
-        await user.add_roles(role)
-
-        await interaction.response.send_message(f"Updated.")
-
+        db.update("role", (user.id, a1, a2, a3, if_role))
         db.close()
 
+        # Giving Rendrill role if criteria satisfied
+        if if_role:
+            role = interaction.guild.get_role(Var.rendrill_role)
+            await user.add_roles(role)
+
+        await interaction.response.send_message(f"Updated.", ephemeral=True)
+
+    # Command to view user's criteria
     @app_commands.command(name="view-req", description="View User's Criteria for Rendrill Role")
+    @app_commands.describe(user="The user whose criterias is to be viewed")
     async def view(self, interaction, user:discord.Member):
+        
+        # Retrieving data from database
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
-
-        print(data)
 
         if not data:
             db.insert("role", (user.id, 0, 0, 0, 0))
@@ -71,7 +78,7 @@ class Criteria(commands.Cog):
 
         rc, wc = '❌', '✅'
 
-
+        # Embed
         embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=0xca4949)
         embed.add_field(name=f"{rc if not data[1] else wc} Help Exprorills", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[2] else wc} Support The Mandrills on Twitter", value="ㅤ", inline=False)
@@ -79,7 +86,7 @@ class Criteria(commands.Cog):
         
         await interaction.response.send_message(embed=embed)
 
-
+# Cog setup command
 async def setup(bot):
     await bot.add_cog(Criteria(bot))
 

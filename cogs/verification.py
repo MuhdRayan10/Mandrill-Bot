@@ -181,7 +181,7 @@ class Verification(commands.Cog):
             count -= 1
  
         # Embed once Captcha is completed
-        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!", color=discord.Color(StaticVariables.base_color))
+        completed_embed = discord.Embed(title=f"{interaction.user.display_name} has {'not' if correct != cache[interaction.user.id] else ''} been verified!", color=discord.Color(Var.base_color))
         completed_embed.set_image(url="attachment://captcha.png")
 
         await interaction.followup.edit_message(msg.id, embed=completed_embed, view=None)
