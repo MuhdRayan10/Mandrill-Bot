@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands, tasks
 from discord import app_commands
 from easy_sqlite3 import *
@@ -39,7 +40,7 @@ class TwitterCog(commands.Cog):
         # start the task
         self.check_tweets.start()
 
-    @tasks.loop(minutes=Var.twitter_loop_time)
+    @tasks.loop(minutes=Var().twitter_loop_time)
     async def check_tweets(self):
         url = f'https://api.twitter.com/2/tweets/search/recent?query=from:{self.screen_name}'
         response = requests.get(url, headers=self.headers)
@@ -66,6 +67,9 @@ class TwitterCog(commands.Cog):
             # Get the channel object
             channel = self.bot.get_channel(Var.tweet_channel_id)
             print(channel)
+
+            embed = discord.Embed(title="New Tweet!", description=f"New Tweet from @{self.screen_name}",color=discord.Color(Var.base_color))
+            embed.add_field(name=f"{tweet_link}", value="ㅤ", inline=False)
 
             # Send the tweet link to the Discord channel
             await channel.send(tweet_link)
