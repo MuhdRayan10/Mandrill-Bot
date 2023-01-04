@@ -1,7 +1,8 @@
-import discord
 from discord.ext import commands, tasks
 from discord import app_commands
 from easy_sqlite3 import *
+
+from helpers import Var
 
 # API STUFF
 import requests
@@ -38,7 +39,7 @@ class TwitterCog(commands.Cog):
         # start the task
         self.check_tweets.start()
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=Var.twitter_loop_time)
     async def check_tweets(self):
         url = f'https://api.twitter.com/2/tweets/search/recent?query=from:{self.screen_name}'
         response = requests.get(url, headers=self.headers)
@@ -97,7 +98,7 @@ class TwitterCog(commands.Cog):
 
         db.close()
     
-
+    # Check if twitter account is valid
     def validify_twitter(self, twitter):
         url = f"https://api.twitter.com/2/users/by/username/{twitter}"
         response = requests.get(url, headers=self.headers)
@@ -110,6 +111,7 @@ class TwitterCog(commands.Cog):
         except KeyError:
             return False
 
+    # Check if wallet adress is valid
     def validify_wallet(self, wallet):
         infra_url = f"https://mainnet.infura.io/v3/{os.getenv('INFRAAPIKEY')}"
         w3 = Web3(Web3.HTTPProvider(infra_url))
