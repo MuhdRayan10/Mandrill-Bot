@@ -40,13 +40,10 @@ async def create_image(user):
 
 # The View of Buttons for the Captcha verification process
 class Captcha(View):
-    def __init__(self, userid, inter, msg_id):
+    def __init__(self, userid):
         super().__init__(timeout=15)
         self.userid = userid
 
-        # For updating buttons after time out
-        self.inter = inter
-        self.msg_id = msg_id 
 
     @discord.ui.button(label="A", style=style)
     async def a(self, __, _):
@@ -64,12 +61,6 @@ class Captcha(View):
     async def d(self, __, _):
         cache[self.userid] += "D"
 
-    async def on_timeout(self):
-        # Disabling all the buttons after timeout and then updating the view
-        for child in self.children:
-            child.disabled = True
-
-        await self.inter.followup.edit_message(self.msg_id, view=self)
 
 # Cog class
 class Verification(commands.Cog):
@@ -87,7 +78,8 @@ class Verification(commands.Cog):
         # Getting the muted role / Creating if it doesn't exist
         role = member.guild.get_role(Var.mute_role)
 
-        role = discord.utils.get(member.guild.roles, name="Muted")
+        if not role:
+            role = discord.utils.get(member.guild.roles, name="not verified")
 
         # Adding the muted role to the newly joined user
         await member.add_roles(role)
@@ -97,7 +89,7 @@ class Verification(commands.Cog):
         img = await create_image(member)
 
         welcome_file = discord.File(fp=img, filename="welcome.png")
-        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at <#{Var.welcome_channel}>", file=welcome_file)
+        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at <#{Var.verification_channel}>", file=welcome_file)
 
 
 
@@ -185,7 +177,7 @@ class Verification(commands.Cog):
         await interaction.followup.edit_message(msg.id, embed=completed_embed, view=None)
         
         # Calling verified function if verified for timing out the user
-        self.verified(interaction.user) if correct == cache[interaction.user.id] else None
+        await self.verified(interaction.user, interaction.guild.get_role(Var.mute_role), interaction.guild.get_role(Var.exprorill_role)) if correct == cache[interaction.user.id] else None
 
         # Deleting cached memory
         del f, cache[interaction.user.id]
@@ -201,12 +193,15 @@ class Verification(commands.Cog):
 
         return embed
 
-    async def verified(self, user):
+    async def verified(self, user, role, role2):
         '''
             Timing out user for specified time after verification
         '''
         await user.timeout(timedelta(minutes=Var.mute_time))
-        await user.remove_roles(Var.mute_role)
+        await user.remove_roles(role)
+
+        await user.add_roles(role2)
+
 
     # Syncing new commands
     @commands.command()

@@ -33,7 +33,7 @@ class TwitterCog(commands.Cog):
         self.headers = {
             'Authorization': f'Bearer {self.bearer_token}'
         }
-        self.screen_name = 'TheMandrillsNFT' # this is the name of the thing the other thing
+        self.screen_name = Var.twitter_account # this is the name of the thing the other thing
 
         # vairables
         self.most_recent_tweet_id = Var.most_recent_tweet_id

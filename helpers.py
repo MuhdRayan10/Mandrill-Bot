@@ -20,4 +20,4 @@ class Var:
             object.__setattr__(self, __name, __value)
 
         with open('./data/var.json', 'w') as f:
-            json.dump(self.data, f)
+            json.dump(self.data, f, indent=4)
