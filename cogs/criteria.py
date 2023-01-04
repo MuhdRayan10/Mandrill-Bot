@@ -4,7 +4,8 @@ import discord
 from easy_sqlite3 import *
 
 # Import stored variables
-from helpers import Var
+from helpers import Var as V
+Var = V()
 
 # Cog class
 class Criteria(commands.Cog):
@@ -47,9 +48,10 @@ class Criteria(commands.Cog):
         data = data[0]
         
         # Status of all 3 activites and whether role should be given and updating
-        a1 = 1 if (done and activity==1) or data[1] else 0
-        a2 = 1 if (done and activity==2) or data[2] else 0
-        a3 = 1 if (done and activity==3) or data[3] else 0
+        a1 = done if activity == 1 else data[1]
+        a2 = done if activity == 2 else data[2]
+        a3 = done if activity == 3 else data[3]
+
 
         if_role = 1 if a1 and a2 and a3 else 0
 

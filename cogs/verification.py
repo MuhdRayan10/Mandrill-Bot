@@ -8,7 +8,8 @@ from datetime import timedelta
 from discord.ui import View
 
 # Import stored variables
-from helpers import Var
+from helpers import Var as V
+Var = V()
 
 # Dictionary of user input on captcha
 cache = {}
@@ -85,8 +86,6 @@ class Verification(commands.Cog):
         
         # Getting the muted role / Creating if it doesn't exist
         role = member.guild.get_role(Var.mute_role)
-        if not role:
-            await member.guild.create_role(name="Muted", permissions=discord.Permissions(send_messages=False))
 
         role = discord.utils.get(member.guild.roles, name="Muted")
 
@@ -98,7 +97,7 @@ class Verification(commands.Cog):
         img = await create_image(member)
 
         welcome_file = discord.File(fp=img, filename="welcome.png")
-        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at <#1059799460605083658>", file=welcome_file)
+        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at <#{Var.welcome_channel}>", file=welcome_file)
 
 
 
@@ -108,7 +107,6 @@ class Verification(commands.Cog):
     @app_commands.command(name="setup-verification", description="[MODS] Create verification interface in specified channel.")
     @app_commands.describe(channel="The channel in which Verification should be set up")
     async def start_verification(self, interaction, channel: discord.TextChannel):
-        await interaction.response.defer()
         
         # The Verify Embed
         embed = discord.Embed(title='Verify', description='Click the button to verify yourself.')
@@ -120,7 +118,7 @@ class Verification(commands.Cog):
 
         # Sending message
         await channel.send(embed=embed, view=view)
-        await interaction.channel.send(f"Added verification app, to <#{channel.id}>")
+        await interaction.response.send_message(f"Added verification app, to <#{channel.id}>")
 
     async def verify(self, interaction):
         '''
