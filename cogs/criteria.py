@@ -36,14 +36,22 @@ class Criteria(commands.Cog):
     async def give_rendrill_role(self, interaction):
         # TODO: check if user is eligible for CRITERIA ONE AND TWO
         
-        async def send_question(interaction, question, stroptions):
+        async def send_question(interaction, question, stroptions:list[str], correctidx:int, questionindex:str=''):
             options = []
             for option in stroptions:
                 opt = discord.SelectOption(label=option)
                 options.append(opt)
             menu = ui.Select(
-                placeholder="Select the Correct Answer!"
+                placeholder="Select the Correct Answer!",
+                options=options
             )
+
+            def check_answer(interaction, stroptions, correctidx):
+                print(interaction.message)
+                print(interaction.type)
+                print(interaction.data)
+            menu.callback = check_answer(interaction, stroptions, correctidx)
+
 
             view = ui.View()
             view.add_item(menu)
@@ -53,7 +61,9 @@ class Criteria(commands.Cog):
                 view=view, 
                 ephemeral=True
             )
-        await send_question(interaction, "Hello!", ['a', 'b', 'c', 'd'])
+
+            
+        question1 = await send_question(interaction, "Hello!", ['a', 'b', 'c', 'd'], correctidx=2)
 
 
     # Command for Moderator to update user's criteria stats
