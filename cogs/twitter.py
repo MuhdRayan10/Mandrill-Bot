@@ -103,14 +103,12 @@ class TwitterCog(commands.Cog):
                 db = Database("./data/data")
 
                 # check if the twitter is valid
-                if not validify_twitter(self.twitter_username):
+                if not validify_twitter(str(self.twitter_username)):
                     await interaction.response.send_message("Twitter account not valid.", ephemeral=True)
                     return
                 
-                # checks if it is a valid wallet id
-                print(validify_wallet(self.wallet_id))
-                print(self.wallet_id)
-                if not validify_wallet(self.wallet_id):
+                # checks if it is a valid wallet address
+                if not validify_wallet(str(self.wallet_id)):
                     await interaction.response.send_message("Wallet ID not valid.", ephemeral=True)
                     return
 
@@ -129,7 +127,7 @@ class TwitterCog(commands.Cog):
         await interaction.response.send_modal(PurmarillVerificationModal())
 
         # Check if twitter account is valid
-        def validify_twitter(twitter):
+        def validify_twitter(twitter:str):
             url = f"https://api.twitter.com/2/users/by/username/{twitter}"
             response = requests.get(url, headers=self.headers)
 
@@ -142,11 +140,11 @@ class TwitterCog(commands.Cog):
                 return False
  
         # Check if wallet adress is valid
-        def validify_wallet(wallet):
+        def validify_wallet(wallet:str):
             # TODO: FIX
             infra_url = f"https://mainnet.infura.io/v3/{os.getenv('INFRAAPIKEY')}"
             w3 = Web3(Web3.HTTPProvider(infra_url))
-            return w3.isAddress(wallet)
+            return Web3.isAddress(wallet)
 
 
     
