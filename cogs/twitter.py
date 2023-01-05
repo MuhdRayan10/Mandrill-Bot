@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
+from discord import ui
 from easy_sqlite3 import *
-
-from helpers import Var
 
 # API STUFF
 import requests
@@ -14,7 +13,6 @@ load_dotenv()
 
 # import stored variables
 from helpers import Var as V
-
 Var = V()
 
 #cog
@@ -42,7 +40,7 @@ class TwitterCog(commands.Cog):
         # start the task
         self.check_tweets.start()
 
-    @tasks.loop(minutes=Var().twitter_loop_time)
+    @tasks.loop(minutes=Var.twitter_loop_time)
     async def check_tweets(self):
         url = f'https://api.twitter.com/2/tweets/search/recent?query=from:{self.screen_name}'
         response = requests.get(url, headers=self.headers)
@@ -70,57 +68,85 @@ class TwitterCog(commands.Cog):
             channel = self.bot.get_channel(Var.tweet_channel_id)
             print(channel)
 
-            embed = discord.Embed(title="New Tweet!", description=f"New Tweet from @{self.screen_name}",color=discord.Color(Var.base_color))
-
             # Send the tweet link to the Discord channel
-            await channel.send(tweet_link, embed=embed)
+            await channel.send(tweet_link)
     
-    @app_commands.command(name="link", description="Link your Discord Account to your Twitter and Wallet Adresses")
-    @app_commands.describe(twitter="Your Twitter Username")
-    @app_commands.describe(wallet="Your Crypto wallet Adress")
-    async def link(self, interaction, twitter:str, wallet:str):
+    @app_commands.command(name="setup-purmarill")
+    async def setup_purmarill(self, interaction, channel: discord.TextChannel):
+        # The Verify Embed
+        embed = discord.Embed(title='Get Purmarill', description='Click the button to get your purmarill role.')
+        get_prumarill_button = ui.Button(label="Get Purmarill", style=discord.ButtonStyle.green)
+
+        get_prumarill_button.callback = self.link # Link function called when button clicked.
         
-        db = Database("./data/data")
+        view = ui.View()
+        view.add_item(get_prumarill_button)
 
-        # check if the twitter is valid
-        if not self.validify_twitter(twitter):
-            await interaction.response.send_message("Twitter account not valid.")
-            return
-        
-        # checks if it is a valid wallet id
-        if not self.validify_wallet(wallet):
-            await interaction.response.send_message("Wallet ID not valid.")
-            return
+        # Sending message
+        await channel.send(embed=embed, view=view)
+        await interaction.response.send_message(f"Added `get prumarill` app, to <#{channel.id}>")
 
-        # Checking if twitter / walled account / user already exists db
-        if not db.if_exists("users", {"twitter":twitter, "wallet":wallet, "user":interaction.user.id}, separator="OR"):
-            await interaction.response.send_message("Twitter account / Wallet ID already registered...")
-            return
+    async def link(self, interaction):
+        class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
+            twitter_username = ui.TextInput(
+                label="Twitter Username",
+                placeholder="Enter your twitter username (without the handle)",
+                style=discord.TextStyle.short
+            )
+            wallet_id = ui.TextInput(
+                label="Wallet Address",
+                placeholder='Enter your ETH wallet address',
+                style=discord.TextStyle.short
+            )
 
-        # Adding name to db
-        db.insert("users", (interaction.user.id, interaction.user.name, twitter, wallet))
-        await interaction.response.send_message("Added")
+            async def on_submit(self, interaction: discord.Interaction) -> None:
+                db = Database("./data/data")
 
-        db.close()
-    
-    # Check if twitter account is valid
-    def validify_twitter(self, twitter):
-        url = f"https://api.twitter.com/2/users/by/username/{twitter}"
-        response = requests.get(url, headers=self.headers)
+                # check if the twitter is valid
+                if not validify_twitter(self.twitter_username):
+                    await interaction.response.send_message("Twitter account not valid.", ephemeral=True)
+                    return
+                
+                # checks if it is a valid wallet id
+                print(validify_wallet(self.wallet_id))
+                print(self.wallet_id)
+                if not validify_wallet(self.wallet_id):
+                    await interaction.response.send_message("Wallet ID not valid.", ephemeral=True)
+                    return
 
-        data = response.json()
+                # Checking if twitter / walled account / user already exists db
+                if not db.if_exists("users", {"twitter":self.twitter_username, "wallet":self.wallet_id, "user":interaction.user.id}, separator="OR"):
+                    await interaction.response.send_message("Twitter account / Wallet ID already registered...", ephemeral=True)
+                    return
 
-        try:
-            if data["data"]["id"].isdigit(): # checks if id exists, and id int
-                return True
-        except KeyError:
-            return False
+                # Adding name to db
+                db.insert("users", (interaction.user.id, interaction.user.name, self.twitter_username, self.wallet_id))
+                await interaction.response.send_message("Added", ephemeral=True)
 
-    # Check if wallet adress is valid
-    def validify_wallet(self, wallet):
-        infra_url = f"https://mainnet.infura.io/v3/{os.getenv('INFRAAPIKEY')}"
-        w3 = Web3(Web3.HTTPProvider(infra_url))
-        return w3.isAddress(wallet)
+                db.close()
+
+        # send modal when link is called
+        await interaction.response.send_modal(PurmarillVerificationModal())
+
+        # Check if twitter account is valid
+        def validify_twitter(twitter):
+            url = f"https://api.twitter.com/2/users/by/username/{twitter}"
+            response = requests.get(url, headers=self.headers)
+
+            data = response.json()
+
+            try:
+                if data["data"]["id"].isdigit(): # checks if id exists, and id int
+                    return True
+            except KeyError:
+                return False
+ 
+        # Check if wallet adress is valid
+        def validify_wallet(wallet):
+            # TODO: FIX
+            infra_url = f"https://mainnet.infura.io/v3/{os.getenv('INFRAAPIKEY')}"
+            w3 = Web3(Web3.HTTPProvider(infra_url))
+            return w3.isAddress(wallet)
 
 
     
