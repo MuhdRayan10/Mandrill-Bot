@@ -142,8 +142,6 @@ class TwitterCog(commands.Cog):
             return Web3.isAddress(wallet)
 
 
-    
-
 async def setup(bot):
     await bot.add_cog(TwitterCog(bot))
     
