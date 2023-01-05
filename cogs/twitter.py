@@ -141,9 +141,6 @@ class TwitterCog(commands.Cog):
  
         # Check if wallet adress is valid
         def validify_wallet(wallet:str):
-            # TODO: FIX
-            infra_url = f"https://mainnet.infura.io/v3/{os.getenv('INFRAAPIKEY')}"
-            w3 = Web3(Web3.HTTPProvider(infra_url))
             return Web3.isAddress(wallet)
 
 
