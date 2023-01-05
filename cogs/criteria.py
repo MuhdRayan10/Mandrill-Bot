@@ -1,5 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
+from discord import ui
 import discord
 from easy_sqlite3 import *
 
@@ -17,6 +18,44 @@ class Criteria(commands.Cog):
 
         db.close()
 
+    @app_commands.command(name="setup-rendrill")
+    async def setup_rendrill(self, interaction, channel: discord.TextChannel):
+        # The Verify Embed
+        embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.')
+        get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green)
+
+        get_rendrill_button.callback = self.give_rendrill_role # Link function called when button clicked.
+        
+        view = ui.View()
+        view.add_item(get_rendrill_button)
+
+        # Sending message
+        await channel.send(embed=embed, view=view)
+        await interaction.response.send_message(f"Added `get rendrill` app, to <#{channel.id}>")
+
+    async def give_rendrill_role(self, interaction):
+        # TODO: check if user is eligible for CRITERIA ONE AND TWO
+        
+        async def send_question(interaction, question, stroptions):
+            options = []
+            for option in stroptions:
+                opt = discord.SelectOption(label=option)
+                options.append(opt)
+            menu = ui.Select(
+                placeholder="Select the Correct Answer!"
+            )
+
+            view = ui.View()
+            view.add_item(menu)
+
+            await interaction.response.send_message(
+                content=question,
+                view=view, 
+                ephemeral=True
+            )
+        await send_question(interaction, "Hello!", ['a', 'b', 'c', 'd'])
+
+
     # Command for Moderator to update user's criteria stats
     @app_commands.command(name="req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
@@ -32,9 +71,8 @@ class Criteria(commands.Cog):
     @app_commands.describe(done="Whether the user was successful in completing the task")
 
     async def req(self, interaction, user:discord.Member, activity:int, done:int):
-        
         """
-            This function allows the mods to update a user's criteria stats
+        This function allows the mods to update a user's criteria stats
         """
 
         # Getting data from database 
