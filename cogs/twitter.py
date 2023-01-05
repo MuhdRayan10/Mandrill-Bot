@@ -50,8 +50,7 @@ class TwitterCog(commands.Cog):
         except KeyError:
             print("User has no posts!")
             return
-        
-        print(type(self.bot))
+
 
         if tweets and tweets[0]['id'] != self.most_recent_tweet_id:
             tweet_id = tweets[0]['id']
@@ -66,7 +65,6 @@ class TwitterCog(commands.Cog):
 
             # Get the channel object
             channel = self.bot.get_channel(Var.tweet_channel_id)
-            print(channel)
 
             # Send the tweet link to the Discord channel
             await channel.send(tweet_link)
@@ -113,7 +111,7 @@ class TwitterCog(commands.Cog):
                     return
 
                 # Checking if twitter / walled account / user already exists db
-                if not db.if_exists("users", {"twitter":self.twitter_username, "wallet":self.wallet_id, "user":interaction.user.id}, separator="OR"):
+                if db.if_exists("users", {"twitter":self.twitter_username, "wallet":self.wallet_id, "user":interaction.user.id}, separator="OR"):
                     await interaction.response.send_message("Twitter account / Wallet ID already registered...", ephemeral=True)
                     return
 
