@@ -24,7 +24,7 @@ class Criteria(commands.Cog):
         embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.')
         get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green)
 
-        get_rendrill_button.callback = self.ask_rendrill_questions # Link function called when button clicked.
+        get_rendrill_button.callback = self.give_rendrill_role # Link function called when button clicked.
         
         view = ui.View()
         view.add_item(get_rendrill_button)
@@ -33,8 +33,9 @@ class Criteria(commands.Cog):
         await channel.send(embed=embed, view=view)
         await interaction.response.send_message(f"Added `get rendrill` app, to <#{channel.id}>")
 
-    async def ask_rendrill_questions(self, interaction):
-        # testing for now
+    async def give_rendrill_role(self, interaction):
+        # TODO: check if user is eligible for CRITERIA ONE AND TWO
+        
         async def send_question(interaction, question, stroptions):
             options = []
             for option in stroptions:
