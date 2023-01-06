@@ -8,6 +8,28 @@ from easy_sqlite3 import *
 from helpers import Var as V
 Var = V()
 
+# chache for questionnaire
+cache = {}
+style = discord.ButtonStyle.blurple
+
+# questionnaire
+class QuestionnaireMenu(ui.View):
+    def __init__(self, userid):
+        super().__init__(timeout=None)
+        self.userid = userid
+        
+    @discord.ui.button(label="A", style=style, custom_id='A')
+    async def a(self, __, _):
+        cache[self.userid].append("A")
+
+    @discord.ui.button(label="B", style=style, custom_id='B')
+    async def b(self, __, _):
+        cache[self.userid].append("B")
+
+    @discord.ui.button(label="C", style=style, custom_id='C')
+    async def c(self, __, _):
+        cache[self.userid].append("C")
+
 # Cog class
 class Criteria(commands.Cog):
     def __init__(self, bot):
@@ -24,7 +46,7 @@ class Criteria(commands.Cog):
         embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.')
         get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green)
 
-        get_rendrill_button.callback = self.give_rendrill_role # Link function called when button clicked.
+        get_rendrill_button.callback = self.rendrill_questionnaire # Link function called when button clicked.
         
         view = ui.View()
         view.add_item(get_rendrill_button)
@@ -33,13 +55,15 @@ class Criteria(commands.Cog):
         await channel.send(embed=embed, view=view)
         await interaction.response.send_message(f"Added `get rendrill` app, to <#{channel.id}>")
 
-    async def give_rendrill_role(self, interaction):
+    async def rendrill_questionnaire(self, interaction):
+        await interaction.response.defer()
+    
         # TODO: check if user is eligible for CRITERIA ONE AND TWO
         questions = ['Who are the "Guardrills"?', 'How many Income percentages are distributed to the "Mandrills" owners in total?', 'What do you need to enter to out Metaverse?']
         options = [
-            ['They are "Supporters"', 'They are "Moderators"', 'They are "Newcomers"'],
-            ['22.22%', '44.44%', '11.11%'],
-            ['Mineral', 'All the species', 'At least one species']
+            ['(A) They are "Supporters"', '(B) They are "Moderators"', '(C) They are "Newcomers"'],
+            ['(A) 22.22%', '(B) 44.44%', '(C) 11.11%'],
+            ['(A) Mineral', '(B) All the species', '(C) At least one species']
         ]
         correct_options = [
             'B',
@@ -47,27 +71,63 @@ class Criteria(commands.Cog):
             'C'
         ]
 
-        for i in range(len(questions)):
-            async def option_callback(interaction: discord.Interaction):
-                print(interaction.data)
-                print(interaction.data['custom_id'] == correct_options[i])
+        # generate chache for user
+        cache[interaction.user.id] = []
 
-            view = ui.View()
-            for alp in ['A', 'B', 'C']:
-                btn = ui.Button(style=discord.ButtonStyle.blurple, label=alp, custom_id=alp)
-                btn.callback = option_callback
-                view.add_item(btn)
-            
-            # generate options
-            options_ = ""
-            for j in range(len(options[i])):
-                options += f"{['A', 'B', 'C'][j]}) {options[i][j]} \n"
-
-            embed = discord.Embed(title=questions[i], description=options_)
-            await interaction.response.send_message(
-                embed=embed,
-                view=view
+        # Creating Embed
+        embed = discord.Embed(
+            title="Rendrill Questionnaire",
+            description="Answer the questions, accurately.",
+            color=discord.Color(Var.base_color)
             )
+        embed.add_field(
+            name=questions[0], 
+            value="\n".join(options[0]),
+            )
+        print()
+
+        msg = await interaction.followup.send(embed=embed, view=QuestionnaireMenu(interaction.user.id), ephemeral=True)
+
+        def check(i) -> True or False:
+            return i.data['component_type'] == 2 and i.user.id == interaction.user.id
+
+        # results of the questionare
+        results = []
+
+        # loop 3 times for 3 questions
+        questionno = 1
+        while questionno <= 3:
+            # wait for button click
+            result = await self.bot.wait_for("interaction", check=check, timeout=None)
+            print(result)
+            print(result.data)
+
+            results.append(result.data['custom_id'])
+
+            await result.response.defer()
+
+            if questionno == 3:
+                break
+
+            # Updating embed and sending message
+            embed.remove_field(0)
+            embed.add_field(
+                name=questions[questionno], 
+                value="\n".join(options[questionno]),
+            )
+            await interaction.followup.edit_message(msg.id, embed=embed, view=QuestionnaireMenu(interaction.user.id))
+
+            questionno += 1
+
+        mark = sum([1 for i, opt in enumerate(results) if opt == correct_options[i]])
+
+        result_embed = discord.Embed(
+            title="Rendrill Questionnaire Results",
+            description=f"""Marks: {mark}/3
+            Passed: {True if mark == 3 else False}"""
+        )
+
+        await interaction.followup.edit_message(msg.id, embed=result_embed)
 
 
     # Command for Moderator to update user's criteria stats
