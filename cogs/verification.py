@@ -44,7 +44,6 @@ class Captcha(View):
         super().__init__(timeout=15)
         self.userid = userid
 
-
     @discord.ui.button(label="A", style=style)
     async def a(self, __, _):
         cache[self.userid] += "A"
@@ -110,7 +109,7 @@ class Verification(commands.Cog):
 
         # Sending message
         await channel.send(embed=embed, view=view)
-        await interaction.response.send_message(f"Added verification app, to <#{channel.id}>")
+        await interaction.response.send_message(f"Added `verification app`, to <#{channel.id}>")
 
     async def verify(self, interaction):
         '''
