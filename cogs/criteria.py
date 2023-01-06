@@ -35,35 +35,39 @@ class Criteria(commands.Cog):
 
     async def give_rendrill_role(self, interaction):
         # TODO: check if user is eligible for CRITERIA ONE AND TWO
-        
-        async def send_question(interaction, question, stroptions:list[str], correctidx:int, questionindex:str=''):
-            options = []
-            for option in stroptions:
-                opt = discord.SelectOption(label=option)
-                options.append(opt)
-            menu = ui.Select(
-                placeholder="Select the Correct Answer!",
-                options=options
-            )
+        questions = ['Who are the "Guardrills"?', 'How many Income percentages are distributed to the "Mandrills" owners in total?', 'What do you need to enter to out Metaverse?']
+        options = [
+            ['They are "Supporters"', 'They are "Moderators"', 'They are "Newcomers"'],
+            ['22.22%', '44.44%', '11.11%'],
+            ['Mineral', 'All the species', 'At least one species']
+        ]
+        correct_options = [
+            'B',
+            'B',
+            'C'
+        ]
 
-            def check_answer(interaction, stroptions, correctidx):
-                print(interaction.message)
-                print(interaction.type)
+        for i in range(len(questions)):
+            async def option_callback(interaction: discord.Interaction):
                 print(interaction.data)
-            menu.callback = check_answer(interaction, stroptions, correctidx)
-
+                print(interaction.data['custom_id'] == correct_options[i])
 
             view = ui.View()
-            view.add_item(menu)
-
-            await interaction.response.send_message(
-                content=question,
-                view=view, 
-                ephemeral=True
-            )
-
+            for alp in ['A', 'B', 'C']:
+                btn = ui.Button(style=discord.ButtonStyle.blurple, label=alp, custom_id=alp)
+                btn.callback = option_callback
+                view.add_item(btn)
             
-        question1 = await send_question(interaction, "Hello!", ['a', 'b', 'c', 'd'], correctidx=2)
+            # generate options
+            options_ = ""
+            for j in range(len(options[i])):
+                options += f"{['A', 'B', 'C'][j]}) {options[i][j]} \n"
+
+            embed = discord.Embed(title=questions[i], description=options_)
+            await interaction.response.send_message(
+                embed=embed,
+                view=view
+            )
 
 
     # Command for Moderator to update user's criteria stats
