@@ -1,8 +1,8 @@
 from discord.ext import commands
 from discord import app_commands
 from easy_sqlite3 import *
-import random
-import discord
+import random, discord, mplcyberpunk, io
+import matplotlib.pyplot as plt
 from easy_pil import Editor, Font, load_image_async, Canvas
 
 from helpers import Var as V
@@ -14,6 +14,9 @@ class XP(commands.Cog):
 
         db = Database("./data/levels")
         db.create_table("levels", {"user":INT, "level":INT, "xp":INT, 'lim':INT, 'total':INT})
+
+        plt.style.use("cyberpunk")
+        plt.rcParams["font.family"] = "monospace"
 
         db.close()
 
@@ -32,7 +35,7 @@ class XP(commands.Cog):
         xp = 5 + random.choice([-1, 0, 1])
 
         if levels[2] + xp >= levels[3]:
-            db.update("levels", {"level":levels[1]+1, "xp":levels[2]+xp-levels[3], "lim":int(1.5*levels[3]), "total":levels[4]+xp},
+            db.update("levels", {"level":levels[1]+1, "xp":levels[2]+xp-levels[3], "lim":int(Var.level_difficult_factor*levels[3]), "total":levels[4]+xp},
                 where={"user":auth_id})
             print(levels[2]+xp-levels[3])
 
@@ -64,11 +67,11 @@ class XP(commands.Cog):
         poppins_small = Font.poppins(size=30)
 
         card_shape = [(600, 0), (750, 300), (900, 300), (900, 0)]
-        bg.polygon(card_shape, color="#FFFFFF")
+        bg.polygon(card_shape, color=Var.hex1)
         bg.paste(profile, (30, 30))
 
-        bg.rectangle((30, 220), width=650, height=40, color="#FFFFFF")
-        bg.bar((30, 220), max_width=650, height=40, percentage=data["xp"]/data["lim"], color="#FFFFFF", radius=20)
+        bg.bar((30, 220), max_width=650, height=40, color="#FFFFFF", radius=20, percentage=100)
+        bg.bar((30, 220), max_width=650, height=40, percentage=data["xp"]*100/data["lim"], color=Var.hex2, radius=20)
         bg.text((200, 40), user.display_name, font=poppins, color="#FFFFFF")
 
         bg.rectangle((200, 100), width=350, height=2, fill="#FFFFFF")
@@ -76,6 +79,46 @@ class XP(commands.Cog):
 
         file = discord.File(fp=bg.image_bytes, filename=f"{user.name}_level.png")
         await interaction.response.send_message(file=file)
+
+    @app_commands.command(name="leaderboard", description="View the server's Top 10 Users")
+    async def leaderboard(self, interaction):
+        db = Database("./data/levels")
+        data = db.select("levels", selected=("user", "total"))
+        data.sort(reverse=True, key= lambda x: x[1])
+
+        if len(data) > 10: data = data[:10]
+
+        def get_mem(member, xp):
+            m = interaction.guild.get_member(member)
+            return m if not m else (m.name, xp)
+
+        data = [get_mem(d[0], d[1]) for d in data]
+        data = [d for d in data if d is not None]
+
+        plt.pie([d[1] for d in data], labels=[f"#{i} {d[0]}" for i,d in enumerate(data, start=1)], autopct='%1.2f%%',
+            explode=[0.05 for _ in range(len(data))], shadow=True, textprops={'color': 'white', 'weight': 'bold', 'fontsize':14})
+        plt.legend(title="Top 10 Users", loc='upper left', bbox_to_anchor=(-0.7, 1.12), prop={'size': 12, 'weight':'bold'})
+
+        with io.BytesIO() as image_binary:
+            plt.savefig(image_binary, format='png', bbox_inches='tight')
+            image_binary.seek(0)
+
+            embed = discord.Embed(title="Mandrill XP Leaderboard")
+            embed.set_image(url="attachment://image.png")
+            
+            await interaction.response.send_message(embed=embed, file=discord.File(fp=image_binary, filename="image.png"))
+
+        plt.close()
+      
+async def setup(bot):
+    await bot.add_cog(XP(bot))
+
+
+
+
+
+    
+
 
 
 
