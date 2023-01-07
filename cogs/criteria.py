@@ -99,8 +99,6 @@ class Criteria(commands.Cog):
         while questionno <= 3:
             # wait for button click
             result = await self.bot.wait_for("interaction", check=check, timeout=None)
-            print(result)
-            print(result.data)
 
             results.append(result.data['custom_id'])
 
