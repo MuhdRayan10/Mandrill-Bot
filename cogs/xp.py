@@ -37,12 +37,25 @@ class XP(commands.Cog):
         if levels[2] + xp >= levels[3]:
             db.update("levels", {"level":levels[1]+1, "xp":levels[2]+xp-levels[3], "lim":int(Var.level_difficult_factor*levels[3]), "total":levels[4]+xp},
                 where={"user":auth_id})
-            print(levels[2]+xp-levels[3])
+            
+            db2 = Database("./data/criteria")
+            if not db2.if_exists("role", where={"user":auth_id}):
+                db2.insert("role", (auth_id, 0, 0, 0, 0))
 
+            db2.update("role", {"a2":1 if levels[1]+1 >= 3 else 0}, {"user":auth_id})
+            current_data = db2.select("role", where={"user":auth_id}, size=1)
+
+            db2.close()
+            
+            if current_data[1] >=2 and current_data[2] == 1 and not current_data[3]:
+                channel = message.guild.get_channel(Var.rendrill_channel)
+                await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!", ephemeral=True)
+
+            
         else:
             db.update("levels", {"xp":levels[2]+xp, "total":levels[4]+xp}, where={"user":auth_id})
 
-        print(f"[LOG] - {message.author.name} - Lvl. {levels[1]} - {levels[2]+xp} XP")
+        print(f"[LOG] - {message.author.name} - Lvl. {levels[1]} - {levels[4]+xp} XP")
         db.close()
 
 

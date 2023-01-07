@@ -6,6 +6,7 @@ from easy_pil import Editor, load_image_async, Font
 from captcha.image import ImageCaptcha
 from datetime import timedelta
 from discord.ui import View
+from functions import update_invites
 
 # Import stored variables
 from helpers import Var as V
@@ -88,8 +89,13 @@ class Verification(commands.Cog):
         img = await create_image(member)
 
         welcome_file = discord.File(fp=img, filename="welcome.png")
-        await channel.send(f"Hello {member.mention}! Welcome to **{member.guild.name}**! Verify yourself at <#{Var.verification_channel}>", file=welcome_file)
+        
+        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hello {member.mention}, we're glad to have you here!", color=Var.base_color)
+        embed.set_image(url="attachment://welcome.png")
+        await channel.send(embed=embed, file=welcome_file)
 
+        # Updating invites
+        await update_invites(member, Var)
 
 
     # Sets up the interface for the Verification in a channel

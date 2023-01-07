@@ -13,5 +13,8 @@
     "exprorill_role": 1060165193897877566,
     "hex1": "#FF66CC",
     "hex2": "#0000D8",
-    "level_difficult_factor": 1.6
+    "level_difficult_factor": 1.6,
+    "rendrill_channel": 1060508457893109810,
+    "levelup_channel": 1061326793098928179,
+    "log_channel": 1060193779816087623
 }

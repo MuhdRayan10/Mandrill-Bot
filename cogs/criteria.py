@@ -1,6 +1,7 @@
 from discord.ext import commands
 from discord import app_commands
 from discord import ui
+from datetime import timedelta
 import discord
 from easy_sqlite3 import *
 
@@ -8,7 +9,6 @@ from easy_sqlite3 import *
 from helpers import Var as V
 Var = V()
 
-# chache for questionnaire
 cache = {}
 style = discord.ButtonStyle.blurple
 
@@ -29,6 +29,10 @@ class QuestionnaireMenu(ui.View):
     @discord.ui.button(label="C", style=style, custom_id='C')
     async def c(self, __, _):
         cache[self.userid].append("C")
+
+# chache for questionnaire
+blurple_btn = discord.ButtonStyle.blurple
+
 
 # Cog class
 class Criteria(commands.Cog):
@@ -58,8 +62,25 @@ class Criteria(commands.Cog):
     async def rendrill_questionnaire(self, interaction):
         await interaction.response.defer()
     
-        # TODO: check if user is eligible for CRITERIA ONE AND TWO
+        db = Database("./data/criteria")
+        data = db.select("role", where={"user":interaction.user.id}, size=1)
+        db.close()
+
+        if not(data[1] >= 2 and data[2] == 1):
+
+            message = "Looks like you haven't completed the first two criteria yet... Do `/view-req` to see which all requirements to get the `Rendrill` Role!"
+            await interaction.followup.send(message, ephemeral=True)
+            return
+
         questions = ['Who are the "Guardrills"?', 'How many Income percentages are distributed to the "Mandrills" owners in total?', 'What do you need to enter to out Metaverse?']
+        user = interaction.user
+
+        # TODO: check if user is eligible for CRITERIA ONE AND TWO
+        questions = [
+            'Who are the "Guardrills"?', 
+            'How many Income percentages are distributed to the "Mandrills" owners in total?', 
+            'What do you need to enter to out Metaverse?'
+        ]
         options = [
             ['(A) They are "Supporters"', '(B) They are "Moderators"', '(C) They are "Newcomers"'],
             ['(A) 22.22%', '(B) 44.44%', '(C) 11.11%'],
@@ -73,7 +94,6 @@ class Criteria(commands.Cog):
 
         # generate chache for user
         cache[interaction.user.id] = []
-
         # Creating Embed
         embed = discord.Embed(
             title="Rendrill Questionnaire",
@@ -84,8 +104,6 @@ class Criteria(commands.Cog):
             name=questions[0], 
             value="\n".join(options[0]),
             )
-        print()
-
         msg = await interaction.followup.send(embed=embed, view=QuestionnaireMenu(interaction.user.id), ephemeral=True)
 
         def check(i) -> True or False:
@@ -125,15 +143,74 @@ class Criteria(commands.Cog):
             Passed: {True if mark == 3 else False}"""
         )
 
-        await interaction.followup.edit_message(msg.id, embed=result_embed)
+        def check(i) -> bool:
+            return i.data['component_type'] == 2 and i.user.id == interaction.user.id
+        
+        score = 0
+        for i, question in enumerate(questions):
+            embed.remove_field(0)
+
+            # Add question and options to the embed
+            embed.add_field(name=question, value="\n".join(options[i]))
+
+            # Create view with buttons for each option
+            before_answer_view = ui.View()
+            for j, _ in enumerate(options[i]):
+                before_answer_view.add_item(ui.Button(
+                    custom_id=chr(ord('A') + j),  # Option letter, e.g. 'A', 'B', 'C'
+                    label=chr(ord('A') + j),
+                    style=blurple_btn
+                ))
+
+            # Send question message and wait for button click
+            question_message = await interaction.followup.send(embed=embed, view=before_answer_view, ephemeral=True)
+            result = await self.bot.wait_for("interaction", check=check, timeout=None)
+            await result.response.defer()
+
+            # Set color of selected option to green or red based on whether it is correct
+            color_map = {chr(ord('A') + j): discord.ButtonStyle.red for j in range(len(options[i]))}
+            color_map[correct_options[i]] = discord.ButtonStyle.green
+
+            # Create view with colored buttons
+            question_wrong_view = ui.View()
+            for j, _ in enumerate(options[i]):
+                question_wrong_view.add_item(ui.Button(
+                    custom_id=chr(ord('A') + j),
+                    label=chr(ord('A') + j),
+                    style=color_map[chr(ord('A') + j)]
+                ))
+
+            # Update message with colored buttons
+            await question_message.edit(embed=embed, view=question_wrong_view)
+
+            # Increment score if the selected option is correct
+            if result.data['custom_id'] == correct_options[i]:
+                score += 1
+
+        # Create final result embed
+        result_embed = discord.Embed(
+            title="Rendrill Questionnaire Results",
+            color=discord.Color(Var.base_color)
+        )
+        if score == len(questions):
+            result_embed.description = "Congratulations, you have passed the questionnaire!"
+        else:
+            result_embed.description = "Sorry, you have failed the questionnaire. Better luck next time."
+        result_embed.add_field(name="Score", value=f"{score}/{len(questions)}")
+
+        # Send final result message
+        await interaction.followup.send(embed=result_embed)
+
+        if score < 2:
+            await user.timeout(timedelta(minutes=5))
 
 
     # Command for Moderator to update user's criteria stats
     @app_commands.command(name="req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
-        app_commands.Choice(name="Help Exprorills", value=1),
-        app_commands.Choice(name="Twitter", value=2),
-        app_commands.Choice(name="Invite Members", value=3)
+        app_commands.Choice(name="Invite 2 Members", value=1),
+        app_commands.Choice(name="Reach Lvl. 3", value=2),
+        app_commands.Choice(name="Complete Quiz", value=3)
     ])
     @app_commands.choices(done=[
         app_commands.Choice(name="True", value=1),
@@ -162,6 +239,8 @@ class Criteria(commands.Cog):
         a2 = done if activity == 2 else data[2]
         a3 = done if activity == 3 else data[3]
 
+        if a1 == 1:
+            a1 += 1
 
         if_role = 1 if a1 and a2 and a3 else 0
 
@@ -180,7 +259,8 @@ class Criteria(commands.Cog):
     @app_commands.command(name="view-req", description="View User's Criteria for Rendrill Role")
     @app_commands.describe(user="The user whose criterias is to be viewed")
     async def view(self, interaction, user:discord.Member):
-        
+        await interaction.response.defer()
+
         # Retrieving data from database
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
@@ -189,19 +269,24 @@ class Criteria(commands.Cog):
             db.insert("role", (user.id, 0, 0, 0, 0))
             data = db.select("role", where={"user":user.id})
 
+        db.close()
+
         data = data[0]
 
         rc, wc = '❌', '✅'
 
         # Embed
         embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=0xca4949)
-        embed.add_field(name=f"{rc if not data[1] else wc} Help Exprorills", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if not data[2] else wc} Support The Mandrills on Twitter", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if not data[3] else wc} Invite at least 2 users to the server", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[1] >= 2 else wc} Invite at least 2 users to the server", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if not data[2] else wc} Reach Lvl. 3 XP", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
         
-        await interaction.response.send_message(embed=embed)
+        await interaction.followup.send(embed=embed)
+
+        if data[1] >= 2 and data[2] and not data[3]:
+            channel = interaction.guild.get_channel(Var.rendrill_channel)
+            await interaction.followup.send(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!", ephemeral=True)
 
 # Cog setup command
 async def setup(bot):
     await bot.add_cog(Criteria(bot))
-
