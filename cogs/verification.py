@@ -90,7 +90,7 @@ class Verification(commands.Cog):
 
         welcome_file = discord.File(fp=img, filename="welcome.png")
         
-        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hello {member.mention}, we're glad to have you here!", color=Var.base_color)
+        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hello {member.mention}, we're glad to have you here! Go verify at <#{Var.verification_channel}>", color=Var.base_color)
         embed.set_image(url="attachment://welcome.png")
         await channel.send(embed=embed, file=welcome_file)
 

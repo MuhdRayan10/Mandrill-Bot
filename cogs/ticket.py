@@ -36,8 +36,8 @@ class CreateTicket(View):
         overwrites = {
             interaction.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             interaction.guild.me: discord.PermissionOverwrite(read_messages=True),
-            interaction.user: discord.PermissionOverwrite(read_messages=True),
-            other_role: discord.PermissionOverwrite(read_messages=True)
+            interaction.user: discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            other_role: discord.PermissionOverwrite(read_messages=True, send_messages=True)
         }
 
         # Get Tickets category and create a new channel
@@ -56,7 +56,7 @@ class Tickets(commands.Cog):
         self.bot = bot
 
     # Setup Ticket Interface in given text channel
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
     @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
     @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
     async def setup_tickets(self, interaction, channel: discord.TextChannel):

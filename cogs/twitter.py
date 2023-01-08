@@ -111,13 +111,16 @@ class TwitterCog(commands.Cog):
                     return
 
                 # Checking if twitter / walled account / user already exists db
-                if db.if_exists("users", {"twitter":self.twitter_username, "wallet":self.wallet_id, "user":interaction.user.id}, separator="OR"):
+                role = interaction.guild.get_role(Var.purmarill_role)
+                if role in interaction.user.roles:
                     await interaction.response.send_message("Twitter account / Wallet ID already registered...", ephemeral=True)
                     return
 
-                # Adding name to db
-                db.insert("users", (interaction.user.id, interaction.user.name, self.twitter_username, self.wallet_id))
+                # Adding name to db ## TODO: HERE NIVED
+                db.execute("INSERT INTO users ")
                 await interaction.response.send_message("Added", ephemeral=True)
+
+                await interaction.user.add_roles(role)
 
                 db.close()
 

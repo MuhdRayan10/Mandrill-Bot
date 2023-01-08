@@ -2,7 +2,7 @@
     "mute_time": 1,
     "tweet_channel_id": 1060158535012454410,
     "base_color": 15544212,
-    "most_recent_tweet_id": "1610800031346593792",
+    "most_recent_tweet_id": "1611992499165483011",
     "welcome_channel": 1060158307425333249,
     "rendrill_role": 1060159729852219392,
     "mute_role": 1060159820113653820,
@@ -17,6 +17,7 @@
     "level_difficult_factor": 1.6,
     "rendrill_channel": 1060508457893109810,
     "levelup_channel": 1061326793098928179,
-    "log_channel": 1060193779816087623, 
-    "liberator_role": 1060159304201678888
+    "log_channel": 1060193779816087623,
+    "liberator_role": 1060159304201678888,
+    "purmarill_role": 1061561816414703677
 }

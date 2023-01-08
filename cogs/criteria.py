@@ -76,6 +76,11 @@ class Criteria(commands.Cog):
         # checks if user has filled the two criteria
         db = Database("./data/criteria")
         data = db.select("role", where={"user":interaction.user.id}, size=1)
+
+        if not data:
+            data = (interaction.user.id, 0, 0, 0, 0)
+            db.insert("role", data)
+            
         db.close()
 
         if not(data[1] >= 2 and data[2] == 1):
@@ -164,7 +169,7 @@ class Criteria(commands.Cog):
         result_embed.add_field(name="Score", value=f"{score}/{len(questions)}")
 
         # Send final result message
-        await interaction.followup.send(embed=result_embed)
+        await interaction.followup.send(embed=result_embed, ephemeral=True)
 
         if passed:
             role = user.guild.get_role(Var.guardrill_role)
@@ -176,6 +181,7 @@ class Criteria(commands.Cog):
             return
 
     # Command for Moderator to update user's criteria stats
+    @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
     @app_commands.command(name="req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 2 Members", value=1),

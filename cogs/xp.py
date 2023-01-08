@@ -4,7 +4,7 @@ from easy_sqlite3 import *
 import random, discord, mplcyberpunk, io
 import matplotlib.pyplot as plt
 from easy_pil import Editor, Font, load_image_async, Canvas
-from datetime import datetime
+from time import strftime
 
 from helpers import Var as V
 Var = V()
@@ -23,12 +23,12 @@ class XP(commands.Cog):
 
         db.close()
     
-    def spam(self, user, time):
+    def spam(self, user, time_):
         if user in self.spam_cache:
-            return True if self.spam_cache[user][0] == time and self.spam_cache[user][1] >= 3 else False
+            return True if self.spam_cache[user][0] == time_ and self.spam_cache[user][1] >= 3 else False
 
         else:
-            self.spam_cache[user] = (time, 0)
+            self.spam_cache[user] = (time_, 0)
             return True
 
 
@@ -37,12 +37,12 @@ class XP(commands.Cog):
         if message.author.bot: return
 
         auth_id = message.author.id
-        time = datetime.strftime("%Y-%m-%d%H:%M")
+        time_ = strftime("%Y-%m-%d%H:%M")
 
-        if self.spam(auth_id, time): return
+        if self.spam(auth_id, time_): return
 
-        new_time = self.spam_cache[auth_id] + 1 if time == self.spam_cache[auth_id][0] == time else 1
-        self.spam_cache[auth_id] = (time, new_time)
+        new_time = self.spam_cache[auth_id][1] + 1 if time_ == self.spam_cache[auth_id][0] == time_ else 1
+        self.spam_cache[auth_id] = (time_, new_time)
 
         db = Database("./data/levels")
 
