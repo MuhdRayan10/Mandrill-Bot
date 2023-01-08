@@ -60,8 +60,20 @@ class Criteria(commands.Cog):
         await interaction.response.send_message(f"Added `get rendrill` app, to <#{channel.id}>")
 
     async def rendrill_questionnaire(self, interaction):
+        user = interaction.user
+
+        # if user already has guardrill role
+        if user.get_role(Var.guardrill_role):
+            embed = discord.Embed(
+                title="Role already assigned",
+                description="It looks like you already have the `guardrill` role. Thank you for your interest!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
         await interaction.response.defer()
-    
+
+        # checks if user has filled the two criteria
         db = Database("./data/criteria")
         data = db.select("role", where={"user":interaction.user.id}, size=1)
         db.close()
@@ -72,10 +84,6 @@ class Criteria(commands.Cog):
             await interaction.followup.send(message, ephemeral=True)
             return
 
-        questions = ['Who are the "Guardrills"?', 'How many Income percentages are distributed to the "Mandrills" owners in total?', 'What do you need to enter to out Metaverse?']
-        user = interaction.user
-
-        # TODO: check if user is eligible for CRITERIA ONE AND TWO
         questions = [
             'Who are the "Guardrills"?', 
             'How many Income percentages are distributed to the "Mandrills" owners in total?', 
@@ -92,55 +100,11 @@ class Criteria(commands.Cog):
             'C'
         ]
 
-        # generate chache for user
-        cache[interaction.user.id] = []
         # Creating Embed
-        embed = discord.Embed(
+        q_embed = discord.Embed(
             title="Rendrill Questionnaire",
             description="Answer the questions, accurately.",
             color=discord.Color(Var.base_color)
-            )
-        embed.add_field(
-            name=questions[0], 
-            value="\n".join(options[0]),
-            )
-        msg = await interaction.followup.send(embed=embed, view=QuestionnaireMenu(interaction.user.id), ephemeral=True)
-
-        def check(i) -> True or False:
-            return i.data['component_type'] == 2 and i.user.id == interaction.user.id
-
-        # results of the questionare
-        results = []
-
-        # loop 3 times for 3 questions
-        questionno = 1
-        while questionno <= 3:
-            # wait for button click
-            result = await self.bot.wait_for("interaction", check=check, timeout=None)
-
-            results.append(result.data['custom_id'])
-
-            await result.response.defer()
-
-            if questionno == 3:
-                break
-
-            # Updating embed and sending message
-            embed.remove_field(0)
-            embed.add_field(
-                name=questions[questionno], 
-                value="\n".join(options[questionno]),
-            )
-            await interaction.followup.edit_message(msg.id, embed=embed, view=QuestionnaireMenu(interaction.user.id))
-
-            questionno += 1
-
-        mark = sum([1 for i, opt in enumerate(results) if opt == correct_options[i]])
-
-        result_embed = discord.Embed(
-            title="Rendrill Questionnaire Results",
-            description=f"""Marks: {mark}/3
-            Passed: {True if mark == 3 else False}"""
         )
 
         def check(i) -> bool:
@@ -148,10 +112,10 @@ class Criteria(commands.Cog):
         
         score = 0
         for i, question in enumerate(questions):
-            embed.remove_field(0)
+            q_embed.remove_field(0)
 
             # Add question and options to the embed
-            embed.add_field(name=question, value="\n".join(options[i]))
+            q_embed.add_field(name=question, value="\n".join(options[i]))
 
             # Create view with buttons for each option
             before_answer_view = ui.View()
@@ -163,7 +127,7 @@ class Criteria(commands.Cog):
                 ))
 
             # Send question message and wait for button click
-            question_message = await interaction.followup.send(embed=embed, view=before_answer_view, ephemeral=True)
+            question_message = await interaction.followup.send(embed=q_embed, view=before_answer_view, ephemeral=True)
             result = await self.bot.wait_for("interaction", check=check, timeout=None)
             await result.response.defer()
 
@@ -181,7 +145,7 @@ class Criteria(commands.Cog):
                 ))
 
             # Update message with colored buttons
-            await question_message.edit(embed=embed, view=question_wrong_view)
+            await question_message.edit(embed=q_embed, view=question_wrong_view)
 
             # Increment score if the selected option is correct
             if result.data['custom_id'] == correct_options[i]:
@@ -192,7 +156,8 @@ class Criteria(commands.Cog):
             title="Rendrill Questionnaire Results",
             color=discord.Color(Var.base_color)
         )
-        if score == len(questions):
+        passed = score == len(questions)
+        if passed:
             result_embed.description = "Congratulations, you have passed the questionnaire!"
         else:
             result_embed.description = "Sorry, you have failed the questionnaire. Better luck next time."
@@ -201,9 +166,14 @@ class Criteria(commands.Cog):
         # Send final result message
         await interaction.followup.send(embed=result_embed)
 
+        if passed:
+            role = user.guild.get_role(Var.guardrill_role)
+            await user.add_roles(role)
+            return
+
         if score < 2:
             await user.timeout(timedelta(minutes=5))
-
+            return
 
     # Command for Moderator to update user's criteria stats
     @app_commands.command(name="req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
@@ -259,6 +229,15 @@ class Criteria(commands.Cog):
     @app_commands.command(name="view-req", description="View User's Criteria for Rendrill Role")
     @app_commands.describe(user="The user whose criterias is to be viewed")
     async def view(self, interaction, user:discord.Member):
+        # if user already has guardrill role
+        if user.get_role(Var.guardrill_role):
+            embed = discord.Embed(
+                title="Role already assigned",
+                description="It looks like you already have the `guardrill` role. Thank you for your interest!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
         await interaction.response.defer()
 
         # Retrieving data from database
@@ -285,7 +264,7 @@ class Criteria(commands.Cog):
 
         if data[1] >= 2 and data[2] and not data[3]:
             channel = interaction.guild.get_channel(Var.rendrill_channel)
-            await interaction.followup.send(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!", ephemeral=True)
+            await interaction.followup.send(content=f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!", ephemeral=True)
 
 # Cog setup command
 async def setup(bot):
