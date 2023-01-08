@@ -14,7 +14,7 @@ async def level_up_message(message, levels):
     embed = discord.Embed(title="Level UP!", color=Var.base_color)
     embed.set_thumbnail(url=message.author.avatar.url)
     embed.add_field(name="User", value=message.author.mention)
-    embed.add_field(name="Level", value=levels[1]+1)
+    embed.add_field(name="Level", value=f"`{levels[1]+1}`")
 
     channel = message.guild.get_channel(Var.levelup_channel)
     await channel.send(embed=embed)
@@ -76,7 +76,7 @@ class XP(commands.Cog):
 
             db2.close()
 
-            level_up_message(message, levels)
+            await level_up_message(message, levels)
             
             if current_data[1] >=2 and current_data[2] == 1 and not current_data[3]:
                 await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button to start the quiz!")
