@@ -74,6 +74,10 @@ class Verification(commands.Cog):
             The aim of this function is to first mute the user on join, and then send
             the user a welcome message in the welcome channel.
         '''
+
+        
+        channel = discord.utils.get(member.guild.channels, id=Var.member_stats_channel)
+        await channel.edit(name=f"👤 Members: {len(member.guild.members)}")
         
         # Getting the muted role / Creating if it doesn't exist
         role = member.guild.get_role(Var.mute_role)
