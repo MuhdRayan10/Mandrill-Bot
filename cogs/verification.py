@@ -189,7 +189,9 @@ class Verification(commands.Cog):
         await interaction.followup.edit_message(msg.id, embed=completed_embed, view=None)
         
         # Calling verified function if verified for timing out the user
-        await self.verified(interaction.user, interaction.guild.get_role(Var.mute_role), interaction.guild.get_role(Var.exprorill_role)) if correct == cache[interaction.user.id] else None
+        await self.verified(interaction.user, interaction.guild.get_role(Var.mute_role), interaction.guild.get_role(Var.exprorill_role), interaction) if correct == cache[interaction.user.id] else None
+
+
 
         # Deleting cached memory
         del f, cache[interaction.user.id]
@@ -205,7 +207,7 @@ class Verification(commands.Cog):
 
         return embed
 
-    async def verified(self, user, role, role2):
+    async def verified(self, user, role, role2, inter):
         '''
             Timing out user for specified time after verification
         '''
@@ -213,6 +215,8 @@ class Verification(commands.Cog):
         await user.remove_roles(role)
 
         await user.add_roles(role2)
+
+        await inter.followup.send(f"Get your `purmarill` role and its benefits by linking your twitter and wallet address at <#{Var.purmarill_channel}>", ephemeral=True)
 
 
     # Syncing new commands

@@ -44,10 +44,11 @@ class Criteria(commands.Cog):
 
         db.close()
 
-    @app_commands.command(name="setup-rendrill")
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.command(name="setup-rendrill", description="[MODS] Setup the rendrill button in the channel specified")
     async def setup_rendrill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
-        embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.')
+        embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.', color=Var.base_color)
         get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green)
 
         get_rendrill_button.callback = self.rendrill_questionnaire # Link function called when button clicked.
@@ -57,7 +58,7 @@ class Criteria(commands.Cog):
 
         # Sending message
         await channel.send(embed=embed, view=view)
-        await interaction.response.send_message(f"Added `get rendrill` app, to <#{channel.id}>")
+        await interaction.response.send_message(f"Added `get rendrill` interface, to <#{channel.id}>")
 
     async def rendrill_questionnaire(self, interaction):
         user = interaction.user
@@ -182,7 +183,7 @@ class Criteria(commands.Cog):
 
     # Command for Moderator to update user's criteria stats
     @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
-    @app_commands.command(name="req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
+    @app_commands.command(name="set-req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 2 Members", value=1),
         app_commands.Choice(name="Reach Lvl. 3", value=2),
@@ -232,7 +233,7 @@ class Criteria(commands.Cog):
         await interaction.response.send_message(f"Updated.", ephemeral=True)
 
     # Command to view user's criteria
-    @app_commands.command(name="view-req", description="View User's Criteria for Rendrill Role")
+    @app_commands.command(name="req", description="View User's Criteria for Rendrill Role")
     @app_commands.describe(user="The user whose criterias is to be viewed")
     async def view(self, interaction, user:discord.Member=None):
         
@@ -271,8 +272,7 @@ class Criteria(commands.Cog):
         await interaction.followup.send(embed=embed)
 
         if data[1] >= 2 and data[2] and not data[3]:
-            channel = interaction.guild.get_channel(Var.rendrill_channel)
-            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
+            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to {Var.rendrill_channel} and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 # Cog setup command
 async def setup(bot):
