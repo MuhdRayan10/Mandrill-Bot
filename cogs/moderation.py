@@ -58,11 +58,9 @@ class Moderation(commands.Cog):
     @app_commands.command(name="purge", description="[MODS] Purge messages")
     @app_commands.describe(limit="Amount of messages to be deleted")
     async def purge(self, interaction, limit:int):
-        # TODO: Fix
 
-        messages = [message async for message in interaction.channel.history(limit=limit)]
-        await interaction.channel.delete_messages(messages)
-        await interaction.response.send_message(content=f"Purged **{limit}** Messages")
+        await interaction.channel.purge(limit=limit+1)
+        await interaction.response.send_message(content=f"Purged **{limit}** Messages!")
 
 # Cog setup command
 async def setup(bot):
