@@ -98,7 +98,12 @@ class TwitterCog(commands.Cog):
             )
 
             async def on_submit(self, interaction: discord.Interaction) -> None:
-                db = Database("./data/data")
+
+                # Checking if twitter / walled account / user already exists db
+                role = interaction.guild.get_role(Var.purmarill_role)
+                if role in interaction.user.roles:
+                    await interaction.response.send_message("Twitter account / Wallet ID already registered...", ephemeral=True)
+                    return
 
                 # check if the twitter is valid
                 if not validify_twitter(str(self.twitter_username)):
@@ -110,17 +115,14 @@ class TwitterCog(commands.Cog):
                     await interaction.response.send_message("Wallet ID not valid.", ephemeral=True)
                     return
 
-                # Checking if twitter / walled account / user already exists db
-                role = interaction.guild.get_role(Var.purmarill_role)
-                if role in interaction.user.roles:
-                    await interaction.response.send_message("Twitter account / Wallet ID already registered...", ephemeral=True)
-                    return
 
+                db = Database("./data/data")
                 # Adding name to db ## TODO: HERE NIVED
-                db.execute("INSERT INTO users ")
+                db.insert("users", (interaction.user.id, interaction.user.name, str(self.twitter_username), str(self.wallet_id)))
                 await interaction.response.send_message("Added", ephemeral=True)
 
                 await interaction.user.add_roles(role)
+
 
                 db.close()
 
