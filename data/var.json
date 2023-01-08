@@ -6,6 +6,7 @@
     "welcome_channel": 1060158307425333249,
     "rendrill_role": 1060159729852219392,
     "mute_role": 1060159820113653820,
+    "muted_role": 1061545587171930142,
     "guardrill_role": 1060159808885506211,
     "twitter_loop_time": 5,
     "twitter_account": "NivedVenugopal1",
@@ -16,5 +17,6 @@
     "level_difficult_factor": 1.6,
     "rendrill_channel": 1060508457893109810,
     "levelup_channel": 1061326793098928179,
-    "log_channel": 1060193779816087623
+    "log_channel": 1060193779816087623, 
+    "liberator_role": 1060159304201678888
 }

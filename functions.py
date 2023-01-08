@@ -59,15 +59,3 @@ async def update_invites(member, V):
     db.close()
 
     await update_criteria(inviter_[0], member.guild, V)
-
-
-
-
-
-
-
-
-        
-
-    
-

@@ -53,14 +53,51 @@ class Moderation(commands.Cog):
 
         await interaction.response.send_message(f"{user.name} has been softbanned by {interaction.user.mention} for the reason: `{reason}` for {time} minutes!")
 
-    @app_commands.checks.has_role(Var.guardrill_role)
-    @app_commands.checks.has_permissions(manage_messages=True)
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="purge", description="[MODS] Purge messages")
     @app_commands.describe(limit="Amount of messages to be deleted")
     async def purge(self, interaction, limit:int):
 
         await interaction.channel.purge(limit=limit+1)
         await interaction.response.send_message(content=f"Purged **{limit}** Messages!")
+
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.command(name="block", description="[MODS] Block user from messaging in this channel")
+    @app_commands.describe(user="The user to be blocked")
+    async def block(self, interaction, user:discord.Member):
+
+        await interaction.channel.set_permissions(user, send_messages=False)
+        await interaction.response.send_message(f"{user.mention} blocked from {interaction.channel.mention}!")
+
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.command(name="unblock", description="[MODS] Unblock user from messaging in this channel")
+    @app_commands.describe(user="The user to be unblocked")
+    async def unblock(self, interaction, user:discord.Member):
+
+        await interaction.channel.set_permissions(user, send_messages=True)
+        await interaction.response.send_message(f"{user.mention} unblocked from {interaction.channel.mention}!")
+
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.command(name="mute", description="[MODS] Mute a user")
+    @app_commands.describe(user="The user to be muted")
+    async def mute(self, interaction, user:discord.Member):
+
+        muted_role = interaction.guild.get_role(Var.muted_role)
+        await user.add_roles(muted_role)
+
+        await interaction.response.send_message(f"Muted {user.mention}!")
+
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.command(name="unmute", description="[MODS] Unmute a user")
+    @app_commands.describe(user="The user to be unmuted")
+    async def mute(self, interaction, user:discord.Member):
+
+        muted_role = interaction.guild.get_role(Var.muted_role)
+        await user.remove_roles(muted_role)
+
+        await interaction.response.send_message(f"Unmuted {user.mention}!")
+    
+
 
 # Cog setup command
 async def setup(bot):
