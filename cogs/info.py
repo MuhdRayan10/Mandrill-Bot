@@ -1,8 +1,11 @@
 from discord.ext import commands
 from discord import app_commands
+from helpers import Var as V
 import discord
 
-class RoadMap(commands.Cog):
+Var = V()
+
+class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -32,6 +35,27 @@ __Exchange Minerals into the Mandrills:__
 
         await interaction.followup.send(embed=embed, file=file)
 
+    @app_commands.command(name="rules", description="The Mandrill server rules")
+    async def rules(self, interaction):
+        embed = discord.Embed(title="Rules", color=Var.base_color)
+        rules = """-Be respectful, civil, and welcoming.
+-No inappropriate or unsafe content.
+-Do not misuse or spam in any of the channels.
+-Do not join the server to promote your content.
+-Any content that is NSFW is not allowed under any circumstances.
+-Do not buy/sell/trade/give away anything.
+-Do not use the server as a dating server.
+-The primary language of this server is English.
+-Discord names and avatars must be appropriate.
+-Spamming in any form is not allowed."""
+        
+        for rule in rules.split("\n"):
+            embed.add_field(name=rule, value="a", inline=False)
+
+        await interaction.response.send_message(embed=embed)
+    
+
+
 
 async def setup(bot):
-    await bot.add_cog(RoadMap(bot))
+    await bot.add_cog(Info(bot))
