@@ -234,7 +234,9 @@ class Criteria(commands.Cog):
     # Command to view user's criteria
     @app_commands.command(name="view-req", description="View User's Criteria for Rendrill Role")
     @app_commands.describe(user="The user whose criterias is to be viewed")
-    async def view(self, interaction, user:discord.Member):
+    async def view(self, interaction, user:discord.Member=None):
+        
+        user = user or interaction.user
         # if user already has guardrill role
         if user.get_role(Var.guardrill_role):
             embed = discord.Embed(
@@ -270,7 +272,7 @@ class Criteria(commands.Cog):
 
         if data[1] >= 2 and data[2] and not data[3]:
             channel = interaction.guild.get_channel(Var.rendrill_channel)
-            await interaction.followup.send(content=f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!", ephemeral=True)
+            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 # Cog setup command
 async def setup(bot):

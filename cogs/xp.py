@@ -9,6 +9,17 @@ from time import strftime
 from helpers import Var as V
 Var = V()
 
+
+async def level_up_message(interaction, levels):
+    embed = discord.Embed(title="Level UP!", color=Var.base_color)
+    embed.set_thumbnail(url=interaction.user.avatar.url)
+    embed.add_field(name="User", value=interaction.user.mention)
+    embed.add_field(name="Level", value=levels[1]+1)
+
+    channel = interaction.guild.get_channel(Var.levelup_channel)
+    await channel.send(embed=embed)
+
+
 class XP(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -64,10 +75,12 @@ class XP(commands.Cog):
             current_data = db2.select("role", where={"user":auth_id}, size=1)
 
             db2.close()
+
+            level_up_message()
             
             if current_data[1] >=2 and current_data[2] == 1 and not current_data[3]:
                 channel = message.guild.get_channel(Var.rendrill_channel)
-                await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!", ephemeral=True)
+                await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!")
 
             
         else:

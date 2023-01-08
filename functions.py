@@ -12,7 +12,7 @@ async def update_criteria(inviter, guild, V):
     if not db.if_exists():
         db.insert("role", (inviter.id, 0, 0, 0, 0))
 
-    db.update("role", {"a1": data[2]}, {"user":inviter.id})
+    db.update("role", {"a1": data[1]}, where={"user":inviter.id})
 
     data = db.select("role", where={"user":inviter.id}, size=1)
     if data[1] >= 2 and data[2] == 1 and not data[3]:
@@ -54,7 +54,7 @@ async def update_invites(member, V):
     db.clear_table('invites')
 
     for invite in invites:
-        db.insert("invites", (invite.inviter.id, invite))
+        db.insert("invites", (invite.inviter.id, invite.code, invite.uses))
 
     db.close()
 
