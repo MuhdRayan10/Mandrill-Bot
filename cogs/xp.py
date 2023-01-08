@@ -4,6 +4,7 @@ from easy_sqlite3 import *
 import random, discord, mplcyberpunk, io
 import matplotlib.pyplot as plt
 from easy_pil import Editor, Font, load_image_async, Canvas
+from datetime import datetime
 
 from helpers import Var as V
 Var = V()
@@ -12,6 +13,8 @@ class XP(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+        self.spam_cache = {}
+
         db = Database("./data/levels")
         db.create_table("levels", {"user":INT, "level":INT, "xp":INT, 'lim':INT, 'total':INT})
 
@@ -19,12 +22,27 @@ class XP(commands.Cog):
         plt.rcParams["font.family"] = "monospace"
 
         db.close()
+    
+    def spam(self, user, time):
+        if user in self.spam_cache:
+            return True if self.spam_cache[user][0] == time and self.spam_cache[user][1] >= 3 else False
+
+        else:
+            self.spam_cache[user] = (time, 0)
+            return True
+
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot: return
 
         auth_id = message.author.id
+        time = datetime.strftime("%Y-%m-%d%H:%M")
+
+        if self.spam(auth_id, time): return
+
+        new_time = self.spam_cache[auth_id] + 1 if time == self.spam_cache[auth_id][0] == time else 1
+        self.spam_cache[auth_id] = (time, new_time)
 
         db = Database("./data/levels")
 

@@ -26,8 +26,8 @@ __Exchange Minerals into the Mandrills:__
 
         embed.add_field(name="Stage 1: Minting Minerals", value=lines)
         
-        file = discord.File(fp="./data/images/roadmap_stage1.png", filename="roadmap.png")
-        embed.set_image(url=r"attachment://roadmap.png")
+        file = discord.File(fp="./data/images/roadmap_stage1.jpg", filename="roadmap.jpg")
+        embed.set_image(url="attachment://roadmap.jpg")
         embed.add_field(name="__Stage 2__", value="__Coming soon!__")
 
         await interaction.followup.send(embed=embed, file=file)
