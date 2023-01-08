@@ -10,13 +10,13 @@ from helpers import Var as V
 Var = V()
 
 
-async def level_up_message(interaction, levels):
+async def level_up_message(message, levels):
     embed = discord.Embed(title="Level UP!", color=Var.base_color)
-    embed.set_thumbnail(url=interaction.user.avatar.url)
-    embed.add_field(name="User", value=interaction.user.mention)
+    embed.set_thumbnail(url=message.author.avatar.url)
+    embed.add_field(name="User", value=message.author.mention)
     embed.add_field(name="Level", value=levels[1]+1)
 
-    channel = interaction.guild.get_channel(Var.levelup_channel)
+    channel = message.guild.get_channel(Var.levelup_channel)
     await channel.send(embed=embed)
 
 
@@ -76,7 +76,7 @@ class XP(commands.Cog):
 
             db2.close()
 
-            level_up_message()
+            level_up_message(message, levels)
             
             if current_data[1] >=2 and current_data[2] == 1 and not current_data[3]:
                 channel = message.guild.get_channel(Var.rendrill_channel)
