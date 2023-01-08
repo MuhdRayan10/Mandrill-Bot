@@ -215,8 +215,8 @@ class Criteria(commands.Cog):
         a2 = done if activity == 2 else data[2]
         a3 = done if activity == 3 else data[3]
 
-        if a1 == 1:
-            a1 += 1
+        if a1 == 1 and done == 1:
+            a1 += 3
 
         if_role = 1 if a1 and a2 and a3 else 0
 
@@ -262,7 +262,7 @@ class Criteria(commands.Cog):
 
         # Embed
         embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=0xca4949)
-        embed.add_field(name=f"{rc if data[1] >= 2 else wc} Invite at least 2 users to the server", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[1] < 2 else wc} Invite at least 2 users to the server", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[2] else wc} Reach Lvl. 3 XP", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
         
