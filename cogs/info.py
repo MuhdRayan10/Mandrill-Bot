@@ -75,3 +75,4 @@ __Exchange Minerals into the Mandrills:__
 
 async def setup(bot):
     await bot.add_cog(Info(bot))
+    
