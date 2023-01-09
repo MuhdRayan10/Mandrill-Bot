@@ -145,7 +145,7 @@ __Exchange Minerals into the Mandrills:__
         # Send the embed message
         helpmsg = await interaction.followup.send(embed=embed, view=menu_view, ephemeral=True)
 
-        for i in range(100):
+        for i in range(100): # buffer of 100 interactions
             # Create the embed for the current page
             embed = self.create_help_menu_embed(menu_pages[current_page])
 
@@ -165,6 +165,19 @@ __Exchange Minerals into the Mandrills:__
                 current_page -= 1
         
         return interaction
+
+    @app_commands.command(name="official-links", description="List of all the official links")
+    async def link(self, interaction):
+        embed = discord.Embed(title="Official Links")
+        embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)")
+        embed.add_field(name="Discord", value="[Join the server](https://discord.gg/3mpVeVyRJD)")
+        embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)")
+        embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)")
+
+        await interaction.response.send_message(embed=embed)
+
+        return
+
 
 async def setup(bot):
     await bot.add_cog(Info(bot))

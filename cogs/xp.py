@@ -99,7 +99,8 @@ class XP(commands.Cog):
         if not db.if_exists("levels", {"user":user.id}):
             db.insert("levels", (user.id, 0, 0, 100, 0))
 
-        data = db.select("levels", where={"user":user.id}, dict_format=True)
+        data = db.select("levels", where={"user":user.id})[0]
+        print(data)
         db.close()
 
         bg = Editor(Canvas((900, 300), color="#141414"))
@@ -114,11 +115,11 @@ class XP(commands.Cog):
         bg.paste(profile, (30, 30))
 
         bg.bar((30, 220), max_width=650, height=40, color="#FFFFFF", radius=20, percentage=100)
-        bg.bar((30, 220), max_width=650, height=40, percentage=data["xp"]*100/data["lim"], color=Var.hex2, radius=20)
+        bg.bar((30, 220), max_width=650, height=40, percentage=data[2]*100/data[3], color=Var.hex2, radius=20)
         bg.text((200, 40), user.display_name, font=poppins, color="#FFFFFF")
 
         bg.rectangle((200, 100), width=350, height=2, fill="#FFFFFF")
-        bg.text((200, 130), f"Level - {data['level']} | XP - {data['xp']}/{data['lim']}", font=poppins_small, color="#FFFFFF")
+        bg.text((200, 130), f"Level - {data[1]} | XP - {data[2]}/{data[3]}", font=poppins_small, color="#FFFFFF")
 
         file = discord.File(fp=bg.image_bytes, filename=f"{user.name}_level.png")
         await interaction.response.send_message(file=file)
