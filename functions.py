@@ -47,6 +47,8 @@ async def update_invites(member, V):
 
             inviter_.append(new_invite.inviter)
 
+            print("Log message")
+
             channel = member.guild.get_channel(V.log_channel)
             await channel.send(embed=embed)
 

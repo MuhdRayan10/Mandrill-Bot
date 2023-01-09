@@ -145,7 +145,7 @@ __Exchange Minerals into the Mandrills:__
         # Send the embed message
         helpmsg = await interaction.followup.send(embed=embed, view=menu_view, ephemeral=True)
 
-        for i in range(100): # buffer of 100 interactions
+        for _ in range(100): # buffer of 100 interactions
             # Create the embed for the current page
             embed = self.create_help_menu_embed(menu_pages[current_page])
 
@@ -155,12 +155,12 @@ __Exchange Minerals into the Mandrills:__
 
             if btn.data["custom_id"] == 'next':
                 if current_page == len(menu_pages)-1:
-                    pass
+                    interaction.response.defer()
 
                 current_page += 1
             elif btn.data["custom_id"] == "previous":
                 if current_page == 0:
-                    pass
+                    interaction.response.defer()
 
                 current_page -= 1
         
@@ -181,4 +181,4 @@ __Exchange Minerals into the Mandrills:__
 
 async def setup(bot):
     await bot.add_cog(Info(bot))
-    
+
