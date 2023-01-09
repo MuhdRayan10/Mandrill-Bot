@@ -1,9 +1,53 @@
 from discord.ext import commands
 from discord import app_commands
 from helpers import Var as V
+from discord import ui
 import discord
 
 Var = V()
+
+menu_pages = [
+    {
+        'title': 'Page 1',
+        'fields': [
+            {
+                'name': '/req',
+                'value': 'View your criteria for gaining the **Rendrill** role',
+                'inline': False
+            },
+            {
+                'name': '/level',
+                'value': 'Get your XP level card for the server',
+                'inline': False
+            },
+            {
+                'name': '/leaderboard',
+                'value': 'Get the server\'s XP Leaderboard (Top 10 Users)',
+                'inline': False
+            }
+        ]
+    },
+    {
+        'title': 'Page 2',
+        'fields': [
+            {
+                'name': '/roadmap',
+                'value': 'View the Mandrill roadmap',
+                'inline': False
+            },
+            {
+                'name': '/rules',
+                'value': 'View the server rules',
+                'inline': False
+            },
+            {
+                'name': '/role-info',
+                'value': 'Get information about the different roles in the server',
+                'inline': False
+            }
+        ]
+    }
+]
 
 class Info(commands.Cog):
     def __init__(self, bot):
@@ -72,6 +116,55 @@ __Exchange Minerals into the Mandrills:__
 
         await interaction.response.send_message(embed=embed)
 
+    def create_help_menu_embed(self, page) -> discord.Embed:
+        embed = discord.Embed(title="Commands Info", description=page['title'], color=Var.base_color)
+        for field in page['fields']:
+            embed.add_field(name=field['name'], value=field['value'], inline=field['inline'])
+        return embed
+
+    @app_commands.command(name="help", description="List of all the server commands")
+    async def help(self, interaction):
+        await interaction.response.defer()
+
+        # Set the current page to the first page of the menu
+        current_page = 0
+        
+
+        menu_view = ui.View()
+        prev = ui.Button(style=discord.ButtonStyle.blurple, emoji="⬅️", custom_id="previous")
+        menu_view.add_item(prev)
+        nxt = ui.Button(style=discord.ButtonStyle.blurple, emoji="➡️", custom_id="next")
+        menu_view.add_item(nxt)
+
+        def check(i) -> bool:
+            return i.data['component_type'] == 2 and i.user.id == interaction.user.id
+
+        # Create the embed for the current page
+        embed = self.create_help_menu_embed(menu_pages[current_page])
+
+        # Send the embed message
+        helpmsg = await interaction.followup.send(embed=embed, view=menu_view, ephemeral=True)
+
+        for i in range(100):
+            # Create the embed for the current page
+            embed = self.create_help_menu_embed(menu_pages[current_page])
+
+            await interaction.followup.edit_message(helpmsg.id, embed=embed, view=menu_view)
+
+            btn = await self.bot.wait_for("interaction", check=check, timeout=None)
+
+            if btn.data["custom_id"] == 'next':
+                if current_page == len(menu_pages)-1:
+                    pass
+
+                current_page += 1
+            elif btn.data["custom_id"] == "previous":
+                if current_page == 0:
+                    pass
+
+                current_page -= 1
+        
+        return interaction
 
 async def setup(bot):
     await bot.add_cog(Info(bot))
