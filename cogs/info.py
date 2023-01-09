@@ -77,7 +77,7 @@ __Exchange Minerals into the Mandrills:__
         embed.set_image(url="attachment://roadmap.jpg")
         embed.add_field(name="__Stage 2__", value="__Coming soon!__")
 
-        await interaction.followup.send(embed=embed, file=file)
+        await interaction.followup.send(embed=embed, file=file, ephemeral=True)
 
     @app_commands.command(name="rules", description="Our server rules.")
     async def rules(self, interaction):
@@ -94,7 +94,7 @@ __Exchange Minerals into the Mandrills:__
 - **Spamming in any form is not allowed.**"""
         
         embed.add_field(name="The rules of our server.", value=rules, inline=True)
-        await interaction.channel.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
     
     @app_commands.command(name='role-info', description="Info about the custom roles.")
     async def role_info(self, interaction):
@@ -114,7 +114,7 @@ __Exchange Minerals into the Mandrills:__
         embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
         embed.add_field(name="Liberators", value=liberators_description, inline=False)
 
-        await interaction.channel.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     def create_help_menu_embed(self, page) -> discord.Embed:
         embed = discord.Embed(title="Commands Info", description=page['title'], color=Var.base_color)
@@ -174,7 +174,7 @@ __Exchange Minerals into the Mandrills:__
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)")
         embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)")
 
-        await interaction.channel.send(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
         return
 
