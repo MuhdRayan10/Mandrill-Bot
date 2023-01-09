@@ -22,7 +22,7 @@ class ServerStats(commands.Cog):
         await channel.edit(name=f"👤 Members: {len(member.guild.members)}")
 
     @commands.Cog.listener()
-    async def on_member_leave(self, member:discord.Member):
+    async def on_member_remove(self, member:discord.Member):
         channel = discord.utils.get(member.guild.channels, id=Var.member_stats_channel)
         await channel.edit(name=f"👤 Members: {len(member.guild.members)}")
 
