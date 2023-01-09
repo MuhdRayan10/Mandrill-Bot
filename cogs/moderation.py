@@ -94,9 +94,6 @@ class Moderation(commands.Cog):
         await asyncio.sleep(time*60)
         await user.remove_roles(muted_role)
 
-        
-    
-
 
 # Cog setup command
 async def setup(bot):

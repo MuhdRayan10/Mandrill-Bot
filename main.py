@@ -24,12 +24,6 @@ async def on_ready():
     print(f"Connected to discord as {bot.user}")
     await bot.change_presence(activity=discord.Game(name="Exploring..."))
 
-    # server stats
-    for guild in bot.guilds:
-        # members
-        channel = discord.utils.get(guild.channels, id=Var.member_stats_channel)
-        await channel.edit(name=f"👤 Members: {len(guild.members)}")
-
 # Getting the token and runnning the bot
 load_dotenv()
 TOKEN = os.getenv('TOKEN')

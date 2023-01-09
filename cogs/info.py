@@ -1,9 +1,9 @@
 from discord.ext import commands
 from discord import app_commands
-from helpers import Var as V
 from discord import ui
 import discord
 
+from helpers import Var as V
 Var = V()
 
 menu_pages = [
