@@ -42,6 +42,12 @@ class Criteria(commands.Cog):
         db = Database("./data/criteria")
         db.create_table("role", {"user":INT, "a1":INT, "a2":INT, "a3":INT, "role":INT})
 
+        get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green, custom_id="rendrill:green")
+        get_rendrill_button.callback = self.rendrill_questionnaire # Link function called when button clicked.
+        
+        self.views = ui.View(timeout=None)
+        self.views.add_item(get_rendrill_button)
+
         db.close()
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
@@ -49,15 +55,10 @@ class Criteria(commands.Cog):
     async def setup_rendrill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
         embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.', color=Var.base_color)
-        get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green)
-
-        get_rendrill_button.callback = self.rendrill_questionnaire # Link function called when button clicked.
         
-        view = ui.View()
-        view.add_item(get_rendrill_button)
 
         # Sending message
-        await channel.send(embed=embed, view=view)
+        await channel.send(embed=embed, view=self.views)
         await interaction.response.send_message(f"Added `get rendrill` interface, to <#{channel.id}>")
 
     async def rendrill_questionnaire(self, interaction):

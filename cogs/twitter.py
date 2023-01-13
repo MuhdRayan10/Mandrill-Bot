@@ -23,6 +23,13 @@ class TwitterCog(commands.Cog):
         # Database stuff
         db = Database("data/data")
         db.create_table("users", {"user":'INTEGER', "name": 'TEXT', "twitter":'TEXT', "wallet":'TEXT'})
+
+        # View stuff
+        get_prumarill_button = ui.Button(label="Get Purmarill", style=discord.ButtonStyle.green, custom_id="purmarill:green")
+        get_prumarill_button.callback = self.link # Link function called when button clicked.
+
+        self.views = ui.View(timeout=None)
+        self.views.add_item(get_prumarill_button)
         
         db.close()
         # self.db.create_table("")
@@ -48,7 +55,6 @@ class TwitterCog(commands.Cog):
         try:
             tweets = response.json()['data']
         except KeyError:
-            print("User has no posts!")
             return
 
 
@@ -73,15 +79,9 @@ class TwitterCog(commands.Cog):
     async def setup_purmarill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
         embed = discord.Embed(title='Get Purmarill', description='Click the button to get your purmarill role.')
-        get_prumarill_button = ui.Button(label="Get Purmarill", style=discord.ButtonStyle.green)
-
-        get_prumarill_button.callback = self.link # Link function called when button clicked.
         
-        view = ui.View()
-        view.add_item(get_prumarill_button)
-
         # Sending message
-        await channel.send(embed=embed, view=view)
+        await channel.send(embed=embed, view=self.views)
         await interaction.response.send_message(f"Added `get prumarill` app, to <#{channel.id}>")
 
     async def link(self, interaction):

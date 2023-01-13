@@ -67,6 +67,12 @@ class Verification(commands.Cog):
     def __init__(self, bot):
         self.bot = bot   
 
+        verify_button = Button(label="Verify", style=discord.ButtonStyle.green, custom_id="verification:green")
+        verify_button.callback = self.verify # Verify function called when button clicked.
+
+        self.views= View(timeout=None)
+        self.views.add_item(verify_button)
+
     # This command is triggered everytime a user joins the server.
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
@@ -106,14 +112,10 @@ class Verification(commands.Cog):
         
         # The Verify Embed
         embed = discord.Embed(title='Verify', description='Click the button to verify yourself.')
-        verify_button = Button(label="Verify", style=discord.ButtonStyle.green)
-        verify_button.callback = self.verify # Verify function called when button clicked.
         
-        view = View()
-        view.add_item(verify_button)
 
         # Sending message
-        await channel.send(embed=embed, view=view)
+        await channel.send(embed=embed, view=self.views)
         await interaction.response.send_message(f"Added `verification app`, to <#{channel.id}>")
 
     async def verify(self, interaction):
