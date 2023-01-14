@@ -210,7 +210,7 @@ class Verification(commands.Cog):
 
         await user.add_roles(role2)
 
-        await inter.followup.send(f"Get your `purmarill` role and its benefits by linking your twitter and wallet address at <#{Var.purmarill_channel}>", ephemeral=True)
+        await inter.followup.send(f"You have been successfully verified, but we have timed you out for {Var.mute_time} minutes for the security of the server.", ephemeral=True)
 
 
     # Syncing new commands

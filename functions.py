@@ -33,7 +33,7 @@ def find_invite(li, code):
 
 async def update_invites(member, V):
     db = Database("./data/invites")
-    db.create_table("invites", {"inviter": INT, "code": STR, "uses": INT})
+    db.create_table("invites", {"inviter": INT, "code": "TEXT", "uses": INT})
 
     invites = await member.guild.invites()
     old_invites = db.select("invites")

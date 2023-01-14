@@ -1,4 +1,4 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ui import View
 from discord import app_commands
 import discord
@@ -55,6 +55,8 @@ class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+        self.active.start()
+
     # Setup Ticket Interface in given text channel
     @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
     @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
@@ -65,6 +67,16 @@ class Tickets(commands.Cog):
         await interaction.response.send_message(channel.mention)
         
         await channel.send(embed=embed, view=CreateTicket())
+
+    @tasks.loop(seconds=15)
+    def active(self):
+        li = []
+        for i in range(0, 1000):
+            li.append(i)
+
+        del li
+
+        
 
 # Cog setup function
 async def setup(bot):

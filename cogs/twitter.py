@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 from discord import app_commands
 from discord import ui
 from easy_sqlite3 import *
+import asyncio
 
 # API STUFF
 import requests
@@ -119,10 +120,11 @@ class TwitterCog(commands.Cog):
                 db = Database("./data/data")
                 # Adding name to db ## TODO: HERE NIVED
                 db.insert("users", (interaction.user.id, interaction.user.name, str(self.twitter_username), str(self.wallet_id)))
-                await interaction.response.send_message("Added", ephemeral=True)
+                await interaction.response.send_message("Your case is under consideration. You'll get the role in 5 minutes!", ephemeral=True)
+
+                await asyncio.sleep(300)
 
                 await interaction.user.add_roles(role)
-
 
                 db.close()
 
