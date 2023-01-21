@@ -87,7 +87,7 @@ class Criteria(commands.Cog):
 
         if not(data[1] >= 2 and data[2] == 1):
 
-            message = "Looks like you haven't completed the first two criteria yet... Do `/view-req` to see which all requirements to get the `Rendrill` Role!"
+            message = "Looks like you haven't completed the first two criteria yet... Do `/req` to see which all requirements to get the `Rendrill` Role, or press the Criteria button!"
             await interaction.followup.send(message, ephemeral=True)
             return
 
@@ -174,7 +174,7 @@ class Criteria(commands.Cog):
         await interaction.followup.send(embed=result_embed, ephemeral=True)
 
         if passed:
-            role = user.guild.get_role(Var.guardrill_role)
+            role = user.guild.get_role(Var.rendrill_role)
             await user.add_roles(role)
             return
 
@@ -242,7 +242,7 @@ class Criteria(commands.Cog):
             await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
             return 
 
-            
+
         user = user or interaction.user
         # if user already has guardrill role
         if user.get_role(Var.rendrill_role):
