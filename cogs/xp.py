@@ -92,6 +92,10 @@ class XP(commands.Cog):
     @app_commands.command(name="level", description="View user's level in the server")
     @app_commands.describe(user="The user to be viewed")
     async def level(self, interaction, user:discord.Member=None):
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return
         
         user = user if user else interaction.user
         db = Database("./data/levels")
@@ -126,6 +130,11 @@ class XP(commands.Cog):
 
     @app_commands.command(name="leaderboard", description="View the server's Top 10 Users")
     async def leaderboard(self, interaction):
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return
+            
         db = Database("./data/levels")
         data = db.select("levels", selected=("user", "total"))
         data.sort(reverse=True, key= lambda x: x[1])

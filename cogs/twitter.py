@@ -94,7 +94,7 @@ class TwitterCog(commands.Cog):
             )
             wallet_id = ui.TextInput(
                 label="Wallet Address",
-                placeholder='Enter your ETH wallet address',
+                placeholder='Enter your FLR wallet address',
                 style=discord.TextStyle.short
             )
 
@@ -120,9 +120,9 @@ class TwitterCog(commands.Cog):
                 db = Database("./data/data")
                 # Adding name to db ## TODO: HERE NIVED
                 db.insert("users", (interaction.user.id, interaction.user.name, str(self.twitter_username), str(self.wallet_id)))
-                await interaction.response.send_message("Your case is under consideration. You'll get the role in 5 minutes!", ephemeral=True)
+                await interaction.response.send_message("Your case is under consideration. It might take 3-5 minutes!", ephemeral=True)
 
-                await asyncio.sleep(300)
+                await asyncio.sleep(200)
 
                 await interaction.user.add_roles(role)
 

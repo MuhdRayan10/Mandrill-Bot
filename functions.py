@@ -44,6 +44,7 @@ async def update_invites(member, V):
 
     for old_invite in old_invites:
         new_invite = find_invite(invites, old_invite[1])
+        if not new_invite: continue
         if old_invite[2] < new_invite.uses:
             embed = discord.Embed(title="Invite", description="Information about the invite", color=V.base_color)
             embed.add_field(name="Inviter", value=new_invite.inviter.name)

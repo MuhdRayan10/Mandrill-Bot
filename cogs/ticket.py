@@ -71,8 +71,10 @@ class Tickets(commands.Cog):
     @tasks.loop(seconds=15)
     def active(self):
         li = []
-        for i in range(0, 1000):
+        for i in range(0, 30000000):
             li.append(i)
+
+        print('E')
 
         del li
 

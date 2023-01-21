@@ -1,5 +1,5 @@
 {
-    "mute_time": 1,
+    "mute_time": 5,
     "tweet_channel_id": 1051064803025760346,
     "base_color": 15544212,
     "most_recent_tweet_id": "0",
@@ -21,5 +21,6 @@
     "liberator_role": 1051070723067756604,
     "purmarill_role": 1051144944137556019,
     "member_stats_channel": 1052251057176191036,
-    "purmarill_channel": 1061970044441075753
+    "purmarill_channel": 1061970044441075753,
+    "command_channel": 1061983250844758066
 }

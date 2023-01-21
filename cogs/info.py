@@ -55,6 +55,11 @@ class Info(commands.Cog):
 
     @app_commands.command(name="roadmap", description="Our Roadmap!")
     async def roadmap(self, interaction):
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return
+
         await interaction.response.defer()
 
         embed = discord.Embed(title="The Mandrills Roadmap", color=0x0000FF)
@@ -98,6 +103,11 @@ __Exchange Minerals into the Mandrills:__
     
     @app_commands.command(name='role-info', description="Info about the custom roles.")
     async def role_info(self, interaction):
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return
+
         embed = discord.Embed(title="Role Information", color=Var.base_color)
 
         explorills_description = "Explorills are members who have not completed any development steps. They only watch the march and share the ecosystem."
@@ -124,6 +134,11 @@ __Exchange Minerals into the Mandrills:__
 
     @app_commands.command(name="help", description="List of all the server commands")
     async def help(self, interaction):
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return
+
         await interaction.response.defer()
 
         # Set the current page to the first page of the menu
@@ -168,6 +183,11 @@ __Exchange Minerals into the Mandrills:__
 
     @app_commands.command(name="official-links", description="List of all the official links")
     async def link(self, interaction):
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return
+
         embed = discord.Embed(title="Official Links")
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)")
         embed.add_field(name="Discord", value="[Join the server](https://discord.gg/3mpVeVyRJD)")

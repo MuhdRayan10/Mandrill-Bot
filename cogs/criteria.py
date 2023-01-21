@@ -237,7 +237,12 @@ class Criteria(commands.Cog):
     @app_commands.command(name="req", description="View User's Criteria for Rendrill Role")
     @app_commands.describe(user="The user whose criterias is to be viewed")
     async def view(self, interaction, user:discord.Member=None):
-        
+
+        if interaction.channel.id != Var.command_channel:
+            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            return 
+
+            
         user = user or interaction.user
         # if user already has guardrill role
         if user.get_role(Var.rendrill_role):
