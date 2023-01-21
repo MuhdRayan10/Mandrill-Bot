@@ -44,6 +44,9 @@ class Criteria(commands.Cog):
 
         get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green, custom_id="rendrill:green")
         get_rendrill_button.callback = self.rendrill_questionnaire # Link function called when button clicked.
+
+        criteria = ui.Button(label="View Criteria Requirements", style=discord.ButtonStyle.green)
+        criteria.callback = self.view
         
         self.views = ui.View(timeout=None)
         self.views.add_item(get_rendrill_button)
@@ -233,17 +236,9 @@ class Criteria(commands.Cog):
 
         await interaction.response.send_message(f"Updated.", ephemeral=True)
 
-    # Command to view user's criteria
-    @app_commands.command(name="req", description="View User's Criteria for Rendrill Role")
-    @app_commands.describe(user="The user whose criterias is to be viewed")
-    async def view(self, interaction, user:discord.Member=None):
+    async def view(self, interaction): 
 
-        if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
-            return 
-
-
-        user = user or interaction.user
+        user = interaction.user
         # if user already has guardrill role
         if user.get_role(Var.rendrill_role):
             embed = discord.Embed(
@@ -275,7 +270,7 @@ class Criteria(commands.Cog):
         embed.add_field(name=f"{rc if not data[2] else wc} Reach Lvl. 3 XP", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
         
-        await interaction.followup.send(embed=embed)
+        await interaction.followup.send(embed=embed, ephemeral=True)
 
         if data[1] >= 2 and data[2] and not data[3]:
             await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to {Var.rendrill_channel} and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
