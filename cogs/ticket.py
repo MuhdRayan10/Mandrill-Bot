@@ -69,7 +69,7 @@ class Tickets(commands.Cog):
         await channel.send(embed=embed, view=CreateTicket())
 
     @tasks.loop(seconds=15)
-    def active(self):
+    async def active(self):
         li = []
         for i in range(0, 30000000):
             li.append(i)
