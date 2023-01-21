@@ -45,11 +45,12 @@ class Criteria(commands.Cog):
         get_rendrill_button = ui.Button(label="Get Rendrill", style=discord.ButtonStyle.green, custom_id="rendrill:green")
         get_rendrill_button.callback = self.rendrill_questionnaire # Link function called when button clicked.
 
-        criteria = ui.Button(label="View Criteria Requirements", style=discord.ButtonStyle.green)
+        criteria = ui.Button(label="Criteria", style=discord.ButtonStyle.blurple, custom_id='requirements:blurple')
         criteria.callback = self.view
         
         self.views = ui.View(timeout=None)
         self.views.add_item(get_rendrill_button)
+        self.views.add_item(criteria)
 
         db.close()
 
@@ -179,11 +180,21 @@ class Criteria(commands.Cog):
         if passed:
             role = user.guild.get_role(Var.rendrill_role)
             await user.add_roles(role)
+
+            db = Database("./data/criteria")
+            db.update("role", {"a3":1}, where={"user":interaction.user.id})
+
+            db.close()
+
+            await interaction.followup.send("You have been awarded the `Rendrill` Role!")
             return
 
         if score < 2:
             await user.timeout(timedelta(minutes=5))
             return
+
+        
+
 
     # Command for Moderator to update user's criteria stats
     @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
@@ -273,7 +284,7 @@ class Criteria(commands.Cog):
         await interaction.followup.send(embed=embed, ephemeral=True)
 
         if data[1] >= 2 and data[2] and not data[3]:
-            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to {Var.rendrill_channel} and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
+            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 # Cog setup command
 async def setup(bot):
