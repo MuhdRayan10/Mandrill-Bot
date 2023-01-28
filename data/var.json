@@ -9,6 +9,7 @@
     "muted_role": 1061970447031345192,
     "guardrill_role": 1051071831706193951,
     "twitter_loop_time": 5,
+    "crypto_update_time": 5,
     "twitter_account": "TheMandrillsNFT",
     "verification_channel": 1050848928456785990,
     "exprorill_role": 1051072126729342986,
@@ -22,5 +23,7 @@
     "purmarill_role": 1051144944137556019,
     "member_stats_channel": 1052251057176191036,
     "purmarill_channel": 1061970044441075753,
-    "command_channel": 1061983250844758066
+    "command_channel": 1061983250844758066,
+    "flr_stats_channel": 0,
+    "sgb_stats_channel": 0
 }
