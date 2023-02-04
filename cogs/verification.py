@@ -68,7 +68,7 @@ class Verification(commands.Cog):
         self.bot = bot   
 
         verify_button = Button(label="Verify", style=discord.ButtonStyle.green, custom_id="verification:green")
-        verify_button.callback = self.verify # Verify function called when button clicked.
+        verify_button.callback = self.turn_off_dms_exponse # Verify function called when button clicked.
 
         self.views= View(timeout=None)
         self.views.add_item(verify_button)
@@ -118,6 +118,29 @@ class Verification(commands.Cog):
         # Sending message
         await channel.send(embed=embed, view=self.views)
         await interaction.response.send_message(f"Added `verification app`, to <#{channel.id}>")
+
+    async def turn_off_dms_exponse(self, interaction):
+        embed = discord.Embed(title="Turn off DMs", description="To continue, you must turn off your DMs.")
+        embed.add_field(name="Why turn off DMs", value="This is to protect you from DM scams, DM advertisers, impersonators, etc.")
+        embed.add_field(name="How to turn off DMs", value="1. Right-click on this server's icon\n2. Click on Privacy Settings\n3. Turn off direct messages\n4. Click on Done")
+
+        view = View()
+        proceed = Button(style=discord.ButtonStyle.green, label="Proceed")
+        proceed.callback = self.rules_exponse
+        view.add_item(proceed)
+
+        await interaction.response.send(embed=embed, view=view)
+
+    async def rules_exponse(self, interaction):
+        embed = discord.Embed(title="Read the Rules", description="To continue, you must read and agree to the server rules.")
+        embed.add_field(name="Rules", value="1. Be respectful, civil, and welcoming.\n2. No inappropriate or unsafe content.\n3. Do not misuse or spam any of the channels.\n4. Do not join the server to promote your content.\n5. Any content that is NSFW is not allowed under any circumstances.\n6. Do not buy/sell/trade/give away anything.\n7. Do not use the server as a dating server.\n8. The primary language of this server is English.\n9. Discord names and avatars must be appropriate.\n10. Spamming in any form is not allowed.")
+
+        view = View()
+        proceed = Button(style=discord.ButtonStyle.green, label="Proceed")
+        proceed.callback = self.verify
+        view.add_item(proceed)
+
+        await interaction.response.send(embed=embed, view=view)
 
     async def verify(self, interaction):
         '''
