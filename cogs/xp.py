@@ -71,14 +71,14 @@ class XP(commands.Cog):
             if not db2.if_exists("role", where={"user":auth_id}):
                 db2.insert("role", (auth_id, 0, 0, 0, 0))
 
-            db2.update("role", {"a2":1 if levels[1]+1 >= 3 else 0}, {"user":auth_id})
+            db2.update("role", {"a2":levels[1]+1}, {"user":auth_id})
             current_data = db2.select("role", where={"user":auth_id}, size=1)
 
             db2.close()
 
             await level_up_message(message, levels)
             
-            if current_data[1] >=2 and current_data[2] == 1 and not current_data[3]:
+            if current_data[1] >=2 and current_data[2] >= 4 and not current_data[3]:
                 await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button to start the quiz!")
 
             

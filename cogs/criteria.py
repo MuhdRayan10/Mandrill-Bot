@@ -91,7 +91,7 @@ class Criteria(commands.Cog):
 
         if not(data[1] >= 2 and data[2] == 1):
 
-            message = "Looks like you haven't completed the first two criteria yet... Do `/req` to see which all requirements to get the `Rendrill` Role, or press the Criteria button!"
+            message = "Looks like you haven't completed the first two criteria yet...  press the Criteria button!"
             await interaction.followup.send(message, ephemeral=True)
             return
 
@@ -186,7 +186,7 @@ class Criteria(commands.Cog):
 
             db.close()
 
-            await interaction.followup.send("You have been awarded the `Rendrill` Role!")
+            await interaction.followup.send("You have been awarded the `Rendrill` Role!", ephemeral=True)
             return
 
         if score < 2:
@@ -200,8 +200,8 @@ class Criteria(commands.Cog):
     @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
     @app_commands.command(name="set-req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
-        app_commands.Choice(name="Invite 2 Members", value=1),
-        app_commands.Choice(name="Reach Lvl. 3", value=2),
+        app_commands.Choice(name="Invite 4 Members", value=1),
+        app_commands.Choice(name="Reach Lvl. 4", value=2),
         app_commands.Choice(name="Complete Quiz", value=3)
     ])
     @app_commands.choices(done=[
@@ -277,13 +277,13 @@ class Criteria(commands.Cog):
 
         # Embed
         embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=0xca4949)
-        embed.add_field(name=f"{rc if data[1] < 2 else wc} Invite at least 2 users to the server", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if not data[2] else wc} Reach Lvl. 3 XP", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[1] < 4 else wc} Invite at least 2 users to the server", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[2] < 4 else wc} Reach Lvl. 4 XP", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
 
-        if data[1] >= 2 and data[2] and not data[3]:
+        if data[1] >= 2 and data[2] >= 4 and not data[3]:
             await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 # Cog setup command

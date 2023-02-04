@@ -17,13 +17,19 @@
     "hex2": "#0000D8",
     "level_difficult_factor": 1.6,
     "rendrill_channel": 1061970102775463976,
-    "levelup_channel": 1061971701325369404,
+    "levelup_channel": 1061983250844758066,
     "log_channel": 1052258308007936082,
     "liberator_role": 1051070723067756604,
     "purmarill_role": 1051144944137556019,
     "member_stats_channel": 1052251057176191036,
     "purmarill_channel": 1061970044441075753,
     "command_channel": 1061983250844758066,
-    "flr_stats_channel": 0,
-    "sgb_stats_channel": 0
+    "flr_stats_channel": 1071522226903462040,
+    "sgb_stats_channel": 0,
+    "roadmap_channel":1052255880613208145,
+    "mint_date": [25, 2, 2023],
+    "mint_channel": 1071522299292946522,
+    "exprorill_channel": 1070698304217821204,
+    "promdrill_channel": 1070700811396591637,
+    "promdrill_role": 1063099505806942299
 }

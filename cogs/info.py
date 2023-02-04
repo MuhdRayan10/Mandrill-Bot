@@ -110,14 +110,31 @@ __Exchange Minerals into the Mandrills:__
 
         embed = discord.Embed(title="Role Information", color=Var.base_color)
 
-        explorills_description = "Explorills are members who have not completed any development steps. They only watch the march and share the ecosystem."
-        purmarills_description = "Purmarills are members who have met the criteria, passed the # get purmarill graph, and have permission to purchase the project's product."
-        rendrills_description = "Rendrills are members who have completed both #get purmarill and #get rendrill and are eligible to purchase a mineral and also spin the #wheel of fortune where they can drop a free mineral and other exciting prizes."
-        promdrills_description = "Promdrills are members who have gone through all areas of development graphs and they are helping new members, keeping chats active, sharing new pieces of information, and helping the project for more population."
-        guardrills_description = "Guardrills are members who are developers of the project, protectors and the most necessary figures."
+        explorills_description = f"<#{Var.exprorill_channel}>\nExprorills are the members who have not received any kind of role yet and are able to interact with the server and community."
+        purmarills_description = f"<#{Var.purmarill_channel}>\nPurmarills are the members who have met the criteria to purchase the Mineral."
+        rendrills_description = f"""<#{Var.rendrill_channel}>\nRendrills are the members who already gained Purmarill role and met the criteria to participate in the "#wheel-of-fortune" for the chance to win one of the prize from the list: 
+
+1)  1,111 $LEF - Native coin of the "Wild Network" 
+2)  Mineral 
+3) "Wild Network" NFT Comics Series "Chronicles of the Ten unique Flowers" (First Edition) 
+4)  "Wild Network" Branded Merch & Physical Artwork (First Edition) 
+or Try Again in 7 Days 
+
+The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or Spin the Wheel 
+"""
+        promdrills_description = f"""<#{Var.promdrill_channel}>\nPromdrills are the members who already got the all three roles and became supporters of the project. 
+Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
+
+Rewards and Benefits:
+1) Stable monthly salary from the project
+2) Bonus from every phase of successful minting
+3) Guaranteed 5 Mineral during each phase 
+4) 44,444 $LEF - Native coin of the "Wild Network" 
+"""
+        guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
 
-        embed.add_field(name="Explorills", value=explorills_description, inline=False)
+        embed.add_field(name="Exprorills", value=explorills_description, inline=False)
         embed.add_field(name="Purmarills", value=purmarills_description, inline=False)
         embed.add_field(name="Rendrills", value=rendrills_description, inline=False)
         embed.add_field(name="Promdrills", value=promdrills_description, inline=False)

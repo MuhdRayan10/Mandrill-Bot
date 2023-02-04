@@ -26,14 +26,16 @@ class MandrillBot(commands.Bot):
             from cogs.verification import Verification
             from cogs.criteria import Criteria
             from cogs.twitter import TwitterCog
+            from cogs.other_roles import Roles
 
-            v, c, t = Verification(self), Criteria(self), TwitterCog(self)
+            views = (Verification(self), Criteria(self), TwitterCog(self), Roles(self))
             
-            self.add_view(v.views)
-            self.add_view(c.views)
-            self.add_view(t.views)
+            for view in views:
+                self.add_view(view.view)
 
-            del v, c, t
+            self.add_view(views[-1].view2)
+
+            del views
 
 bot = MandrillBot()
 

@@ -96,10 +96,11 @@ class Verification(commands.Cog):
 
         welcome_file = discord.File(fp=img, filename="welcome.png")
         
-        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hello {member.mention}, we're glad to have you here! Go verify at <#{Var.verification_channel}>", color=Var.base_color)
+        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hey {member.mention}, welcome to The Mandrills! Please make sure you <#{Var.verification_channel}> and <#{Var.exprorill_channel}> in order to interact with the server and community!", color=Var.base_color)
         embed.set_image(url="attachment://welcome.png")
-        await channel.send(embed=embed, file=welcome_file)
 
+        await channel.send(embed=embed, file=welcome_file)
+        
         # Updating invites
         await update_invites(member, Var)
 
@@ -185,8 +186,6 @@ class Verification(commands.Cog):
         # Calling verified function if verified for timing out the user
         await self.verified(interaction.user, interaction.guild.get_role(Var.mute_role), interaction.guild.get_role(Var.exprorill_role), interaction) if correct == cache[interaction.user.id] else None
 
-
-
         # Deleting cached memory
         del f, cache[interaction.user.id]
         os.remove(f"./data/captcha/{interaction.user.id}.png")
@@ -203,14 +202,13 @@ class Verification(commands.Cog):
 
     async def verified(self, user, role, role2, inter):
         '''
-            Timing out user for specified time after verification
+            Giving roles after verification
         '''
-        await user.timeout(timedelta(minutes=Var.mute_time))
         await user.remove_roles(role)
 
         await user.add_roles(role2)
 
-        await inter.followup.send(f"You have been successfully verified, but we have timed you out for {Var.mute_time} minutes for the security of the server.", ephemeral=True)
+        await inter.followup.send(f"✅・You have been verified! Go to <#{Var.exprorill_channel}> to talk in the server.", ephemeral=True)
 
 
     # Syncing new commands
