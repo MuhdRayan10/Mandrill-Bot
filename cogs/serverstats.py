@@ -11,26 +11,32 @@ from helpers import Var as V
 Var = V()
 
 class CryptoToUsd:
-
     def __init__(self) -> None:
         self.url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'  # Coinmarketcap API url
 
         headers = {
             'Accepts': 'application/json',
-            'X-CMC_PRO_API_KEY': os.getenv('COINMARKETCAPKEY')
+            'X-CMC_PRO_API_KEY': "d61d9d58-eb85-45a0-854e-a4765400d8e1"
         }
 
         self.session = Session()
         self.session.headers.update(headers)
 
-    def get_current_flare(self) -> int:
+    def flare(self):
         parameters = {'symbol': 'FLR', 'convert': 'USD'}
 
         response = self.session.get(self.url, params=parameters)
 
         info = json.loads(response.text)
+        print(info)
+
         if info:
-            return round(info['data']['FLR']['quote']['USD']['price'], 7)
+            if info['data']['FLR']['quote']['USD']['percent_change_1h'] > 0: # other available options: percent_change_24h,percent_change_7d upto 90d 
+                trend = 1
+            else:
+                trend = 0
+
+            return round(info['data']['FLR']['quote']['USD']['price'], 7), trend
         
 class ServerStats(commands.Cog):
     def __init__(self, bot):
@@ -75,16 +81,14 @@ class ServerStats(commands.Cog):
     @tasks.loop(minutes=Var.crypto_update_time)
     async def update_cryptos(self):
 
-        FLR = self.crypto_helper.get_current_flare()
+        FLR, trend = self.crypto_helper.get_current_flare()
 
         guild = self.bot.guilds()[0]
 
         flr_channel = await guild.fetch_channel(Var.flr_stats_channel)
 
         up, down = "🟢(↗)", "🔴(↘)"
-
-        trend = self.calculate_trend(FLR) # Rayan: This 
-        await flr_channel.edit(name=f"FLR {up if trend else down} {FLR}")
+        await flr_channel.edit(name=f"FLR {up if trend == 1 else down} {FLR}")
 
 
 # Cog setup command
