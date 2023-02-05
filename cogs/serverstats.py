@@ -72,7 +72,7 @@ class ServerStats(commands.Cog):
 
         flr_channel = await self.guild.fetch_channel(Var.flr_stats_channel)
 
-        up, down = "🟢 (↗)", "🔴 (↘)"
+        up, down = "🟢 (↗)", "🔴 g(↘)"
         await flr_channel.edit(name=f"FLR {up if trend == 1 else down} {FLR}")
 
     @tasks.loop(minutes=1)
@@ -86,7 +86,7 @@ class ServerStats(commands.Cog):
             delta = end_of_day - now
             return f"{delta.days} Days & {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}:{delta.seconds%60:02}"
 
-        x = await mint_channel.edit(name=f"MINT | {time_remaining()}")
+        x = await mint_channel.edit(name=f"In {time_remaining()}")
         print(x)
 
 
