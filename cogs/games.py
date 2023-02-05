@@ -35,6 +35,7 @@ class Games(commands.Cog):
         self.wheel = wheel()
 
     @app_commands.command(name="setup-spin-wheel")
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_spinwheel(self, interaction):
         embed = discord.Embed(title='Mystery Prize', description='Click the button to play.', color=Var.base_color)
         embed.add_field(
@@ -43,7 +44,8 @@ class Games(commands.Cog):
 
 
         view = ui.View()
-        for i in range(8):
+
+        for _ in range(8):
             spin_wheel = ui.Button(label="X", style=discord.ButtonStyle.blurple)
             spin_wheel.callback = self.spin_wheel
             view.add_item(spin_wheel)
