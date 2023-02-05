@@ -1,8 +1,8 @@
 from requests import Session
 import json
-import os
+import asyncio
 
-from datetime import date, datetime
+import datetime
 
 import discord
 from discord.ext import commands, tasks
@@ -41,10 +41,11 @@ class CryptoToUsd:
 class ServerStats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.guild = self.bot.guilds[0]
         self.crypto_helper = CryptoToUsd()
 
         self.update_cryptos.start()
-        self.mintdate_update.start()
+        self.update_mint_date.start()
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -64,31 +65,29 @@ class ServerStats(commands.Cog):
         channel = discord.utils.get(member.guild.channels, id=Var.member_stats_channel)
         await channel.edit(name=f"👤 Members: {len(member.guild.members)}")
 
-    @tasks.loop(hours=3)
-    async def mintdate_update(self):
-        today_date = datetime.utcnow()
-        today_date = today_date.strftime("%d-%m-%Y")
-        today_date = [int(x) for x in today_date.split("-")]
-
-        d1 = date(Var.mint_date[-1], Var.mint_date[-2], Var.mint_date[-3])
-        d2 = date(today_date[-1], today_date[-2], today_date[-3])
-
-        difference = d2 - d1
-        
-        channel = self.bot.get_channel(Var.mint_channel)
-        await channel.edit(name=f"Days: {difference.days}")
-
     @tasks.loop(minutes=Var.crypto_update_time)
     async def update_cryptos(self):
 
-        FLR, trend = self.crypto_helper.get_current_flare()
+        FLR, trend = self.crypto_helper.flare()
 
-        guild = self.bot.guilds()[0]
-
-        flr_channel = await guild.fetch_channel(Var.flr_stats_channel)
+        flr_channel = await self.guild.fetch_channel(Var.flr_stats_channel)
 
         up, down = "🟢(↗)", "🔴(↘)"
         await flr_channel.edit(name=f"FLR {up if trend == 1 else down} {FLR}")
+
+    @tasks.loop(minutes=1)
+    async def update_mint_date(self):
+        print("Updating Mint")
+        mint_channel = await self.guild.fetch_channel(Var.mint_date_channel)
+
+        def time_remaining():
+            now = datetime.datetime.now()
+            end_of_day = datetime.datetime(now.year, 2, 28, 23, 0, 0)
+            delta = end_of_day - now
+            return f"{delta.days} Days & {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}:{delta.seconds%60:02}"
+
+        x = await mint_channel.edit(name=f"MINT | {time_remaining()}")
+        print(x)
 
 
 # Cog setup command
