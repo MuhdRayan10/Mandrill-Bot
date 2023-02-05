@@ -83,7 +83,7 @@ class ServerStats(commands.Cog):
 
         up, down = "🟢(↗)", "🔴(↘)"
 
-        trend = self.calculate_trend(FLR)
+        trend = self.calculate_trend(FLR) # Rayan: This 
         await flr_channel.edit(name=f"FLR {up if trend else down} {FLR}")
 
 
