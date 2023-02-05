@@ -1,6 +1,9 @@
 import random
 
+import time
+import json
 import discord
+from discord import app_commands
 from discord.ext import commands
 from discord import ui
 
@@ -30,24 +33,60 @@ class Games(commands.Cog):
         
         # wheel
         self.wheel = wheel()
-        spin_wheel = ui.Button(label="Spin", style=discord.ButtonStyle.green, custom_id="games:spin_wheel")
+
+    @app_commands.command(name="setup-spin-wheel")
+    async def setup_spinwheel(self, interaction):
+        embed = discord.Embed(title='Mystery Prize', description='Click the button to play.', color=Var.base_color)
+        embed.add_field(
+            name="Prizes", value='\n'.join(self.wheel.items)
+        )
+
+        spin_wheel = ui.Button(label="X", style=discord.ButtonStyle.blurple)
         spin_wheel.callback = self.spin_wheel
 
-        self.views= ui.View(timeout=None)
-        self.views.add_item(spin_wheel)
+        view = ui.View()
+        for i in range(8):
+            view.add_item(spin_wheel)
 
-    def spin_wheel(self):
+        channel = interaction.guild.get_channel(Var.spinwheel_channel)
+        await channel.send(embed=embed, view=view)
+
+
+    def spin_wheel(self, interaction):
+        now = int(time.time())
+
+        with open('./data/games/spin_wheel_interactions.json', 'r') as f:
+            interactions = json.load(f)
+
+        for interaction_ in interactions:
+            interaction_time, interaction_user_id = interaction_
+            if interaction_user_id == interaction.user.id and now - interaction_time < 7 * 24 * 60 * 60:
+                desc = f"You have already interacted in the past 7 days. Please try again later."
+                embed = discord.Embed(
+                    title="Spin the Wheel Prize",
+                    description=desc
+                )
+                return embed
+
         prize = self.wheel.spin()
 
         if prize == 'Try Again in 7 Days':
-            desc = "You have not recieved any prize. Try again in 7 days!"
+            desc = "You have not received any prize. Try again in 7 days!"
         else:
-            desc = f"You have recieved {prize}! [CONTACT A MOD TO CLAIM]"
+            desc = f"You have won {prize}!"
 
         embed = discord.Embed(
             title="Spin the Wheel Prize",
             description=desc
         )
+
+        interaction_ = [now, interaction.user_id]
+        interactions.append(interaction_)
+
+        with open('./data/games/spin_wheel_interactions.json', 'w') as f:
+            json.dump(interactions, f)
+
+        return embed
 
 # Cog setup command
 async def setup(bot):
