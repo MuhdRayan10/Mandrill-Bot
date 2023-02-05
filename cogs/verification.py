@@ -139,31 +139,28 @@ class Verification(commands.Cog):
 
     async def discord_security(self, interaction):
 
-        val = f"""Discord Security
-
-Please stay safe and take the time to review our security tips below.
-
-➡️  The Mandrills will never DM you first. We recommend to Turn off "direct messages" from the server members.
+        val = f"""  ㅤㅤ
+        ➡️  The Mandrills will never DM you first. We recommend to Turn off "direct messages" from the server members.
 
 ➡️  To navigate safe ONLY use <#{Var.official_links}> channel
 
-➡️  Identify easily The Mandrills team members through our roles ⚪Liberators, 🔵Guardrills & 🟠Promdrills"""
+➡️  Identify easily The Mandrills team members through our roles\n\n⚪ Liberators, 🔵 Guardrills & 🟠 Promdrills"""
         embed = discord.Embed(title="Discord Security")
         embed.add_field(name="Please stay safe and take the time to review our security tips below.", value=val)
 
         view = View()
-        proceed = Button(style=discord.ButtonStyle.green, label="Proceed")
+        proceed = Button(style=discord.ButtonStyle.green, label="Continue")
         proceed.callback = self.rules_exponse
         view.add_item(proceed)
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
     async def rules_exponse(self, interaction):
         embed = discord.Embed(title="Read the Rules", description="To continue, you must read and agree to the server rules.")
         embed.add_field(name="Rules", value="1. Be respectful, civil, and welcoming.\n2. No inappropriate or unsafe content.\n3. Do not misuse or spam any of the channels.\n4. Do not join the server to promote your content.\n5. Any content that is NSFW is not allowed under any circumstances.\n6. Do not buy/sell/trade/give away anything.\n7. Do not use the server as a dating server.\n8. The primary language of this server is English.\n9. Discord names and avatars must be appropriate.\n10. Spamming in any form is not allowed.")
 
         view = View()
-        proceed = Button(style=discord.ButtonStyle.green, label="Proceed")
+        proceed = Button(style=discord.ButtonStyle.green, label="Agree")
         proceed.callback = self.verify
         view.add_item(proceed)
 
@@ -251,7 +248,7 @@ Please stay safe and take the time to review our security tips below.
 
         await user.add_roles(role2)
 
-        await inter.followup.send(f"<#{Var.exprorill_channel}> role in order to interact with the server and community. ")
+        await inter.followup.send(f"<#{Var.exprorill_channel}> role in order to interact with the server and community.", ephemeral=True)
 
     # Syncing new commands
     @commands.command()

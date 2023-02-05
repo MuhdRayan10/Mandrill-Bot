@@ -52,7 +52,7 @@ class Games(commands.Cog):
         )
 
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
-        await channel.send(embed=embed, view=self.view)
+        await channel.send(embed=embed, view=self.views)
 
     async def spin_wheel(self, interaction):
         now = int(time.time())

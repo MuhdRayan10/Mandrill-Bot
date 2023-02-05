@@ -106,22 +106,21 @@ __Exchange Minerals into the Mandrills:__
         purmarills_description = f"Purmarills are the members who have met the criteria to purchase the Mineral."
         rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to participate in the "#wheel-of-fortune" for the chance to win one of the prize from the list: 
 
-1)  1,111 $LEF - Native coin of the "Wild Network" 
-2)  Mineral 
-3) "Wild Network" NFT Comics Series "Chronicles of the Ten unique Flowers" (First Edition) 
-4)  "Wild Network" Branded Merch & Physical Artwork (First Edition) 
-or Try Again in 7 Days 
+ㅤ1)  1,111 $LEF - Native coin of the "Wild Network" 
+ㅤ2)  Mineral 
+ㅤ3) "Wild Network" NFT Comics Series "Chronicles of the Ten unique Flowers" (First Edition) 
+ㅤ4)  "Wild Network" Branded Merch & Physical Artwork (First Edition) 
 
-The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or Spin the Wheel 
+The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or Spin the Wheel.
 """
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 
 Rewards and Benefits:
-1) Stable monthly salary from the project
-2) Bonus from every phase of successful minting
-3) Guaranteed 5 Mineral during each phase 
-4) 44,444 $LEF - Native coin of the "Wild Network" 
+ㅤ1) Stable monthly salary from the project
+ㅤ2) Bonus from every phase of successful minting
+ㅤ3) Guaranteed 5 Mineral during each phase 
+ㅤ4) 44,444 $LEF - Native coin of the "Wild Network" 
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
@@ -195,11 +194,10 @@ Rewards and Benefits:
 
     
         embed = discord.Embed(title="Official Links")
-        embed.add_field(name="<:youtube:1007371629220868257> YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
-        embed.add_field(name="<:discord:1007516966317207623> Discord", value="[Join the server](https://discord.gg/3mpVeVyRJD)",inline=False)
-        embed.add_field(name="<:twitter:1007517488738729985> Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
-        embed.add_field(name="<:website:1007360805408346204> Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
-        embed.add_field(name="✉️ E-mail", value="info@themandrills.xyz")
+        embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
+        embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
+        embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
+        embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
 
         await interaction.response.send_message(embed=embed)
 
