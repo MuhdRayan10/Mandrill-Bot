@@ -43,20 +43,24 @@ class Roles(commands.Cog):
         get_promdrill_button = ui.Button(label="Get Promdrill", style=discord.ButtonStyle.green, custom_id="promdrill:green")
         get_promdrill_button.callback = self.promdrill
 
+        criteria = ui.Button(label="Criteria", style=discord.ButtonStyle.blurple, custom_id='requirements_prom:blurple')
+        criteria.callback = self.view
+
         self.view2 = ui.View(timeout=None)
         self.view2.add_item(get_promdrill_button)
+        self.view2.add_item(criteria)
 
         
     async def give_exprorill(self, interaction):
 
-        exprorill_role = interaction.guild.get_role(V.exprorill_role)
-        unverified_role = interaction.guild.get_role(V.mute_role)
+        exprorill_role = interaction.guild.get_role(Var.exprorill_role)
+        unverified_role = interaction.guild.get_role(Var.mute_role)
 
         if unverified_role in interaction.user.roles:
             await interaction.response.send_message(f"Unfortunately you are still unverified... Go verify yourself at <#{Var.verification_channel}>", ephemeral=True)
         
         else:
-            interaction.user.add_roles(exprorill_role)
+            await interaction.user.add_roles(exprorill_role)
             await interaction.response.send_message(f"You are now officially an `Exprorill`!", ephemeral=True)
 
 
@@ -208,6 +212,44 @@ class Roles(commands.Cog):
             await interaction.followup.send("Due to a low score, you have been timed out for 5 minutes. Please try again later.", ephemeral=True)
             return
 
+    async def view(self, interaction): 
+
+        user = interaction.user
+        # if user already has guardrill role
+        if user.get_role(Var.promdrill_role):
+            embed = discord.Embed(
+                title="Role already assigned",
+                description="It looks like you already have the `promdrill` role. Thank you for your interest!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        await interaction.response.defer()
+
+        # Retrieving data from database
+        db = Database("./data/criteria")
+        data = db.select("role", where={"user":user.id})
+
+        if not data:
+            db.insert("role", (user.id, 0, 0, 0, 0))
+            data = db.select("role", where={"user":user.id})
+
+        db.close()
+
+        data = data[0]
+
+        rc, wc = '❌', '✅'
+
+        # Embed
+        embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=0xca4949)
+        embed.add_field(name=f"{rc if data[1] < 8 else wc} Invite at least 8 users to the server", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[2] < 8 else wc} Reach Lvl. 8 XP", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
+        
+        await interaction.followup.send(embed=embed, ephemeral=True)
+
+        if data[1] >= 2 and data[2] >= 4 and not data[3]:
+            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 
 async def setup(bot):

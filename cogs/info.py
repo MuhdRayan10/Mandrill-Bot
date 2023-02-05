@@ -56,10 +56,6 @@ class Info(commands.Cog):
     @app_commands.command(name="roadmap", description="Our Roadmap!")
     async def roadmap(self, interaction):
 
-        if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
-            return
-
         await interaction.response.defer()
 
         embed = discord.Embed(title="The Mandrills Roadmap", color=0x0000FF)
@@ -104,15 +100,11 @@ __Exchange Minerals into the Mandrills:__
     @app_commands.command(name='role-info', description="Info about the custom roles.")
     async def role_info(self, interaction):
 
-        if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
-            return
-
         embed = discord.Embed(title="Role Information", color=Var.base_color)
 
-        explorills_description = f"<#{Var.exprorill_channel}>\nExprorills are the members who have not received any kind of role yet and are able to interact with the server and community."
-        purmarills_description = f"<#{Var.purmarill_channel}>\nPurmarills are the members who have met the criteria to purchase the Mineral."
-        rendrills_description = f"""<#{Var.rendrill_channel}>\nRendrills are the members who already gained Purmarill role and met the criteria to participate in the "#wheel-of-fortune" for the chance to win one of the prize from the list: 
+        explorills_description = f"Exprorills are the members who have not received any kind of role yet and are able to interact with the server and community."
+        purmarills_description = f"Purmarills are the members who have met the criteria to purchase the Mineral."
+        rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to participate in the "#wheel-of-fortune" for the chance to win one of the prize from the list: 
 
 1)  1,111 $LEF - Native coin of the "Wild Network" 
 2)  Mineral 
@@ -122,7 +114,7 @@ or Try Again in 7 Days
 
 The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or Spin the Wheel 
 """
-        promdrills_description = f"""<#{Var.promdrill_channel}>\nPromdrills are the members who already got the all three roles and became supporters of the project. 
+        promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 
 Rewards and Benefits:
@@ -141,7 +133,7 @@ Rewards and Benefits:
         embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
         embed.add_field(name="Liberators", value=liberators_description, inline=False)
 
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=embed)
 
     def create_help_menu_embed(self, page) -> discord.Embed:
         embed = discord.Embed(title="Commands Info", description=page['title'], color=Var.base_color)
@@ -201,20 +193,55 @@ Rewards and Benefits:
     @app_commands.command(name="official-links", description="List of all the official links")
     async def link(self, interaction):
 
-        if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
-            return
-
+    
         embed = discord.Embed(title="Official Links")
-        embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)")
-        embed.add_field(name="Discord", value="[Join the server](https://discord.gg/3mpVeVyRJD)")
-        embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)")
-        embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)")
+        embed.add_field(name="<:youtube:1007371629220868257> YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
+        embed.add_field(name="<:discord:1007516966317207623> Discord", value="[Join the server](https://discord.gg/3mpVeVyRJD)",inline=False)
+        embed.add_field(name="<:twitter:1007517488738729985> Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
+        embed.add_field(name="<:website:1007360805408346204> Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
+        embed.add_field(name="✉️ E-mail", value="info@themandrills.xyz")
 
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=embed)
 
         return
 
+    @app_commands.command(name="how-to-mint", description="Shows information on how to mint")
+    async def how_to_mint(self, interaction):
+        val1 = f"""You will need to add the Flare Network to your wallet first. 
+
+**Network name**: Flare
+**NEW RPC URL**: https://flare-api.flare.network/ext/C/rpc
+**Chain ID**: 14
+**Currency Symbol**: FLR
+**Block explorer URL**: https://flare-explorer.flare.network/
+
+1️⃣  Login to your Metamask account
+
+2️⃣  Navigate to settings > Network > Add Network
+
+3️⃣  Enter Flare Network details from above
+
+4️⃣  Click “Save”
+
+5️⃣  Now you can go to the minting page, connect wallet and MINT 
+
+"Please only use <#{Var.official_links}> to navigate MINT page" (**Beware of the fishing links**)"""
+        
+        val2 = """1️⃣  Open your Bifrost Wallet
+
+2️⃣  Click on the 4-panel square icon to open the browser, navigate to our minting page
+
+3️⃣  Ensure you are on the Flare Network and NOT other...
+
+4️⃣  Connect your wallet
+
+5️⃣  Click MINT on the mint page and approve the transaction within your Bifrost Wallet"""
+
+        embed = discord.Embed(title="Minting")
+        embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
+        embed.add_field(name="How to mint using your Brifost wallet?", value=val2)
+
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Info(bot))

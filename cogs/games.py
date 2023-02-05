@@ -22,6 +22,8 @@ class wheel:
             '"Wild Network" Branded Merch & Physical Artwork (First Edition)',
             'Try Again in 7 Days',
         ]
+
+        
         
 
     def spin(self) -> str:
@@ -34,6 +36,13 @@ class Games(commands.Cog):
         # wheel
         self.wheel = wheel()
 
+        self.views = ui.View(timeout=None)
+
+        for i in range(5):
+            spin_wheel = ui.Button(label="??", style=discord.ButtonStyle.blurple, custom_id=f"??{i}:blurple")
+            spin_wheel.callback = self.spin_wheel
+            self.views.add_item(spin_wheel)
+
     @app_commands.command(name="setup-spin-wheel")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_spinwheel(self, interaction):
@@ -42,16 +51,8 @@ class Games(commands.Cog):
             name="Prizes", value='\n'.join(self.wheel.items)
         )
 
-
-        view = ui.View()
-
-        for _ in range(8):
-            spin_wheel = ui.Button(label="X", style=discord.ButtonStyle.blurple)
-            spin_wheel.callback = self.spin_wheel
-            view.add_item(spin_wheel)
-
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
-        await channel.send(embed=embed, view=view)
+        await channel.send(embed=embed, view=self.view)
 
     async def spin_wheel(self, interaction):
         now = int(time.time())
