@@ -41,18 +41,17 @@ class Games(commands.Cog):
             name="Prizes", value='\n'.join(self.wheel.items)
         )
 
-        spin_wheel = ui.Button(label="X", style=discord.ButtonStyle.blurple)
-        spin_wheel.callback = self.spin_wheel
 
         view = ui.View()
         for i in range(8):
+            spin_wheel = ui.Button(label="X", style=discord.ButtonStyle.blurple)
+            spin_wheel.callback = self.spin_wheel
             view.add_item(spin_wheel)
 
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
         await channel.send(embed=embed, view=view)
 
-
-    def spin_wheel(self, interaction):
+    async def spin_wheel(self, interaction):
         now = int(time.time())
 
         with open('./data/games/spin_wheel_interactions.json', 'r') as f:
@@ -66,7 +65,9 @@ class Games(commands.Cog):
                     title="Spin the Wheel Prize",
                     description=desc
                 )
-                return embed
+                
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
 
         prize = self.wheel.spin()
 
@@ -80,13 +81,13 @@ class Games(commands.Cog):
             description=desc
         )
 
-        interaction_ = [now, interaction.user_id]
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        interaction_ = [now, interaction.user.id]
         interactions.append(interaction_)
 
         with open('./data/games/spin_wheel_interactions.json', 'w') as f:
             json.dump(interactions, f)
-
-        return embed
 
 # Cog setup command
 async def setup(bot):
