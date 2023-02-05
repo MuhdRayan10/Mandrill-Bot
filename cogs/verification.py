@@ -4,7 +4,6 @@ from discord.ui import Button, View
 import discord, random, os
 from easy_pil import Editor, load_image_async, Font
 from captcha.image import ImageCaptcha
-from datetime import timedelta
 from discord.ui import View
 from functions import update_invites
 

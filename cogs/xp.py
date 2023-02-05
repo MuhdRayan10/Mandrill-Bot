@@ -94,7 +94,7 @@ class XP(commands.Cog):
     async def level(self, interaction, user:discord.Member=None):
 
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
             return
         
         user = user if user else interaction.user
@@ -132,7 +132,7 @@ class XP(commands.Cog):
     async def leaderboard(self, interaction):
 
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
             return
             
         db = Database("./data/levels")

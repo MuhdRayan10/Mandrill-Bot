@@ -55,8 +55,6 @@ class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.active.start()
-
     # Setup Ticket Interface in given text channel
     @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
     @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")

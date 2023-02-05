@@ -37,8 +37,8 @@ class Roles(commands.Cog):
         get_exprorill_button = ui.Button(label="Get Exprorill", style=discord.ButtonStyle.green, custom_id="exprorill:green")
         get_exprorill_button.callback = self.give_exprorill
 
-        self.view = ui.View(timeout=None)
-        self.view.add_item(get_exprorill_button)
+        self.views = ui.View(timeout=None)
+        self.views.add_item(get_exprorill_button)
 
         get_promdrill_button = ui.Button(label="Get Promdrill", style=discord.ButtonStyle.green, custom_id="promdrill:green")
         get_promdrill_button.callback = self.promdrill
@@ -65,7 +65,7 @@ class Roles(commands.Cog):
         embed = discord.Embed(title='Get Exprorill', description='Click the button to get your Exprorill role.', color=Var.base_color)
         
         channel = interaction.guild.get_channel(Var.exprorill_channel)
-        await channel.send(embed=embed, view=self.view)
+        await channel.send(embed=embed, view=self.views)
 
     @app_commands.command(name="setup-promdrill", description="[MODS] Sets up promdrill interface.")
     async def setup_promdrill(self, interaction):

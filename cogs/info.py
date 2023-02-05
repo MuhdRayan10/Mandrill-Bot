@@ -57,7 +57,7 @@ class Info(commands.Cog):
     async def roadmap(self, interaction):
 
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
             return
 
         await interaction.response.defer()
@@ -105,7 +105,7 @@ __Exchange Minerals into the Mandrills:__
     async def role_info(self, interaction):
 
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
             return
 
         embed = discord.Embed(title="Role Information", color=Var.base_color)
@@ -153,7 +153,7 @@ Rewards and Benefits:
     async def help(self, interaction):
 
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
             return
 
         await interaction.response.defer()
@@ -202,7 +202,7 @@ Rewards and Benefits:
     async def link(self, interaction):
 
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <{Var.command_channel}>")
+            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
             return
 
         embed = discord.Embed(title="Official Links")

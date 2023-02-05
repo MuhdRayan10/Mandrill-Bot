@@ -31,7 +31,7 @@ class MandrillBot(commands.Bot):
             views = (Verification(self), Criteria(self), TwitterCog(self), Roles(self))
             
             for view in views:
-                self.add_view(view.view)
+                self.add_view(view.views)
 
             self.add_view(views[-1].view2)
 
