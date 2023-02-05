@@ -72,7 +72,7 @@ class ServerStats(commands.Cog):
 
         flr_channel = await self.guild.fetch_channel(Var.flr_stats_channel)
 
-        up, down = "🟢(↗)", "🔴(↘)"
+        up, down = "🟢 (↗)", "🔴 (↘)"
         await flr_channel.edit(name=f"FLR {up if trend == 1 else down} {FLR}")
 
     @tasks.loop(minutes=1)
