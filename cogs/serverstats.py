@@ -44,30 +44,12 @@ class ServerStats(commands.Cog):
         self.guild = self.bot.guilds[0]
         self.crypto_helper = CryptoToUsd()
 
-        self.update_cryptos.start()
         self.update_mint_date.start()
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        # server stats
-        for guild in self.bot.guilds:
-            # members
-            channel = discord.utils.get(guild.channels, id=Var.member_stats_channel)
-            await channel.edit(name=f"👤 Members: {len(guild.members)}")
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member:discord.Member):
-        channel = discord.utils.get(member.guild.channels, id=Var.member_stats_channel)
-        await channel.edit(name=f"👤 Members: {len(member.guild.members)}")
-
-    @commands.Cog.listener()
-    async def on_member_remove(self, member:discord.Member):
-        channel = discord.utils.get(member.guild.channels, id=Var.member_stats_channel)
-        await channel.edit(name=f"👤 Members: {len(member.guild.members)}")
-
-    @tasks.loop(minutes=Var.crypto_update_time)
-    async def update_cryptos(self):
-
+    @tasks.loop(minutes=2)
+    async def update_mint_date(self):
+        
         FLR, trend = self.crypto_helper.flare()
 
         flr_channel = await self.guild.fetch_channel(Var.flr_stats_channel)
@@ -75,9 +57,6 @@ class ServerStats(commands.Cog):
         up, down = "🟢 (↗)", "🔴 g(↘)"
         await flr_channel.edit(name=f"FLR {up if trend == 1 else down} {FLR}")
 
-    @tasks.loop(minutes=1)
-    async def update_mint_date(self):
-        print("Updating Mint")
         mint_channel = await self.guild.fetch_channel(Var.mint_date_channel)
 
         def time_remaining():
@@ -86,9 +65,7 @@ class ServerStats(commands.Cog):
             delta = end_of_day - now
             return f"{delta.days} Days & {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}:{delta.seconds%60:02}"
 
-        x = await mint_channel.edit(name=f"In {time_remaining()}")
-        print(x)
-
+        await mint_channel.edit(name=f"In {time_remaining()}")
 
 # Cog setup command
 async def setup(bot):

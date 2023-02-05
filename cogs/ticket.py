@@ -68,16 +68,6 @@ class Tickets(commands.Cog):
         
         await channel.send(embed=embed, view=CreateTicket())
 
-    @tasks.loop(seconds=29)
-    async def active(self):
-        li = []
-        for i in range(0, 5000000):
-            li.append(i)
-
-        print('E')
-
-        del li
-
         
 
 # Cog setup function
