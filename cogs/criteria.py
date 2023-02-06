@@ -67,7 +67,7 @@ class Criteria(commands.Cog):
 
         # Sending message
         await channel.send(embed=embed, view=self.views)
-        await interaction.response.send_message(f"Added `get rendrill` interface, to <#{channel.id}>")
+        await interaction.response.send_message(f"Added `Rendrill` role interface, to <#{channel.id}>")
 
     async def rendrill_questionnaire(self, interaction):
         user = interaction.user
@@ -219,7 +219,6 @@ class Criteria(commands.Cog):
     ])
     @app_commands.describe(activity="What the user has done")
     @app_commands.describe(done="Whether the user was successful in completing the task")
-
     async def req(self, interaction, user:discord.Member, activity:int, done:int):
         """
         This function allows the mods to update a user's criteria stats

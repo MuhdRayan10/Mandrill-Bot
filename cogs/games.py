@@ -41,16 +41,15 @@ class Games(commands.Cog):
             spin_wheel.callback = self.spin_wheel
             self.views.add_item(spin_wheel)
 
-    @app_commands.command(name="setup-spin-wheel")
+    @app_commands.command(name="setup-mystery-box")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    async def setup_spinwheel(self, interaction):
+    async def setup_mystery_box(self, interaction, channel:discord.TextChannel):
         embed = discord.Embed(title='Choose the Box Carefully...', color=Var.base_color)
         embed.add_field(name="Prizes", value='- 1,111 $LEF - Native coin of the "Wild Network"\n- Mineral\n- NFT Comics Series "Chronicles of the Ten unique Flowers"\n- "Wild Network" Branded Merch & Physical Artwork (First Edition)',
             color=Var.base_color)
         
-
-        channel = interaction.guild.get_channel(Var.spinwheel_channel)
         await channel.send(embed=embed, view=self.views)
+        await interaction.response.send_message(f"Added `Mystery Box` interface, to <#{channel.id}>")
 
     async def spin_wheel(self, interaction):
         user = interaction.user
