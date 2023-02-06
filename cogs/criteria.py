@@ -30,6 +30,10 @@ class QuestionnaireMenu(ui.View):
     async def c(self, __, _):
         cache[self.userid].append("C")
 
+    @discord.ui.button(label="D", style=style, custom_id='D')
+    async def d(self, __, _):
+        cache[self.userid].append("D")
+
 # chache for questionnaire
 blurple_btn = discord.ButtonStyle.blurple
 
@@ -96,19 +100,25 @@ class Criteria(commands.Cog):
             return
 
         questions = [
-            'Who are the "Guardrills"?', 
-            'How many Income percentages are distributed to the "Mandrills" owners in total?', 
-            'What do you need to enter to out Metaverse?'
+            'How Mandrills are came into being ?', 
+            'Why are the Minerals so important elements in the Wild Network\'s Life?', 
+            'How many Minerals and Mandrills must the user HOLD in order to get free Copy of the "Wild Network" NFT Comics Series "Chronicles of the Ten unique Flowers" every month based on the snapshot?',
+            'How many comics series will be there in total and copies in each month?'
         ]
         options = [
-            ['(A) They are "Supporters"', '(B) They are "Moderators"', '(C) They are "Newcomers"'],
-            ['(A) 22.22%', '(B) 44.44%', '(C) 11.11%'],
-            ['(A) Mineral', '(B) All the species', '(C) At least one species']
+            ['(A) With a spaceship from the Galaxy', '(B) Through minerals evolution over time', '(C) They are just generated NFTs - "You\'re quite wrong"', '(D) They just spawned from nowhere'],
+            
+            ['(A) They are expensive due to scarcity - "It\'s true, but the reason for that is their usefulness"', '(B) Minerals are so magical and enchanting, you want to hold them all the time - "It\'s also true, but importance comes from their actual daily use cases, therefore progressive demand and value is guaranteed."', '(C) They are gaining progressive utility in the Wild Network\'s life because they hold vitality power. Minerals are the ONE and ONLY source of Metaverse energy', '(D) I can awaken mandrills with the help of minerals, but the mineral will be melted in that case - "Now that is the question! To be or not to be! It is up to you to decide what is more important to you, keep the mineral or use it to awaken the mandrill! BTW did you know that to join the Metaverse or buy land there, you must hold at least one species of the Wild Network, for example, the mandrill. Each species is eligible to purchase one land."'],
+            
+            ['(A) 4 Minerals and 4 Mandrills', '(B) 5 Minerals and 5 Mandrills', '(C) 8 Minerals and 8 Mandrills', '21 Minerals and 21 Mandrills'],
+
+            ['(A) Total 12 series with 555 copies of NFT in each month', '(B) Total 4 series with 444 copies of NFT in each month', '(C) Total 8 series with 888 copies of NFT in each month', '(D) Total 21 series with 1,111 copies of NFT in each month']
         ]
         correct_options = [
             'B',
+            'C',
             'B',
-            'C'
+            'A'
         ]
 
         # Creating Embed
