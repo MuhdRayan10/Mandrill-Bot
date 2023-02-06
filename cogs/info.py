@@ -58,7 +58,7 @@ class Info(commands.Cog):
 
         await interaction.response.defer()
 
-        embed = discord.Embed(title="The Mandrills Roadmap", color=Var.base_color)
+        embed = discord.Embed(title="The Mandrills Roadmap", color=0x0000FF)
         lines = """Three Phases of minting Minerals:
 - **1st Phase of Minting:** 1,111 Minerals Price: TBA
 - **2nd Phase of Minting:** 1,111 Minerals Price: TBA
@@ -112,6 +112,7 @@ __Exchange Minerals into the Mandrills:__
 4. One Full Set of Branded Merch & Physical Artwork (1/12)
 
 The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or open <#1070742662551961640>
+\n
 """
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
@@ -121,7 +122,7 @@ Rewards and Benefits:
 2. Bonus from every phase of successful minting
 3. Guaranteed 5 Mineral during each phase 
 4. 44,444 $LEF - Native coin of the "Wild Network" 
-
+\n
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
@@ -194,7 +195,7 @@ Rewards and Benefits:
     async def link(self, interaction):
 
     
-        embed = discord.Embed(title="Official Links", color=Var.base_color)
+        embed = discord.Embed(title="Official Links")
         embed.add_field(name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)", inline=False)
         embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
@@ -238,7 +239,7 @@ Rewards and Benefits:
 
 5️⃣  Click MINT on the mint page and approve the transaction within your Bifrost Wallet"""
 
-        embed = discord.Embed(title="Minting", color=Var.base_color)
+        embed = discord.Embed(title="Minting")
         embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
         embed.add_field(name="How to mint using your Brifost wallet?", value=val2, inline=False)
 
