@@ -46,7 +46,7 @@ class Games(commands.Cog):
     async def setup_spinwheel(self, interaction):
         embed = discord.Embed(title='Choose the Box Carefully...', color=Var.base_color)
         embed.add_field(
-            name="Prizes", value='1,111 $LEF - Native coin of the "Wild Network"\nMineral\nNFT Comics Series "Chronicles of the Ten unique Flowers"\n"Wild Network" Branded Merch & Physical Artwork (First Edition)\n\n or **Try Again in 4 Days**')
+            name="Prizes", value='- 1,111 $LEF - Native coin of the "Wild Network"\n- Mineral\n- NFT Comics Series "Chronicles of the Ten unique Flowers"\n- "Wild Network" Branded Merch & Physical Artwork (First Edition)')
         
 
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
