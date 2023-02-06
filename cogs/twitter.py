@@ -95,6 +95,8 @@ class TwitterCog(commands.Cog):
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
+        elif not interaction.user.get_role(Var.guardrill_role):
+            await interaction.response.send_message(f"You need to <#{Var.guardrill_channel}> to get the Rendrill role.")
 
         class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
             twitter_username = ui.TextInput(

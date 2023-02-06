@@ -80,7 +80,10 @@ class Criteria(commands.Cog):
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
-
+        elif not user.get_role(Var.guardrill_role):
+            await interaction.response.send_message(f"You need to <#{Var.guardrill_channel}> to get the Rendrill role.")
+            return
+            
         await interaction.response.defer()
 
         # checks if user has filled the two criteria
