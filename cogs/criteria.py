@@ -251,7 +251,7 @@ class Criteria(commands.Cog):
         # if user already has guardrill role
         if user.get_role(Var.rendrill_role):
             embed = discord.Embed(title="Role already assigned", color=Var.base_color,
-                description="It looks like you already have the `rendrill` role. Thank you for your interest!", color=Var.base_color)
+                description="It looks like you already have the `rendrill` role. Thank you for your interest!")
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
