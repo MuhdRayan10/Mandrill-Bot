@@ -206,7 +206,7 @@ class Criteria(commands.Cog):
 
 
     # Command for Moderator to update user's criteria stats
-    @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="set-req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 4 Members", value=1),

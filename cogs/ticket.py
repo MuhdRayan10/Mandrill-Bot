@@ -30,7 +30,7 @@ class Tickets(commands.Cog):
         self.views.add_item(button)
 
     # Setup Ticket Interface in given text channel
-    @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
     @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
     async def setup_tickets(self, interaction, channel: discord.TextChannel):

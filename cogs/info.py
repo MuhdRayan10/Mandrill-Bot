@@ -97,6 +97,7 @@ __Exchange Minerals into the Mandrills:__
         embed.add_field(name="The rules of our server.", value=rules, inline=True)
         await interaction.response.send_message(embed=embed, ephemeral=True)
     
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name='role-info', description="Info about the custom roles.")
     async def role_info(self, interaction):
 
@@ -112,7 +113,7 @@ __Exchange Minerals into the Mandrills:__
 4. One Full Set of Branded Merch & Physical Artwork (1/12)
 
 The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or open <#1070742662551961640>
-\n
+ 
 """
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
@@ -122,7 +123,7 @@ Rewards and Benefits:
 2. Bonus from every phase of successful minting
 3. Guaranteed 5 Mineral during each phase 
 4. 44,444 $LEF - Native coin of the "Wild Network" 
-\n
+ 
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
@@ -191,6 +192,7 @@ Rewards and Benefits:
         
         return interaction
 
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="official-links", description="List of all the official links")
     async def link(self, interaction):
 
@@ -207,6 +209,7 @@ Rewards and Benefits:
 
         return
 
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="how-to-mint", description="Shows information on how to mint")
     async def how_to_mint(self, interaction):
         val1 = f"""You will need to add the Flare Network to your wallet first. 

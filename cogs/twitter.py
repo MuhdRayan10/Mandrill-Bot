@@ -76,6 +76,7 @@ class TwitterCog(commands.Cog):
             # Send the tweet link to the Discord channel
             await channel.send(tweet_link)
     
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="setup-purmarill", description="Setup the Purmarill Interface in the specified channel")
     async def setup_purmarill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
@@ -118,12 +119,12 @@ class TwitterCog(commands.Cog):
 
                 # check if the twitter is valid
                 if not validify_twitter(str(self.twitter_username)):
-                    await interaction.response.send_message("Twitter account is not valid.", ephemeral=True)
+                    await interaction.response.send_message("Twitter username does not exist.", ephemeral=True)
                     return
                 
                 # checks if it is a valid wallet address
                 if not validify_wallet(str(self.wallet_id)):
-                    await interaction.response.send_message("Wallet ID is not valid.", ephemeral=True)
+                    await interaction.response.send_message("FLR address is not valid.", ephemeral=True)
                     return
 
 
