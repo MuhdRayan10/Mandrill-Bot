@@ -39,16 +39,16 @@ class Games(commands.Cog):
         self.views = ui.View(timeout=None)
 
         for i in range(5):
-            spin_wheel = ui.Button(label="??", style=discord.ButtonStyle.blurple, custom_id=f"??{i}:blurple")
+            spin_wheel = ui.Button(label="?", style=discord.ButtonStyle.blurple, custom_id=f"??{i}:blurple")
             spin_wheel.callback = self.spin_wheel
             self.views.add_item(spin_wheel)
 
     @app_commands.command(name="setup-spin-wheel")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_spinwheel(self, interaction):
-        embed = discord.Embed(title='Mystery Prize', description='Click the button to play.', color=Var.base_color)
+        embed = discord.Embed(title='Mystery Prize', description='Choose the Box Carefully.', color=Var.base_color)
         embed.add_field(
-            name="Prizes", value='\n'.join(self.wheel.items)
+            name="Prizes", value='\n'.join(list(set(self.wheel.items)))
         )
 
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
@@ -63,7 +63,10 @@ class Games(commands.Cog):
         for interaction_ in interactions:
             interaction_time, interaction_user_id = interaction_
             if interaction_user_id == interaction.user.id and now - interaction_time < 7 * 24 * 60 * 60:
-                desc = f"You have already interacted in the past 7 days. Please try again later."
+                time_left_in_seconds = 7 * 24 * 60 * 60 - (now - interaction_time)
+                time_left_in_days = time_left_in_seconds // (24 * 60 * 60)
+                time_left_in_hours = (time_left_in_seconds % (24 * 60 * 60)) // (60 * 60)
+                desc = f"You have already interacted in the past 7 days. Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
                 embed = discord.Embed(
                     title="Spin the Wheel Prize",
                     description=desc
@@ -75,19 +78,20 @@ class Games(commands.Cog):
         prize = self.wheel.spin()
 
         if prize == 'Try Again in 7 Days':
-            desc = "You have not received any prize. Try again in 7 days!"
+            desc = "Unfortunately you have chosen the empty box, Try again in 7 days!"
         else:
-            desc = f"You have won {prize}!"
+            desc = f"Congratulations! You have won the `{prize}`."
 
         embed = discord.Embed(
-            title="Spin the Wheel Prize",
-            description=desc
+            title="Prize Info",
+            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc is not "Unfortunately you have chosen the empty box, Try again in 7 days!" else None
         )
+        embed.add_field(name="Result", value=desc)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
         interaction_ = [now, interaction.user.id]
-        interactions.append(interaction_)
+        interactions.append (interaction_)
 
         with open('./data/games/spin_wheel_interactions.json', 'w') as f:
             json.dump(interactions, f)
