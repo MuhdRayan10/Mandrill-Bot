@@ -98,7 +98,7 @@ class Games(commands.Cog):
 
         embed = discord.Embed(
             title="Prize Info",
-            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc is not "Unfortunately you have chosen the empty box, Try again in 4 days!" else None,
+            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc != "Unfortunately you have chosen the empty box, Try again in 4 days!" else None,
             color=Var.base_color)
         embed.add_field(name="Result", value=desc)
 

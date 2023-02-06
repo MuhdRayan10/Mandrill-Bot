@@ -65,7 +65,7 @@ class ServerStats(commands.Cog):
             delta = end_of_day - now
             return f"In {delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 
-        await mint_channel.edit(name=f"Mint In {time_remaining()}")
+        await mint_channel.edit(name=f"Mint {time_remaining()}")
 
 # Cog setup command
 async def setup(bot):
