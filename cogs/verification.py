@@ -67,7 +67,7 @@ class Verification(commands.Cog):
         self.bot = bot   
 
         verify_button = Button(label="Verify", style=discord.ButtonStyle.green, custom_id="verification:green")
-        verify_button.callback = self.turn_off_dms_exponse # Verify function called when button clicked.
+        verify_button.callback = self.discord_security # Verify function called when button clicked.
 
         self.views= View(timeout=None)
         self.views.add_item(verify_button)
@@ -95,7 +95,7 @@ class Verification(commands.Cog):
 
         welcome_file = discord.File(fp=img, filename="welcome.png")
         
-        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hey {member.mention}, welcome to The Mandrills! Please make sure you <#{Var.verification_channel}> and <#{Var.exprorill_channel}> role in order to interact with the server and community!", color=Var.base_color)
+        embed = discord.Embed(title="Welcome to The Mandrill's Server!", description=f"Hey {member.mention}, welcome to The Mandrills! Please make sure to <#{Var.verification_channel}> and <#{Var.explorill_channel}> role in order to interact with the server and community!", color=Var.base_color)
         embed.set_image(url="attachment://welcome.png")
 
         await channel.send(embed=embed, file=welcome_file)
@@ -118,7 +118,7 @@ class Verification(commands.Cog):
         await interaction.response.send_message(f"Added `verification app`, to <#{channel.id}>")
 
     async def turn_off_dms_exponse(self, interaction):
-
+        
         # Checking if the user is muted or not (if not, then already verified)
         role = interaction.guild.get_role(Var.mute_role)
         
@@ -140,7 +140,7 @@ class Verification(commands.Cog):
     async def discord_security(self, interaction):
 
         val = f"""  ㅤㅤ
-        ➡️  The Mandrills will never DM you first. We recommend to Turn off "direct messages" from the server members.
+        ➡️  The Mandrills will never DM you first. We recommend to Turn off "direct messages" from the server members
 
 ➡️  To navigate safe ONLY use <#{Var.official_links}> channel
 
@@ -245,7 +245,9 @@ class Verification(commands.Cog):
             Giving roles after verification
         '''
         await user.remove_roles(role)
-        await inter.followup.send(f"<#{Var.exprorill_channel}> role in order to interact with the server and community.", ephemeral=True)
+        await user.add_roles(inter.guild.get_role(Var.muted_role))
+
+        await inter.followup.send(f"<#{Var.explorill_channel}> role in order to interact with the server and community.", ephemeral=True)
 
     # Syncing new commands
     @commands.command()

@@ -130,9 +130,7 @@ class TwitterCog(commands.Cog):
                 db = Database("./data/data")
                 # Adding name to db ## TODO: HERE NIVED
                 db.insert("users", (interaction.user.id, interaction.user.name, str(self.twitter_username), str(self.wallet_id)))
-                await interaction.response.send_message("Your case is under consideration. It might take 3-5 minutes!", ephemeral=True)
-
-                await asyncio.sleep(200)
+                await interaction.response.send_message("You are now officially a Purmarill!", ephemeral=True)
 
                 await interaction.user.add_roles(role)
 

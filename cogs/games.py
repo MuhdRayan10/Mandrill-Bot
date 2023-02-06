@@ -6,6 +6,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from discord import ui
+from easy_sqlite3 import *
 
 from helpers import Var as V
 Var = V()
@@ -36,7 +37,7 @@ class Games(commands.Cog):
 
         self.views = ui.View(timeout=None)
 
-        for i in range(5):
+        for i in range(8):
             spin_wheel = ui.Button(label="?", style=discord.ButtonStyle.blurple, custom_id=f"??{i}:blurple")
             spin_wheel.callback = self.spin_wheel
             self.views.add_item(spin_wheel)
@@ -89,6 +90,11 @@ class Games(commands.Cog):
             desc = "Unfortunately you have chosen the empty box, Try again in 4 days!"
         else:
             desc = f"**Congratulations!**\nYou have won the `{prize}`."
+            db = Database("./data/prizes")
+            db.create_table("prizes", {"winner":INT, "name":"TEXT", "prize":STR})
+
+            db.insert("prizes", (interaction.user.id, interaction.user.name, prize))
+            db.close()
 
         embed = discord.Embed(
             title="Prize Info",

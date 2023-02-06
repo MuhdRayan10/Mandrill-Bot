@@ -195,7 +195,7 @@ class Criteria(commands.Cog):
 
             db.close()
 
-            await interaction.followup.send("You have been awarded the `Rendrill` Role!", ephemeral=True)
+            await interaction.followup.send(f"Congratulations ! You are now officially a Rendrill !\nGo to the <#{Var.spinwheel_channel}>, you've earned this success ^‿^", ephemeral=True)
             return
 
         if score < 2:
@@ -285,7 +285,7 @@ class Criteria(commands.Cog):
         embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 4 else wc} Invite at least 4 users to the server", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if data[2] < 4 else wc} Reach Lvl. 4 XP", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1st & 2nd Tasks)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
 

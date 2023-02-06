@@ -54,6 +54,7 @@ class Info(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="roadmap", description="Our Roadmap!")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def roadmap(self, interaction):
 
         await interaction.response.defer()
@@ -81,6 +82,7 @@ __Exchange Minerals into the Mandrills:__
         await interaction.followup.send(embed=embed, file=file, ephemeral=True)
 
     @app_commands.command(name="rules", description="Our server rules.")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def rules(self, interaction):
         embed = discord.Embed(title="Rules", color=Var.base_color)
         rules = """- **Be respectful, civil, and welcoming.**
@@ -98,6 +100,7 @@ __Exchange Minerals into the Mandrills:__
         await interaction.response.send_message(embed=embed, ephemeral=True)
     
     @app_commands.command(name='role-info', description="Info about the custom roles.")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def role_info(self, interaction):
 
         embed = discord.Embed(title="Role Information", color=Var.base_color)
@@ -192,6 +195,7 @@ Rewards and Benefits:
         return interaction
 
     @app_commands.command(name="official-links", description="List of all the official links")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def link(self, interaction):
 
     
@@ -201,13 +205,14 @@ Rewards and Benefits:
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
         embed.add_field(name="Medium", value="[@wildnetwork](https://medium.com/@wildnetwork)", inline=False)
-        embed.add_field(name="E-mail", value="info@themandrills.xyz")
+        embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
 
         await interaction.channel.send(embed=embed)
 
         return
 
     @app_commands.command(name="how-to-mint", description="Shows information on how to mint")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def how_to_mint(self, interaction):
         val1 = f"""You will need to add the Flare Network to your wallet first. 
 
@@ -227,7 +232,7 @@ Rewards and Benefits:
 
 5️⃣  Now you can go to the minting page, connect wallet and MINT 
 
-"Please only use <#{Var.official_links}> to navigate MINT page" (**Beware of the fishing links**)"""
+"Please only use <#{Var.official_links}> to navigate MINT page" (**Beware of the fishing links**)\nㅤㅤ"""
         
         val2 = """1️⃣  Open your Bifrost Wallet
 
