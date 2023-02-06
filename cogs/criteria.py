@@ -70,8 +70,7 @@ class Criteria(commands.Cog):
 
         # if user already has guardrill role
         if user.get_role(Var.guardrill_role):
-            embed = discord.Embed(
-                title="Role already assigned",
+            embed = discord.Embed(title="Role already assigned", color=Var.base_color,
                 description="It looks like you already have the `guardrill` role. Thank you for your interest!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -115,7 +114,7 @@ class Criteria(commands.Cog):
         q_embed = discord.Embed(
             title="Rendrill Questionnaire",
             description="Answer the questions, accurately.",
-            color=discord.Color(Var.base_color)
+            color=Var.base_color
         )
 
         def check(i) -> bool:
@@ -165,8 +164,7 @@ class Criteria(commands.Cog):
         # Create final result embed
         result_embed = discord.Embed(
             title="Rendrill Questionnaire Results",
-            color=discord.Color(Var.base_color)
-        )
+            color=Var.base_color)
         passed = score == len(questions)
         if passed:
             result_embed.description = "Congratulations, you have passed the questionnaire!"
@@ -252,10 +250,8 @@ class Criteria(commands.Cog):
         user = interaction.user
         # if user already has guardrill role
         if user.get_role(Var.rendrill_role):
-            embed = discord.Embed(
-                title="Role already assigned",
-                description="It looks like you already have the `rendrill` role. Thank you for your interest!"
-            )
+            embed = discord.Embed(title="Role already assigned", color=Var.base_color,
+                description="It looks like you already have the `rendrill` role. Thank you for your interest!", color=Var.base_color)
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
@@ -276,14 +272,14 @@ class Criteria(commands.Cog):
         rc, wc = '❌', '✅'
 
         # Embed
-        embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=0xca4949)
+        embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 4 else wc} Invite at least 4 users to the server", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if data[2] < 4 else wc} Reach Lvl. 4 XP", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1 & 2)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
 
-        if data[1] >= 2 and data[2] >= 4 and not data[3]:
+        if data[1] >= 4 and data[2] >= 4 and not data[3]:
             await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 # Cog setup command

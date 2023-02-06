@@ -79,7 +79,7 @@ class TwitterCog(commands.Cog):
     @app_commands.command(name="setup-purmarill", description="Setup the Purmarill Interface in the specified channel")
     async def setup_purmarill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
-        embed = discord.Embed(title='Click the button to get your Purmarill role')
+        embed = discord.Embed(title='Click the button to get your Purmarill role',color=Var.base_color)
         
         # Sending message
         await channel.send(embed=embed, view=self.views)

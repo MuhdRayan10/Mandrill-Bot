@@ -111,7 +111,7 @@ class Verification(commands.Cog):
     async def start_verification(self, interaction, channel: discord.TextChannel):
         
         # The Verify Embed
-        embed = discord.Embed(title='Verify', description='Click the button to verify yourself.')
+        embed = discord.Embed(title='Verify', description='Click the button to verify yourself.',color=Var.base_color)
 
         # Sending message
         await channel.send(embed=embed, view=self.views)
@@ -126,7 +126,7 @@ class Verification(commands.Cog):
             await interaction.response.send_message("Already verified!", ephemeral=True)
             return
 
-        embed = discord.Embed(title="Turn off DMs", description="To continue, you must turn off your DMs.")
+        embed = discord.Embed(title="Turn off DMs", description="To continue, you must turn off your DMs.", color=Var.base_color)
         embed.add_field(name="Why turn off DMs", value="This is to protect you from DM scams, DM advertisers, impersonators, etc.")
         embed.add_field(name="How to turn off DMs", value="1. Right-click on this server's icon\n2. Click on Privacy Settings\n3. Turn off direct messages\n4. Click on Done")
 
@@ -145,7 +145,7 @@ class Verification(commands.Cog):
 ➡️  To navigate safe ONLY use <#{Var.official_links}> channel
 
 ➡️  Identify easily The Mandrills team members through our roles\n\n⚪ Liberators, 🔵 Guardrills & 🟠 Promdrills"""
-        embed = discord.Embed(title="Discord Security")
+        embed = discord.Embed(title="Discord Security", color=Var.base_color)
         embed.add_field(name="Please stay safe and take the time to review our security tips below.", value=val)
 
         view = View()
@@ -156,7 +156,7 @@ class Verification(commands.Cog):
         await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
     async def rules_exponse(self, interaction):
-        embed = discord.Embed(title="Read the Rules", description="To continue, you must read and agree to the server rules.")
+        embed = discord.Embed(title="Read the Rules", description="To continue, you must read and agree to the server rules.", color=Var.base_color)
         embed.add_field(name="Rules", value="1. Be respectful, civil, and welcoming.\n2. No inappropriate or unsafe content.\n3. Do not misuse or spam any of the channels.\n4. Do not join the server to promote your content.\n5. Any content that is NSFW is not allowed under any circumstances.\n6. Do not buy/sell/trade/give away anything.\n7. Do not use the server as a dating server.\n8. The primary language of this server is English.\n9. Discord names and avatars must be appropriate.\n10. Spamming in any form is not allowed.")
 
         view = View()
@@ -186,7 +186,7 @@ class Verification(commands.Cog):
         f = discord.File(f"./data/captcha/{interaction.user.id}.png", filename="captcha.png")
 
         # Creating Embed
-        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct sequence to verify.", color=discord.Color(Var.base_color))
+        embed = discord.Embed(title="Captcha Verification", description="Click the buttons in the correct sequence to verify.", color=Var.base_color)
         embed.set_image(url="attachment://captcha.png")
 
         msg = await interaction.followup.send(embed=embed, view=Captcha(interaction.user.id), file=f, ephemeral=True)
@@ -218,13 +218,13 @@ class Verification(commands.Cog):
             count -= 1
  
         # Embed once Captcha is completed
-        completed_embed = discord.Embed(title=f"{interaction.user.display_name} you have {'not ' if correct != cache[interaction.user.id] else ''}been verified! {'Please try again...' if correct != cache[interaction.user.id] else ''}", color=discord.Color(Var.base_color))
+        completed_embed = discord.Embed(title=f"{interaction.user.display_name} you have {'not ' if correct != cache[interaction.user.id] else ''}been verified! {'Please try again...' if correct != cache[interaction.user.id] else ''}", color=Var.base_color)
         completed_embed.set_image(url="attachment://captcha.png")
 
         await interaction.followup.edit_message(msg.id, embed=completed_embed, view=None)
         
         # Calling verified function if verified for timing out the user
-        await self.verified(interaction.user, interaction.guild.get_role(Var.mute_role), interaction.guild.get_role(Var.exprorill_role), interaction) if correct == cache[interaction.user.id] else None
+        await self.verified(interaction.user, interaction.guild.get_role(Var.mute_role), interaction) if correct == cache[interaction.user.id] else None
 
         # Deleting cached memory
         del f, cache[interaction.user.id]
@@ -240,14 +240,11 @@ class Verification(commands.Cog):
 
         return embed
 
-    async def verified(self, user, role, role2, inter):
+    async def verified(self, user, role, inter):
         '''
             Giving roles after verification
         '''
         await user.remove_roles(role)
-
-        await user.add_roles(role2)
-
         await inter.followup.send(f"<#{Var.exprorill_channel}> role in order to interact with the server and community.", ephemeral=True)
 
     # Syncing new commands

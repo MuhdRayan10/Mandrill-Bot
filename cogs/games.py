@@ -45,8 +45,8 @@ class Games(commands.Cog):
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_spinwheel(self, interaction):
         embed = discord.Embed(title='Choose the Box Carefully...', color=Var.base_color)
-        embed.add_field(
-            name="Prizes", value='- 1,111 $LEF - Native coin of the "Wild Network"\n- Mineral\n- NFT Comics Series "Chronicles of the Ten unique Flowers"\n- "Wild Network" Branded Merch & Physical Artwork (First Edition)')
+        embed.add_field(name="Prizes", value='- 1,111 $LEF - Native coin of the "Wild Network"\n- Mineral\n- NFT Comics Series "Chronicles of the Ten unique Flowers"\n- "Wild Network" Branded Merch & Physical Artwork (First Edition)',
+            color=Var.base_color)
         
 
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
@@ -57,7 +57,8 @@ class Games(commands.Cog):
         if user.get_role(Var.rendrill_role) is None:
             embed = discord.Embed(
                 title="Not Eligible",
-                description=f"You will be eligible to open the Mystery Box after you the <@{Var.rendrill_role}> from <#{Var.rendrill_channel}>."
+                description=f"You will be eligible to open the Mystery Box after you the <@{Var.rendrill_role}> from <#{Var.rendrill_channel}>.",
+                color=Var.base_color
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -76,7 +77,8 @@ class Games(commands.Cog):
                 desc = f"You have already interacted in the past 4 days. Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
                 embed = discord.Embed(
                     title="Spin the Wheel Prize",
-                    description=desc
+                    description=desc,
+                    color=Var.base_color
                 )
                 
                 await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -91,8 +93,8 @@ class Games(commands.Cog):
 
         embed = discord.Embed(
             title="Prize Info",
-            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc is not "Unfortunately you have chosen the empty box, Try again in 4 days!" else None
-        )
+            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc is not "Unfortunately you have chosen the empty box, Try again in 4 days!" else None,
+            color=Var.base_color)
         embed.add_field(name="Result", value=desc)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
