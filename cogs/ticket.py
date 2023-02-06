@@ -24,7 +24,7 @@ class CreateTicket(View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @discord.ui.button(label="Create Ticket", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="Proceed", style=discord.ButtonStyle.green)
     async def create_ticket(self, interaction, _):
 
         await interaction.response.defer()
@@ -61,7 +61,7 @@ class Tickets(commands.Cog):
     @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
     async def setup_tickets(self, interaction, channel: discord.TextChannel):
         
-        embed = discord.Embed(title="Create a Ticket!", description="Click on the `Create Ticket` button below to create a ticket. The server's staff will be notified and shortly aid you with your problem.")
+        embed = discord.Embed(title="Create a Ticket!", description="Click on the `Proceed` button below to create a ticket. One of our team member will be notified and shortly aid you with your problem.")
         await interaction.response.send_message(channel.mention)
         
         await channel.send(embed=embed, view=CreateTicket())

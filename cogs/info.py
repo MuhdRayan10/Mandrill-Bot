@@ -194,10 +194,11 @@ Rewards and Benefits:
 
     
         embed = discord.Embed(title="Official Links")
+        embed.add_field(name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)")
         embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
-        embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
+        embed.add_field(name="E-mail", value="info@themandrills.xyz")
 
         await interaction.channel.send(embed=embed)
 
@@ -237,7 +238,7 @@ Rewards and Benefits:
 
         embed = discord.Embed(title="Minting")
         embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
-        embed.add_field(name="How to mint using your Brifost wallet?", value=val2)
+        embed.add_field(name="How to mint using your Brifost wallet?", value=val2, inline=False)
 
         await interaction.channel.send(embed=embed)
 

@@ -58,7 +58,7 @@ class Criteria(commands.Cog):
     @app_commands.command(name="setup-rendrill", description="[MODS] Setup the rendrill button in the channel specified")
     async def setup_rendrill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
-        embed = discord.Embed(title='Get Rendrill', description='Click the button to get your rendrill role.', color=Var.base_color)
+        embed = discord.Embed(title='Click the button to get your Rendrill role.', color=Var.base_color)
         
 
         # Sending message

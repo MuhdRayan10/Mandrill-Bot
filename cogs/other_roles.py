@@ -34,11 +34,11 @@ class Roles(commands.Cog):
         
         self.bot = bot
 
-        get_exprorill_button = ui.Button(label="Get Exprorill", style=discord.ButtonStyle.green, custom_id="exprorill:green")
-        get_exprorill_button.callback = self.give_exprorill
+        get_explorill_button = ui.Button(label="Get Explorill", style=discord.ButtonStyle.green, custom_id="explorill:green")
+        get_explorill_button.callback = self.give_explorill
 
         self.views = ui.View(timeout=None)
-        self.views.add_item(get_exprorill_button)
+        self.views.add_item(get_explorill_button)
 
         get_promdrill_button = ui.Button(label="Get Promdrill", style=discord.ButtonStyle.green, custom_id="promdrill:green")
         get_promdrill_button.callback = self.promdrill
@@ -51,29 +51,29 @@ class Roles(commands.Cog):
         self.view2.add_item(criteria)
 
         
-    async def give_exprorill(self, interaction):
+    async def give_explorill(self, interaction):
 
-        exprorill_role = interaction.guild.get_role(Var.exprorill_role)
+        explorill_role = interaction.guild.get_role(Var.explorill_role)
         unverified_role = interaction.guild.get_role(Var.mute_role)
 
         if unverified_role in interaction.user.roles:
             await interaction.response.send_message(f"Unfortunately you are still unverified... Go verify yourself at <#{Var.verification_channel}>", ephemeral=True)
         
         else:
-            await interaction.user.add_roles(exprorill_role)
-            await interaction.response.send_message(f"You are now officially an `Exprorill`!", ephemeral=True)
+            await interaction.user.add_roles(explorill_role)
+            await interaction.response.send_message(f"You are now officially an Explorill!", ephemeral=True)
 
 
-    @app_commands.command(name="setup-exprorill", description="[MODS] Setup exprorill role interface")    
-    async def setup_exprorill(self, interaction):
-        embed = discord.Embed(title='Get Exprorill', description='Click the button to get your Exprorill role.', color=Var.base_color)
+    @app_commands.command(name="setup-explorill", description="[MODS] Setup explorill role interface")    
+    async def setup_explorill(self, interaction):
+        embed = discord.Embed(title='Click the button to get your Explorill role.', color=Var.base_color)
         
-        channel = interaction.guild.get_channel(Var.exprorill_channel)
+        channel = interaction.guild.get_channel(Var.explorill_channel)
         await channel.send(embed=embed, view=self.views)
 
     @app_commands.command(name="setup-promdrill", description="[MODS] Sets up promdrill interface.")
     async def setup_promdrill(self, interaction):
-        embed = discord.Embed(title='Get Promdrill', description='Click the button to get your Promdrill role.', color=Var.base_color)
+        embed = discord.Embed(title='Click the button to get your Promdrill role.', color=Var.base_color)
         
         channel = interaction.guild.get_channel(Var.promdrill_channel)
         await channel.send(embed=embed, view=self.view2)
@@ -87,7 +87,7 @@ class Roles(commands.Cog):
         if user.get_role(Var.guardrill_role):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you already have the `guardrill` role. Thank you for your interest!"
+                description="It looks like you already have the `Guardrill` role. Thank you for your interest!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -219,7 +219,7 @@ class Roles(commands.Cog):
         if user.get_role(Var.promdrill_role):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you already have the `promdrill` role. Thank you for your interest!"
+                description="It looks like you already have the `Promdrill` role. Thank you for your interest!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return

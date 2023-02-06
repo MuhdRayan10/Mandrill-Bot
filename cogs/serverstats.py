@@ -63,7 +63,7 @@ class ServerStats(commands.Cog):
             now = datetime.datetime.now()
             end_of_day = datetime.datetime(now.year, 2, 28, 23, 0, 0)
             delta = end_of_day - now
-            return f"{delta.days} Days {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
+            return f"{delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 
         await mint_channel.edit(name=f"In {time_remaining()}")
 

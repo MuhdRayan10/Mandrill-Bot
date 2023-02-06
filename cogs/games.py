@@ -14,17 +14,15 @@ class wheel:
     def __init__(self) -> None:
         self.items = [
             '1,111 $LEF - Native coin of the "Wild Network"',
-            'Try Again in 7 Days',
+            'Try Again in 4 Days',
             'Mineral',
-            'Try Again in 7 Days',
-            'NFT Comics Series "Chronicles of the Ten unique Flowers',
-            'Try Again in 7 Days',
+            'Try Again in 4 Days',
+            'NFT Comics Series "Chronicles of the Ten unique Flowers"',
+            'Try Again in 4 Days',
             '"Wild Network" Branded Merch & Physical Artwork (First Edition)',
-            'Try Again in 7 Days',
+            'Try Again in 4 Days',
         ]
 
-        
-        
 
     def spin(self) -> str:
         return random.choice(self.items)
@@ -46,27 +44,36 @@ class Games(commands.Cog):
     @app_commands.command(name="setup-spin-wheel")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_spinwheel(self, interaction):
-        embed = discord.Embed(title='Mystery Prize', description='Choose the Box Carefully.', color=Var.base_color)
+        embed = discord.Embed(title='Choose the Box Carefully...', color=Var.base_color)
         embed.add_field(
-            name="Prizes", value='\n'.join(list(set(self.wheel.items)))
-        )
+            name="Prizes", value='1,111 $LEF - Native coin of the "Wild Network"\nMineral\nNFT Comics Series "Chronicles of the Ten unique Flowers"\n"Wild Network" Branded Merch & Physical Artwork (First Edition)\n\n or **Try Again in 4 Days**')
+        
 
         channel = interaction.guild.get_channel(Var.spinwheel_channel)
         await channel.send(embed=embed, view=self.views)
 
     async def spin_wheel(self, interaction):
+        user = interaction.user
+        if user.get_role(Var.rendrill_role) is None:
+            embed = discord.Embed(
+                title="Not Eligible",
+                description=f"You will be eligible to open the Mystery Box after you the <@{Var.rendrill_role}> from <#{Var.rendrill_channel}>."
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+        
         now = int(time.time())
-
+    
         with open('./data/games/spin_wheel_interactions.json', 'r') as f:
             interactions = json.load(f)
 
         for interaction_ in interactions:
             interaction_time, interaction_user_id = interaction_
-            if interaction_user_id == interaction.user.id and now - interaction_time < 7 * 24 * 60 * 60:
-                time_left_in_seconds = 7 * 24 * 60 * 60 - (now - interaction_time)
+            if interaction_user_id == interaction.user.id and now - interaction_time < 4 * 24 * 60 * 60:
+                time_left_in_seconds = 4 * 24 * 60 * 60 - (now - interaction_time)
                 time_left_in_days = time_left_in_seconds // (24 * 60 * 60)
                 time_left_in_hours = (time_left_in_seconds % (24 * 60 * 60)) // (60 * 60)
-                desc = f"You have already interacted in the past 7 days. Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
+                desc = f"You have already interacted in the past 4 days. Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
                 embed = discord.Embed(
                     title="Spin the Wheel Prize",
                     description=desc
@@ -77,14 +84,14 @@ class Games(commands.Cog):
 
         prize = self.wheel.spin()
 
-        if prize == 'Try Again in 7 Days':
-            desc = "Unfortunately you have chosen the empty box, Try again in 7 days!"
+        if prize == 'Try Again in 4 Days':
+            desc = "Unfortunately you have chosen the empty box, Try again in 4 days!"
         else:
-            desc = f"Congratulations! You have won the `{prize}`."
+            desc = f"**Congratulations!**\nYou have won the `{prize}`."
 
         embed = discord.Embed(
             title="Prize Info",
-            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc is not "Unfortunately you have chosen the empty box, Try again in 7 days!" else None
+            description="Keep an eye on <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc is not "Unfortunately you have chosen the empty box, Try again in 4 days!" else None
         )
         embed.add_field(name="Result", value=desc)
 

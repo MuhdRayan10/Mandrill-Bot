@@ -108,12 +108,12 @@ class TwitterCog(commands.Cog):
 
                 # check if the twitter is valid
                 if not validify_twitter(str(self.twitter_username)):
-                    await interaction.response.send_message("Twitter account not valid.", ephemeral=True)
+                    await interaction.response.send_message("Twitter account is not valid.", ephemeral=True)
                     return
                 
                 # checks if it is a valid wallet address
                 if not validify_wallet(str(self.wallet_id)):
-                    await interaction.response.send_message("Wallet ID not valid.", ephemeral=True)
+                    await interaction.response.send_message("Wallet ID is not valid.", ephemeral=True)
                     return
 
 
