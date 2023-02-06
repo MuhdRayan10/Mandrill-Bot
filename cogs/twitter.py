@@ -86,6 +86,16 @@ class TwitterCog(commands.Cog):
         await interaction.response.send_message(f"Added `get prumarill` app, to <#{channel.id}>")
 
     async def link(self, interaction):
+
+        # if user already has guardrill role
+        if interaction.user.get_role(Var.purmarill_role):
+            embed = discord.Embed(
+                title="Role already assigned",
+                description="It looks like you already have the `Purmarill` role. Thank you for your interest!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
         class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
             twitter_username = ui.TextInput(
                 label="Twitter Username",

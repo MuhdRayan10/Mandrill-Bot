@@ -117,10 +117,11 @@ The First 50 person who gains the role of the Rendrill, have a choice to take gu
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 
 Rewards and Benefits:
-ㅤ1. Stable monthly salary from the project
-ㅤ2. Bonus from every phase of successful minting
-ㅤ3. Guaranteed 5 Mineral during each phase 
-ㅤ4. 44,444 $LEF - Native coin of the "Wild Network" 
+1. Stable monthly salary from the project
+2. Bonus from every phase of successful minting
+3. Guaranteed 5 Mineral during each phase 
+4. 44,444 $LEF - Native coin of the "Wild Network" 
+
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
