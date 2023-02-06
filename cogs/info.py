@@ -199,7 +199,7 @@ Rewards and Benefits:
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
         embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.channel.send(embed=embed)
 
         return
 
@@ -239,7 +239,7 @@ Rewards and Benefits:
         embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
         embed.add_field(name="How to mint using your Brifost wallet?", value=val2)
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.channel.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Info(bot))
