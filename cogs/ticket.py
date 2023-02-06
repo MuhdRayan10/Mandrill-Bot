@@ -24,7 +24,7 @@ class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        button = discord.ui.Button("Proceed", style=discord.ButtonStyle.green)
+        button = discord.ui.Button(label="Proceed", style=discord.ButtonStyle.green, custom_id="ticket:green")
         button.callback = self.create_ticket
         self.views = View(timeout=None)
         self.views.add_item(button)
