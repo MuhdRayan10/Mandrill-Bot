@@ -19,13 +19,29 @@ class TicketSettings(View):
         await interaction.channel.delete()
 
 
-# Ticket Creation Interface buttons
-class CreateTicket(View):
-    def __init__(self):
-        super().__init__(timeout=None)
+# Cog class
+class Tickets(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    @discord.ui.button(label="Proceed", style=discord.ButtonStyle.green)
-    async def create_ticket(self, interaction, _):
+        button = discord.ui.Button("Proceed", style=discord.ButtonStyle.green)
+        button.callback = self.create_ticket
+        self.views = View(timeout=None)
+        self.views.add_item(button)
+
+    # Setup Ticket Interface in given text channel
+    @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
+    @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
+    @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
+    async def setup_tickets(self, interaction, channel: discord.TextChannel):
+        
+        embed = discord.Embed(title="Create a Ticket!", description="Click on the `Proceed` button below to create a ticket. One of our team member will be notified and shortly aid you with your problem.",
+            color=Var.base_color)
+        await interaction.response.send_message(channel.mention)
+        
+        await channel.send(embed=embed, view=self.views)
+
+    async def create_ticket(self, interaction):
 
         await interaction.response.defer()
 
@@ -51,22 +67,7 @@ class CreateTicket(View):
             color=Var.base_color)
         await channel.send(embed=embed, view=TicketSettings())
 
-# Cog class
-class Tickets(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
 
-    # Setup Ticket Interface in given text channel
-    @app_commands.checks.has_any_role(Var.rendrill_role, Var.liberator_role)
-    @app_commands.command(name="setup-tickets", description="[MODS] Setup Ticket Interface")
-    @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
-    async def setup_tickets(self, interaction, channel: discord.TextChannel):
-        
-        embed = discord.Embed(title="Create a Ticket!", description="Click on the `Proceed` button below to create a ticket. One of our team member will be notified and shortly aid you with your problem.",
-            color=Var.base_color)
-        await interaction.response.send_message(channel.mention)
-        
-        await channel.send(embed=embed, view=CreateTicket())
 
         
 
