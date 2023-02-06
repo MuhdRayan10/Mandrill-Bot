@@ -28,8 +28,9 @@ class MandrillBot(commands.Bot):
             from cogs.twitter import TwitterCog
             from cogs.other_roles import Roles
             from cogs.games import Games
+            from cogs.ticket import Tickets
 
-            views = (Verification(self), Criteria(self), TwitterCog(self), Games(self), Roles(self))
+            views = (Verification(self), Criteria(self), TwitterCog(self), Games(self), Tickets(self), Roles(self))
             
             for view in views:
                 self.add_view(view.views)
