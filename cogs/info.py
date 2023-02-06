@@ -58,7 +58,7 @@ class Info(commands.Cog):
 
         await interaction.response.defer()
 
-        embed = discord.Embed(title="The Mandrills Roadmap", color=0x0000FF)
+        embed = discord.Embed(title="The Mandrills Roadmap", color=Var.base_color)
         lines = """Three Phases of minting Minerals:
 - **1st Phase of Minting:** 1,111 Minerals Price: TBA
 - **2nd Phase of Minting:** 1,111 Minerals Price: TBA
@@ -194,7 +194,7 @@ Rewards and Benefits:
     async def link(self, interaction):
 
     
-        embed = discord.Embed(title="Official Links")
+        embed = discord.Embed(title="Official Links", color=Var.base_color)
         embed.add_field(name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)", inline=False)
         embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
@@ -238,7 +238,7 @@ Rewards and Benefits:
 
 5️⃣  Click MINT on the mint page and approve the transaction within your Bifrost Wallet"""
 
-        embed = discord.Embed(title="Minting")
+        embed = discord.Embed(title="Minting", color=Var.base_color)
         embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
         embed.add_field(name="How to mint using your Brifost wallet?", value=val2, inline=False)
 

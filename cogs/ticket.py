@@ -47,7 +47,8 @@ class CreateTicket(View):
 
         await interaction.followup.edit_message(msg.id, content=f"Channel created successfully! {channel.mention}")
 
-        embed = discord.Embed(title="Ticket Created!", description=f"{interaction.user.mention} created a ticket! \nTo close the ticket, click the button below.")
+        embed = discord.Embed(title="Ticket Created!", description=f"{interaction.user.mention} created a ticket! \nTo close the ticket, click the button below.",
+            color=Var.base_color)
         await channel.send(embed=embed, view=TicketSettings())
 
 # Cog class
@@ -61,7 +62,8 @@ class Tickets(commands.Cog):
     @app_commands.describe(channel="The channel where the Ticket Interface is to be set up")
     async def setup_tickets(self, interaction, channel: discord.TextChannel):
         
-        embed = discord.Embed(title="Create a Ticket!", description="Click on the `Proceed` button below to create a ticket. One of our team member will be notified and shortly aid you with your problem.")
+        embed = discord.Embed(title="Create a Ticket!", description="Click on the `Proceed` button below to create a ticket. One of our team member will be notified and shortly aid you with your problem.",
+            color=Var.base_color)
         await interaction.response.send_message(channel.mention)
         
         await channel.send(embed=embed, view=CreateTicket())
