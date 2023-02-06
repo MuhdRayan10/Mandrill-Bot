@@ -82,7 +82,7 @@ class TwitterCog(commands.Cog):
         embed = discord.Embed(title='Click the button to get your Purmarill role',color=Var.base_color)
         
         # Sending message
-        await channel.send(embed=embed, view=self.views)
+        await channel.send(embed=embed, view=self.views, color=Var.base_color)
         await interaction.response.send_message(f"Added `get prumarill` app, to <#{channel.id}>")
 
     async def link(self, interaction):
