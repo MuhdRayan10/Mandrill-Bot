@@ -41,7 +41,7 @@ class CreateTicket(View):
         }
 
         # Get Tickets category and create a new channel
-        category = discord.utils.get(interaction.guild.categories, name='TICKETS')
+        category = discord.utils.get(interaction.guild.categories, id=1052257859112538213)
         channel = await interaction.guild.create_text_channel(f"[TICKET]-{interaction.user.name}",
                 overwrites=overwrites, category=category)
 

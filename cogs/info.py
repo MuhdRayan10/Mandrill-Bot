@@ -104,23 +104,23 @@ __Exchange Minerals into the Mandrills:__
 
         explorills_description = f"Exprorills are the members who have not received any kind of role yet and are able to interact with the server and community."
         purmarills_description = f"Purmarills are the members who have met the criteria to purchase the Mineral."
-        rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to participate in the "#wheel-of-fortune" for the chance to win one of the prize from the list: 
+        rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#1070742662551961640> for the chance to win one of the prize from the list:
 
-ㅤ1)  1,111 $LEF - Native coin of the "Wild Network" 
-ㅤ2)  Mineral 
-ㅤ3) "Wild Network" NFT Comics Series "Chronicles of the Ten unique Flowers" (First Edition) 
-ㅤ4)  "Wild Network" Branded Merch & Physical Artwork (First Edition) 
+1. Mineral
+2. NFT Comics Series "Chronicles of the Ten unique Flowers" (1/12)
+3. 1,111 $LEF - Native coin of the "Wild Network"
+4. One Full Set of Branded Merch & Physical Artwork (1/12)
 
-The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or Spin the Wheel.
+The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or open <#1070742662551961640>
 """
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 
 Rewards and Benefits:
-ㅤ1) Stable monthly salary from the project
-ㅤ2) Bonus from every phase of successful minting
-ㅤ3) Guaranteed 5 Mineral during each phase 
-ㅤ4) 44,444 $LEF - Native coin of the "Wild Network" 
+ㅤ1. Stable monthly salary from the project
+ㅤ2. Bonus from every phase of successful minting
+ㅤ3. Guaranteed 5 Mineral during each phase 
+ㅤ4. 44,444 $LEF - Native coin of the "Wild Network" 
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
