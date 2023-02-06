@@ -66,14 +66,14 @@ class Roles(commands.Cog):
 
     @app_commands.command(name="setup-explorill", description="[MODS] Setup explorill role interface")    
     async def setup_explorill(self, interaction):
-        embed = discord.Embed(title='Click the button to get your Explorill role.', color=Var.base_color)
+        embed = discord.Embed(title='Click the button to get your Explorill role', color=Var.base_color)
         
         channel = interaction.guild.get_channel(Var.explorill_channel)
         await channel.send(embed=embed, view=self.views)
 
     @app_commands.command(name="setup-promdrill", description="[MODS] Sets up promdrill interface.")
     async def setup_promdrill(self, interaction):
-        embed = discord.Embed(title='Click the button to get your Promdrill role.', color=Var.base_color)
+        embed = discord.Embed(title='Click the button to get your Promdrill role', color=Var.base_color)
         
         channel = interaction.guild.get_channel(Var.promdrill_channel)
         await channel.send(embed=embed, view=self.view2)

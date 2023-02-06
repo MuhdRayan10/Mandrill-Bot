@@ -165,29 +165,3 @@ class XP(commands.Cog):
       
 async def setup(bot):
     await bot.add_cog(XP(bot))
-
-
-
-
-
-    
-
-
-
-
-
-        
-
-
-
-
-
-
-        
-
-
-
-async def setup(bot):
-    await bot.add_cog(XP(bot))
-            
-        
