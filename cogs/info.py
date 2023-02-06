@@ -132,7 +132,7 @@ Rewards and Benefits:
         embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
         embed.add_field(name="Liberators", value=liberators_description, inline=False)
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.channel.send(embed=embed)
 
     def create_help_menu_embed(self, page) -> discord.Embed:
         embed = discord.Embed(title="Commands Info", description=page['title'], color=Var.base_color)
