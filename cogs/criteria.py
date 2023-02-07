@@ -101,7 +101,7 @@ class Criteria(commands.Cog):
             
         db.close()
 
-        if not(data[1] >= 2 and data[2] == 1):
+        if not(data[1] >= 4 and data[2] >= 4):
             message = "Looks like you haven't completed the first two criteria yet...  press the Criteria button!"
             await interaction.followup.send(message, ephemeral=True)
             return
@@ -246,19 +246,14 @@ class Criteria(commands.Cog):
         a2 = done if activity == 2 else data[2]
         a3 = done if activity == 3 else data[3]
 
-        if a1 == 1 and done == 1:
+        if activity == 1:
             a1 += 3
+        elif activity == 2:
+            a2 += 3
 
-        if_role = 1 if a1 and a2 and a3 else 0
-
-        db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":if_role},
+        db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":0},
              where={"user":user.id})
         db.close()
-
-        # Giving Rendrill role if criteria satisfied
-        if if_role:
-            role = interaction.guild.get_role(Var.rendrill_role)
-            await user.add_roles(role)
 
         await interaction.response.send_message(f"Updated.", ephemeral=True)
 

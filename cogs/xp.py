@@ -78,7 +78,7 @@ class XP(commands.Cog):
 
             await level_up_message(message, levels)
             
-            if current_data[1] >=2 and current_data[2] >= 4 and not current_data[3]:
+            if current_data[1] >=4 and current_data[2] >= 4 and not current_data[3]:
                 await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button to start the quiz!")
 
             
@@ -162,6 +162,32 @@ class XP(commands.Cog):
             await interaction.response.send_message(embed=embed, file=discord.File(fp=image_binary, filename="image.png"))
 
         plt.close()
+
+    @app_commands.command(name="invites", description="See how many invites the user has.")
+    @app_commands.describe(user="User whose invites stats have to be displayed")
+    async def invites(self, interaction, user:discord.Member=None):
+        user = user or interaction.user
+
+        db = Database("./data/invites")
+        data = db.select("invites", where={"inviter":user.id})
+        if not data:
+            await interaction.response.send_message(embed=discord.Embed(title=f"{user.name} has no invites.", color=Var.base_color))
+            return
+
+        count = 0
+        for d in data:
+            count += d[2]
+
+        embed = discord.Embed(title="Invites", color=Var.base_color)
+        embed.add_field(name="User", value=user.name)
+        embed.add_field(name="Invite Links", value=f"`{len(data)}`", inline=False)
+        embed.add_field(name="Invites", value=f"`{count}`", inline=False)
+
+        await interaction.response.send_message(embed=embed)
+        db.close()
+
+
+
       
 async def setup(bot):
     await bot.add_cog(XP(bot))

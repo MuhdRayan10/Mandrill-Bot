@@ -20,9 +20,8 @@ async def update_criteria(inviter, guild, V):
     data = db.select("role", where={"user":inviter.id}, size=1)
     db.close()
 
-    if data[1] >= 2 and data[2] == 1 and not data[3]:
-        channel = guild.get_channel(V.rendrill_channel)
-        await inviter.send(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {channel.mention} and click on the `GET RENDRILL` button to start the quiz!")
+    if data[1] >= 4 and data[2] >= 4 and not data[3]:
+        await inviter.send(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {V.rendrill_channel} and click on the `GET RENDRILL` button to start the quiz!")
     
 
 
