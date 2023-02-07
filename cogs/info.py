@@ -54,6 +54,7 @@ class Info(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="roadmap", description="Our Roadmap!")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def roadmap(self, interaction):
 
         await interaction.response.defer()
@@ -81,6 +82,7 @@ __Exchange Minerals into the Mandrills:__
         await interaction.followup.send(embed=embed, file=file, ephemeral=True)
 
     @app_commands.command(name="rules", description="Our server rules.")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def rules(self, interaction):
         embed = discord.Embed(title="Rules", color=Var.base_color)
         rules = """- **Be respectful, civil, and welcoming.**
@@ -99,36 +101,34 @@ __Exchange Minerals into the Mandrills:__
     
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name='role-info', description="Info about the custom roles.")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def role_info(self, interaction):
 
         embed = discord.Embed(title="Role Information", color=Var.base_color)
 
-        explorills_description = f"Exprorills are the members who have not received any kind of role yet and are able to interact with the server and community."
+        explorills_description = f"Explorills are the members who have not received any kind of role yet and are able to interact with the server and community."
         purmarills_description = f"Purmarills are the members who have met the criteria to purchase the Mineral."
         rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#1070742662551961640> for the chance to win one of the prize from the list:
-
-1. Mineral
-2. NFT Comics Series "Chronicles of the Ten unique Flowers" (1/12)
-3. 1,111 $LEF - Native coin of the "Wild Network"
-4. One Full Set of Branded Merch & Physical Artwork (1/12)
-
+ㅤ1. Mineral
+ㅤ2. NFT Comics Series "Chronicles of the Ten unique Flowers" (1/12)
+ㅤ3. 1,111 $LEF - Native coin of the "Wild Network"
+ㅤ4. One Full Set of Branded Merch & Physical Artwork (1/12)
 The First 50 person who gains the role of the Rendrill, have a choice to take guaranteed Mineral or open <#1070742662551961640>
  
 """
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
-
 Rewards and Benefits:
-1. Stable monthly salary from the project
-2. Bonus from every phase of successful minting
-3. Guaranteed 5 Mineral during each phase 
-4. 44,444 $LEF - Native coin of the "Wild Network" 
- 
+ㅤ1. Stable monthly salary from the project
+ㅤ2. Bonus from every phase of successful minting
+ㅤ3. Guaranteed 5 Mineral during each phase 
+ㅤ4. 44,444 $LEF - Native coin of the "Wild Network" 
+\n
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
 
-        embed.add_field(name="Exprorills", value=explorills_description, inline=False)
+        embed.add_field(name="Explorills", value=explorills_description, inline=False)
         embed.add_field(name="Purmarills", value=purmarills_description, inline=False)
         embed.add_field(name="Rendrills", value=rendrills_description, inline=False)
         embed.add_field(name="Promdrills", value=promdrills_description, inline=False)
@@ -194,6 +194,7 @@ Rewards and Benefits:
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="official-links", description="List of all the official links")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def link(self, interaction):
 
     
@@ -203,7 +204,7 @@ Rewards and Benefits:
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
         embed.add_field(name="Medium", value="[@wildnetwork](https://medium.com/@wildnetwork)", inline=False)
-        embed.add_field(name="E-mail", value="info@themandrills.xyz")
+        embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
 
         await interaction.channel.send(embed=embed)
 
@@ -211,6 +212,7 @@ Rewards and Benefits:
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="how-to-mint", description="Shows information on how to mint")
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def how_to_mint(self, interaction):
         val1 = f"""You will need to add the Flare Network to your wallet first. 
 
@@ -230,7 +232,7 @@ Rewards and Benefits:
 
 5️⃣  Now you can go to the minting page, connect wallet and MINT 
 
-"Please only use <#{Var.official_links}> to navigate MINT page" (**Beware of the fishing links**)"""
+"Please only use <#{Var.official_links}> to navigate MINT page" (**Beware of the fishing links**)\nㅤㅤ"""
         
         val2 = """1️⃣  Open your Bifrost Wallet
 

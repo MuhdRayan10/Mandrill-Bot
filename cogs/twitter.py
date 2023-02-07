@@ -96,6 +96,8 @@ class TwitterCog(commands.Cog):
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
+        elif not interaction.user.get_role(Var.guardrill_role):
+            await interaction.response.send_message(f"You need to <#{Var.guardrill_channel}> to get the Rendrill role.")
 
         class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
             twitter_username = ui.TextInput(
@@ -131,9 +133,7 @@ class TwitterCog(commands.Cog):
                 db = Database("./data/data")
                 # Adding name to db ## TODO: HERE NIVED
                 db.insert("users", (interaction.user.id, interaction.user.name, str(self.twitter_username), str(self.wallet_id)))
-                await interaction.response.send_message("Your case is under consideration. It might take 3-5 minutes!", ephemeral=True)
-
-                await asyncio.sleep(200)
+                await interaction.response.send_message("You are now officially a Purmarill!", ephemeral=True)
 
                 await interaction.user.add_roles(role)
 
