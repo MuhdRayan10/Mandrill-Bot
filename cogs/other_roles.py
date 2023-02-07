@@ -56,9 +56,14 @@ class Roles(commands.Cog):
         explorill_role = interaction.guild.get_role(Var.explorill_role)
         unverified_role = interaction.guild.get_role(Var.mute_role)
 
-        if unverified_role in interaction.user.roles:
+        roles = interaction.user.roles
+
+        if unverified_role in roles:
             await interaction.response.send_message(f"Unfortunately you are still unverified... Go verify yourself at <#{Var.verification_channel}>", ephemeral=True)
         
+        if explorill_role in roles:
+            await interaction.response.send_message(f"You already are an Explorill!", ephemeral=True)
+
         else:
             await interaction.user.add_roles(explorill_role)
             await interaction.response.send_message(f"You are now officially an Explorill!", ephemeral=True)
