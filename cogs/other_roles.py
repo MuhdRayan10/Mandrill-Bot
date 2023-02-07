@@ -62,8 +62,8 @@ class Roles(commands.Cog):
         else:
             await interaction.user.add_roles(explorill_role)
             await interaction.response.send_message(f"You are now officially an Explorill!", ephemeral=True)
-
             await interaction.user.remove_roles(interaction.guild.get_role(Var.muted_role))
+
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="setup-explorill", description="[MODS] Setup explorill role interface")    
     async def setup_explorill(self, interaction):
