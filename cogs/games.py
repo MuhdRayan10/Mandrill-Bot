@@ -75,9 +75,9 @@ class Games(commands.Cog):
                 time_left_in_seconds = 4 * 24 * 60 * 60 - (now - interaction_time)
                 time_left_in_days = time_left_in_seconds // (24 * 60 * 60)
                 time_left_in_hours = (time_left_in_seconds % (24 * 60 * 60)) // (60 * 60)
-                desc = f"You have already interacted in the past 4 days. Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
+                desc = f"Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
                 embed = discord.Embed(
-                    title="Spin the Wheel Prize",
+                    title="You have already opened the box!",
                     description=desc, color=Var.base_color
                 )
                 
