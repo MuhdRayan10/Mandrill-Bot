@@ -60,9 +60,15 @@ class Roles(commands.Cog):
 
         if unverified_role in roles:
             await interaction.response.send_message(f"Unfortunately you are still unverified... Go verify yourself at <#{Var.verification_channel}>", ephemeral=True)
+            return
         
         if explorill_role in roles:
-            await interaction.response.send_message(f"You already are an Explorill!", ephemeral=True)
+            embed = discord.Embed(
+                title="Role already assigned",
+                description="It looks like you are already an `Exporill`!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
         else:
             await interaction.user.add_roles(explorill_role)
@@ -90,11 +96,19 @@ class Roles(commands.Cog):
         user = interaction.user
         blurple_btn = discord.ButtonStyle.blurple
 
-        # if user already has guardrill role
-        if user.get_role(Var.guardrill_role):
+        # if user already has role
+        if interaction.user.get_role(Var.promdrill_role):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you already have the `Guardrill` role. Thank you for your interest!"
+                description="It looks like you are already a `Promdrill`!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        elif not interaction.user.get_role(Var.rendrill_role):
+            embed = discord.Embed(
+                title="Lower Role Required",
+                description=f"You must first have the `Rendrill` role. Head over to <#{Var.rendrill_channel}> to obtain it."
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return

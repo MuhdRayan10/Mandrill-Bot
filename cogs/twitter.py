@@ -88,16 +88,22 @@ class TwitterCog(commands.Cog):
 
     async def link(self, interaction):
 
-        # if user already has guardrill role
+        # if user already has role
         if interaction.user.get_role(Var.purmarill_role):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you already have the `Purmarill` role. Thank you for your interest!"
+                description="It looks like you are already a `Purmarill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
-        elif not interaction.user.get_role(Var.guardrill_role):
-            await interaction.response.send_message(f"You need to <#{Var.guardrill_channel}> to get the Rendrill role.")
+
+        elif not interaction.user.get_role(Var.explorill_role):
+            embed = discord.Embed(
+                title="Lower Role Required",
+                description=f"You must first have the `Explorill` role. Head over to <#{Var.explorill_channel}> to obtain it."
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
         class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
             twitter_username = ui.TextInput(

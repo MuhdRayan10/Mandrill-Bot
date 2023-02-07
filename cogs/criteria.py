@@ -72,16 +72,21 @@ class Criteria(commands.Cog):
     async def rendrill_questionnaire(self, interaction):
         user = interaction.user
 
-        # if user already has guardrill role
-        if user.get_role(Var.guardrill_role):
+        # if user already has role
+        if interaction.user.get_role(Var.rendrill_role):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you already have the `Guardrill` role. Thank you for your interest!"
+                description="It looks like you are already an `Rendrill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
-        elif not user.get_role(Var.guardrill_role):
-            await interaction.response.send_message(f"You need to <#{Var.guardrill_channel}> to get the Rendrill role.")
+
+        elif not interaction.user.get_role(Var.purmarill_role):
+            embed = discord.Embed(
+                title="Lower Role Required",
+                description=f"You must first have the `Purmarill` role. Head over to <#{Var.purmarill_channel}> to obtain it."
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
             
         await interaction.response.defer()
@@ -97,7 +102,6 @@ class Criteria(commands.Cog):
         db.close()
 
         if not(data[1] >= 2 and data[2] == 1):
-
             message = "Looks like you haven't completed the first two criteria yet...  press the Criteria button!"
             await interaction.followup.send(message, ephemeral=True)
             return
