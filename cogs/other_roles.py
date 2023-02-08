@@ -149,8 +149,7 @@ class Roles(commands.Cog):
 
         # Creating Embed
         q_embed = discord.Embed(
-            title="Promdrill Questionnaire",
-            description="Answer the questions, accurately.",
+            title="Choose the answer carefully…",
             color=Var.base_color
         )
 
@@ -178,17 +177,14 @@ class Roles(commands.Cog):
             result = await self.bot.wait_for("interaction", check=check, timeout=None)
             await result.response.defer()
 
-            # Set color of selected option to green or red based on whether it is correct
-            color_map = {chr(ord('A') + j): discord.ButtonStyle.red for j in range(len(options[i]))}
-            color_map[correct_options[i]] = discord.ButtonStyle.green
-
             # Create view with colored buttons
             question_wrong_view = ui.View()
             for j, _ in enumerate(options[i]):
                 question_wrong_view.add_item(ui.Button(
                     custom_id=chr(ord('A') + j),
                     label=chr(ord('A') + j),
-                    style=color_map[chr(ord('A') + j)]
+                    style=discord.ButtonStyle.grey,
+                    disabled=True
                 ))
 
             # Update message with colored buttons
@@ -200,7 +196,7 @@ class Roles(commands.Cog):
 
         # Create final result embed
         result_embed = discord.Embed(
-            title="Rendrill Questionnaire Results",
+            title="Promdrill Questionnaire Results",
             color=discord.Color(Var.base_color)
         )
         passed = score == len(questions)
@@ -261,7 +257,7 @@ class Roles(commands.Cog):
         rc, wc = '❌', '✅'
 
         # Embed
-        embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=Var.base_color)
+        embed=discord.Embed(title="Promdrill Role Criteria", description="Complete all 3 tasks to get the Promdrill Role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 8 else wc} Invite at least 8 users to the server", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if data[2] < 8 else wc} Reach Lvl. 8 XP", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc} Complete the Quiz (after 1st & 2nd tasks)", value="ㅤ", inline=False)
@@ -269,8 +265,44 @@ class Roles(commands.Cog):
         await interaction.followup.send(embed=embed, ephemeral=True)
 
         if data[1] >= 8 and data[2] >= 8:
-            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
+            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Promdrill` role! To complete the quiz, go to <#{Var.promdrill_channel}> and click on the `GET PROMDRILL` button and start the quiz!", ephemeral=True)
 
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
+    @app_commands.command(name="set-req-prom", description="[MODS] Set requirements for a user to obtain Promdrill role.")
+    @app_commands.choices(activity=[
+        app_commands.Choice(name="Invite 8 Members", value=1),
+        app_commands.Choice(name="Reach Lvl. 8", value=2),
+        app_commands.Choice(name="Complete Quiz", value=3)
+    ])
+    @app_commands.choices(done=[
+        app_commands.Choice(name="True", value=1),
+        app_commands.Choice(name="False", value=0)
+    ])
+    async def set_req_prom(self, interaction, user:discord.Member, activity:int, done:int):
+        db = Database("./data/criteria")
+        data = db.select("role", where={"user":user.id})
+
+        if not data:
+            db.insert("role", (user.id, 0, 0, 0, 0))
+            data = db.select("role", where={"user":user.id})
+
+        data = data[0]
+
+        # Status of all 3 activites and whether role should be given and updating
+        a1 = done if activity == 1 else data[1]
+        a2 = done if activity == 2 else data[2]
+        a3 = done if activity == 3 else data[3]
+
+        if activity == 1 and done:
+            a1 += 7
+        elif activity == 2 and done:
+            a2 += 7
+
+        db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":0},
+             where={"user":user.id})
+        db.close()
+
+        await interaction.response.send_message(f"Updated.", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Roles(bot))

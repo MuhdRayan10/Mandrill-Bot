@@ -130,8 +130,7 @@ class Criteria(commands.Cog):
 
         # Creating Embed
         q_embed = discord.Embed(
-            title="Rendrill Questionnaire",
-            description="Answer the questions, accurately.",
+            title="Choose the answer carefully…",
             color=Var.base_color
         )
 
@@ -159,9 +158,6 @@ class Criteria(commands.Cog):
             result = await self.bot.wait_for("interaction", check=check, timeout=None)
             await result.response.defer()
 
-            # Set color of selected option to green or red based on whether it is correct
-            color_map = {chr(ord('A') + j): discord.ButtonStyle.red for j in range(len(options[i]))}
-            color_map[correct_options[i]] = discord.ButtonStyle.green
 
             # Create view with colored buttons
             question_wrong_view = ui.View()
@@ -169,7 +165,8 @@ class Criteria(commands.Cog):
                 question_wrong_view.add_item(ui.Button(
                     custom_id=chr(ord('A') + j),
                     label=chr(ord('A') + j),
-                    style=color_map[chr(ord('A') + j)]
+                    style=discord.ButtonStyle.grey, 
+                    disabled=True
                 ))
 
             # Update message with colored buttons
@@ -246,9 +243,9 @@ class Criteria(commands.Cog):
         a2 = done if activity == 2 else data[2]
         a3 = done if activity == 3 else data[3]
 
-        if activity == 1:
+        if activity == 1 and done:
             a1 += 3
-        elif activity == 2:
+        elif activity == 2 and done:
             a2 += 3
 
         db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":0},

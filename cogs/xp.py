@@ -178,8 +178,9 @@ class XP(commands.Cog):
         for d in data:
             count += d[2]
 
-        embed = discord.Embed(title="Invites", color=Var.base_color)
+        embed = discord.Embed(title="Invites", color=Var.base_color, icon_url=user.avatar.url)
         embed.add_field(name="User", value=user.name)
+        embed.set_thumbnail(url=user.avatar.url)
         embed.add_field(name="Invite Links", value=f"`{len(data)}`", inline=False)
         embed.add_field(name="Invites", value=f"`{count}`", inline=False)
 
