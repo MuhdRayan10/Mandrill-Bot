@@ -55,7 +55,7 @@ class Games(commands.Cog):
         user = interaction.user
         if user.get_role(Var.rendrill_role) is None:
             embed = discord.Embed(
-                title="Not Eligible",
+                title="Required Role",
                 description=f"You will be eligible to open the Mystery Box after you <#{Var.rendrill_channel}> role.",
                 color=Var.base_color
             )

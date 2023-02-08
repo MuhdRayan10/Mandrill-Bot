@@ -76,7 +76,7 @@ class Criteria(commands.Cog):
         if interaction.user.get_role(Var.rendrill_role):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you are already an `Rendrill`!"
+                description="It looks like you are already a `Rendrill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -102,7 +102,7 @@ class Criteria(commands.Cog):
         db.close()
 
         if not(data[1] >= 4 and data[2] >= 4):
-            message = "Looks like you haven't completed the first two criteria yet...  press the Criteria button!"
+            message = "Looks like you haven't completed all 3 tasks...  press the `Criteria` button!"
             await interaction.followup.send(message, ephemeral=True)
             return
 
@@ -117,7 +117,7 @@ class Criteria(commands.Cog):
             
             ['(A) They are expensive due to scarcity - "It\'s true, but the reason for that is their usefulness"', '(B) Minerals are so magical and enchanting, you want to hold them all the time - "It\'s also true, but importance comes from their actual daily use cases, therefore progressive demand and value is guaranteed."', '(C) They are gaining progressive utility in the Wild Network\'s life because they hold vitality power. Minerals are the ONE and ONLY source of Metaverse energy', '(D) I can awaken mandrills with the help of minerals, but the mineral will be melted in that case - "Now that is the question! To be or not to be! It is up to you to decide what is more important to you, keep the mineral or use it to awaken the mandrill! BTW did you know that to join the Metaverse or buy land there, you must hold at least one species of the Wild Network, for example, the mandrill. Each species is eligible to purchase one land."'],
             
-            ['(A) 4 Minerals and 4 Mandrills', '(B) 5 Minerals and 5 Mandrills', '(C) 8 Minerals and 8 Mandrills', '(D) g21 Minerals and 21 Mandrills'],
+            ['(A) 4 Minerals and 4 Mandrills', '(B) 5 Minerals and 5 Mandrills', '(C) 8 Minerals and 8 Mandrills', '(D) 21 Minerals and 21 Mandrills'],
 
             ['(A) Total 12 series with 555 copies of NFT in each month', '(B) Total 4 series with 444 copies of NFT in each month', '(C) Total 8 series with 888 copies of NFT in each month', '(D) Total 21 series with 1,111 copies of NFT in each month']
         ]
@@ -177,15 +177,17 @@ class Criteria(commands.Cog):
                 score += 1
 
         # Create final result embed
-        result_embed = discord.Embed(
-            title="Rendrill Questionnaire Results",
-            color=Var.base_color)
         passed = score == len(questions)
+        result_embed = None
         if passed:
-            result_embed.description = "Congratulations, you have passed the questionnaire!"
+            result_embed = discord.Embed(title="Marvelous!", color=Var.base_color)
+        
+            result_embed.description = "You passed the Quiz…"
         else:
-            result_embed.description = "Sorry, you have failed the questionnaire. Better luck next time."
-        result_embed.add_field(name="Score", value=f"{score}/{len(questions)}")
+            result_embed = discord.Embed(title="We appreciate your efforts!", description="You didn't make it through this round")
+            result_embed.add_field(name="ㅤ", value=f"Navigate to our website through <#{Var.official_links}>\nRead carefully “Path of the Wild Network”\nCome back in 24 hours and try again!")
+        
+        result_embed.add_field(name="Score", value=f"{score if passed else '?'}/{len(questions)}")
 
         # Send final result message
         await interaction.followup.send(embed=result_embed, ephemeral=True)
@@ -203,7 +205,7 @@ class Criteria(commands.Cog):
             return
 
         if score < 2:
-            await user.timeout(timedelta(minutes=5))
+            await user.timeout(timedelta(hours=24))
             return
 
         
@@ -260,7 +262,7 @@ class Criteria(commands.Cog):
         # if user already has guardrill role
         if user.get_role(Var.rendrill_role):
             embed = discord.Embed(title="Role already assigned", color=Var.base_color,
-                description="It looks like you already have the `rendrill` role. Thank you for your interest!")
+                description="It looks like you already have the `Rendrill` role. Thank you for your interest!")
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
@@ -281,9 +283,9 @@ class Criteria(commands.Cog):
         rc, wc = '❌', '✅'
 
         # Embed
-        embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill Role!", color=Var.base_color)
+        embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 4 else wc} Invite at least 4 users to the server", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if data[2] < 4 else wc} Reach Lvl. 4 XP", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[2] < 4 else wc} Reach Level - 4", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1st & 2nd Tasks)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)

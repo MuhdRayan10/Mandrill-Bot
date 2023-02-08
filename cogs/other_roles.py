@@ -107,8 +107,8 @@ class Roles(commands.Cog):
 
         elif not interaction.user.get_role(Var.rendrill_role):
             embed = discord.Embed(
-                title="Lower Role Required",
-                description=f"You must first have the `Rendrill` role. Head over to <#{Var.rendrill_channel}> to obtain it."
+                title="Role Required",
+                description=f"You must first <#{Var.rendrill_channel}> role to be a `Promdrill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -127,7 +127,7 @@ class Roles(commands.Cog):
 
         if not(data[1] >= 8 and data[2] >= 8):
 
-            message = "Looks like you haven't completed the first two criteria yet...  press the Criteria button!"
+            message = "Looks like you haven't completed all three tasks...  press the `Criteria` button!"
             await interaction.followup.send(message, ephemeral=True)
             return
 
@@ -195,16 +195,19 @@ class Roles(commands.Cog):
                 score += 1
 
         # Create final result embed
-        result_embed = discord.Embed(
-            title="Promdrill Questionnaire Results",
-            color=discord.Color(Var.base_color)
-        )
         passed = score == len(questions)
+        result_embed = None
+
         if passed:
+            result_embed = discord.Embed(
+                title="Rendrill Questionnaire Results",
+                color=Var.base_color)
+        
             result_embed.description = "Congratulations, you have passed the questionnaire!"
         else:
-            result_embed.description = "Sorry, you have failed the questionnaire. Better luck next time."
-        result_embed.add_field(name="Score", value=f"{score}/{len(questions)}")
+            result_embed = discord.Embed(title="We appreciate your efforts!", description="You didn't make it through this round")
+            result_embed.add_field(name="ㅤ", value=f"Navigate to our website through <#{Var.official_links}>\nRead carefully “Path of the Wild Network”\nCome back in 24 hours and try again!")
+        result_embed.add_field(name="Score", value=f"{score if passed else '?'}/{len(questions)}")
 
         # Send final result message
         await interaction.followup.send(embed=result_embed, ephemeral=True)
@@ -213,7 +216,6 @@ class Roles(commands.Cog):
             result_embed.description = "Congratulations, you have passed the questionnaire!"
         else:
             result_embed.description = "Sorry, you have failed the questionnaire. Better luck next time."
-        result_embed.add_field(name="Score", value=f"{score}/{len(questions)}")
 
         await interaction.followup.send(embed=result_embed, ephemeral=True)
 
@@ -225,8 +227,7 @@ class Roles(commands.Cog):
             return
 
         if score < 6:
-            await user.timeout(timedelta(minutes=5))
-            await interaction.followup.send("Due to a low score, you have been timed out for 5 minutes. Please try again later.", ephemeral=True)
+            await user.timeout(timedelta(hours=24))
             return
 
     async def view(self, interaction): 
@@ -257,9 +258,9 @@ class Roles(commands.Cog):
         rc, wc = '❌', '✅'
 
         # Embed
-        embed=discord.Embed(title="Promdrill Role Criteria", description="Complete all 3 tasks to get the Promdrill Role!", color=Var.base_color)
+        embed=discord.Embed(title="Promdrill Role Criteria", description="Complete all 3 tasks to get the Promdrill role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 8 else wc} Invite at least 8 users to the server", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if data[2] < 8 else wc} Reach Lvl. 8 XP", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[2] < 8 else wc} Reach Level - 8", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc} Complete the Quiz (after 1st & 2nd tasks)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
