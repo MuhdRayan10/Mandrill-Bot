@@ -156,7 +156,7 @@ class XP(commands.Cog):
             plt.savefig(image_binary, format='png', bbox_inches='tight')
             image_binary.seek(0)
 
-            embed = discord.Embed(title="Mandrill XP Leaderboard", color=Var.base_color)
+            embed = discord.Embed(title="The Mandrills' XP Leaderboard", color=Var.base_color)
             embed.set_image(url="attachment://image.png")
             
             await interaction.response.send_message(embed=embed, file=discord.File(fp=image_binary, filename="image.png"))

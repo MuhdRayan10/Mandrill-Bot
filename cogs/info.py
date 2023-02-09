@@ -201,6 +201,7 @@ Rewards and Benefits:
         embed = discord.Embed(title="Official Links")
         embed.add_field(name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)", inline=False)
         embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
+        embed.add_field(name="Path of the Wild Network", value="[themandrills.xyz/journey](https://themandrills.xyz/journey)", inline=False)
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
         embed.add_field(name="Medium", value="[@wildnetwork](https://medium.com/@wildnetwork)", inline=False)

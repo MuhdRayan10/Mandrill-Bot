@@ -1,6 +1,7 @@
 from requests import Session
 import json
 import asyncio
+import pytz
 
 import datetime
 
@@ -59,9 +60,11 @@ class ServerStats(commands.Cog):
 
         mint_channel = await self.guild.fetch_channel(Var.mint_date_channel)
 
+        timezone = pytz.timezone('Etc/GMT-5')
+
         def time_remaining():
             now = datetime.datetime.now()
-            end_of_day = datetime.datetime(now.year, 2, 28, 23, 0, 0)
+            end_of_day = datetime.datetime(now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
             delta = end_of_day - now
             return f"{delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 
