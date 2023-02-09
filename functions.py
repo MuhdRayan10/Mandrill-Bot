@@ -20,15 +20,17 @@ async def update_criteria(inviter, guild, V):
     data = db.select("role", where={"user":inviter.id}, size=1)
     db.close()
 
-    if data[1] >= 4 and data[2] >= 4 and not data[3]:
-        await inviter.send(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to {V.rendrill_channel} and click on the `GET RENDRILL` button to start the quiz!")
-    
-
-
 def find_invite(li, code):
     for inv in li:
         if str(inv.code) == str(code):
             return inv
+
+async def update_all(member, db):
+    invites = await member.guild.invites()
+    db.clear_table('invites')
+
+    for invite in invites:
+        db.insert("invites", (invite.inviter.id, invite.code, invite.uses))
 
 async def update_invites(member, V):
     db = Database("./data/invites")
@@ -64,6 +66,7 @@ async def update_invites(member, V):
         if invite.code not in codes:
             embed = discord.Embed(title="Invite", description="Information about the invite", color=V.base_color)
             embed.add_field(name="Inviter", value=invite.inviter.name)
+            embed.set_thumbnail(url=invite.inviter.avatar.url)
             embed.add_field(name="Uses", value=f"`{invite.uses}`")
             embed.add_field(name="Invited", value=member.name)
 
@@ -73,6 +76,8 @@ async def update_invites(member, V):
             await channel.send(embed=embed)
 
         db.insert("invites", (invite.inviter.id, invite.code, invite.uses))
+
+    await update_all(member, db)
 
     db.close()
 
