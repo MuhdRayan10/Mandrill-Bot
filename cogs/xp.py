@@ -5,6 +5,7 @@ import random, discord, mplcyberpunk, io
 import matplotlib.pyplot as plt
 from easy_pil import Editor, Font, load_image_async, Canvas
 from time import strftime
+from functions import update_all
 
 from helpers import Var as V
 Var = V()
@@ -169,6 +170,11 @@ class XP(commands.Cog):
         user = user or interaction.user
 
         db = Database("./data/invites")
+        await update_all(user, db)
+
+        db.close()
+
+        db = Database("./data/invites")
         data = db.select("invites", where={"inviter":user.id})
         if not data:
             await interaction.response.send_message(embed=discord.Embed(title=f"{user.name} has no invites.", color=Var.base_color))
@@ -178,7 +184,7 @@ class XP(commands.Cog):
         for d in data:
             count += d[2]
 
-        embed = discord.Embed(title="Invites", color=Var.base_color, icon_url=user.avatar.url)
+        embed = discord.Embed(title="Invites", color=Var.base_color)
         embed.add_field(name="User", value=user.name)
         embed.set_thumbnail(url=user.avatar.url)
         embed.add_field(name="Invite Links", value=f"`{len(data)}`", inline=False)
