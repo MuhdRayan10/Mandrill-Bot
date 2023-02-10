@@ -68,7 +68,7 @@ class TwitterCog(commands.Cog):
             tweet_url = f'https://twitter.com/{self.screen_name}/status/{self.most_recent_tweet_id}'
 
             # Format the tweet link as a string
-            tweet_link = f'> @everyone `@{self.screen_name}`: {tweet_url}'
+            tweet_link = f':loudspeaker: @everyone {tweet_url}'
 
             # Get the channel object
             channel = self.bot.get_channel(Var.tweet_channel_id)
@@ -99,8 +99,8 @@ class TwitterCog(commands.Cog):
 
         elif not interaction.user.get_role(Var.explorill_role):
             embed = discord.Embed(
-                title="Lower Role Required",
-                description=f"You must first have the `Explorill` role. Head over to <#{Var.explorill_channel}> to obtain it."
+                title="Role Required",
+                description=f"First you have to be a <#{Var.explorill_channel}> role to a `Purmarill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
