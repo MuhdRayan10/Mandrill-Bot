@@ -12,6 +12,18 @@ Var = V()
 cache = {}
 style = discord.ButtonStyle.blurple
 
+def update_criterias(user_id, db:Database):
+    db2 = Database("./data/invites")
+    data = db2.select("invites", where={"inviter":user_id})
+    db2.close()
+
+    count = 0
+    for d in data:
+        count += d[2]
+    
+    db.update("roles", information={'a1':count}, where={"user":user_id})
+
+
 # questionnaire
 class QuestionnaireMenu(ui.View):
     def __init__(self, userid):
@@ -89,11 +101,17 @@ class Criteria(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
             
-        await interaction.response.defer()
+
+        try:
+            update_criterias(user.id, db)
+        except Exception as e:
+            print(e)
 
         # checks if user has filled the two criteria
         db = Database("./data/criteria")
         data = db.select("role", where={"user":interaction.user.id}, size=1)
+
+        update_criterias(interaction.user.id, db)
 
         if not data:
             data = (interaction.user.id, 0, 0, 0, 0)
@@ -271,6 +289,12 @@ class Criteria(commands.Cog):
         # Retrieving data from database
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
+
+        try:
+            update_criterias(user.id, db)
+        except Exception as e:
+            print(e)
+
 
         if not data:
             db.insert("role", (user.id, 0, 0, 0, 0))
