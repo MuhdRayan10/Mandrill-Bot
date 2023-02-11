@@ -21,7 +21,7 @@ def update_criterias(user_id, db:Database):
     for d in data:
         count += d[2]
     
-    db.update("roles", information={'a1':count}, where={"user":user_id})
+    db.update("role", information={'a1':count}, where={"user":user_id})
 
 
 # questionnaire
@@ -101,11 +101,7 @@ class Criteria(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
             
-
-        try:
-            update_criterias(user.id, db)
-        except Exception as e:
-            print(e)
+        await interaction.response.defer()
 
         # checks if user has filled the two criteria
         db = Database("./data/criteria")
