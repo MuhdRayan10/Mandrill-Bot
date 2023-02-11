@@ -108,7 +108,29 @@ class Moderation(commands.Cog):
         
         await channel.send(embed=embed)
     
-    
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        # if it is message sent by bot
+        if message.author.bot is True:
+            return
+
+        # if person is liberator
+        user = message.author
+        member = self.guild.get_member(user.id)
+        if member.get_role(Var.liberator_role) is not None:
+            return
+
+        # check for links and gifs
+        keywords = ["https://", "http://", "tenor.com"]
+
+        for keyword in keywords:
+            if keyword in message.content:
+
+                await message.reply(content="**⛔ Sorry. Links and Embeds are not allowed in our Server!**", delete_after=10)
+
+                await message.delete()
+
+                return
 
 # Cog setup command
 async def setup(bot):
