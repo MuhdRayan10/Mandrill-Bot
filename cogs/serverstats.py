@@ -2,6 +2,7 @@ from requests import Session
 import json
 import asyncio
 import pytz
+import os
 
 import datetime
 
@@ -17,7 +18,7 @@ class CryptoToUsd:
 
         headers = {
             'Accepts': 'application/json',
-            'X-CMC_PRO_API_KEY': "d61d9d58-eb85-45a0-854e-a4765400d8e1"
+            'X-CMC_PRO_API_KEY': os.getenv("COINMARKETCAPKEY")
         }
 
         self.session = Session()
@@ -48,7 +49,7 @@ class ServerStats(commands.Cog):
         self.update_mint_date.start()
 
 
-    @tasks.loop(minutes=2)
+    @tasks.loop(minutes=5)
     async def update_mint_date(self):
         
         FLR, trend = self.crypto_helper.flare()

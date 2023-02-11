@@ -99,8 +99,8 @@ class TwitterCog(commands.Cog):
 
         elif not interaction.user.get_role(Var.explorill_role):
             embed = discord.Embed(
-                title="Role Required",
-                description=f"First you have to be a <#{Var.explorill_channel}> role to a `Purmarill`!"
+                title="Required Role",
+                description=f"First you have to be a <#{Var.explorill_channel}> role to be a `Purmarill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
