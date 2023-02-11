@@ -10,6 +10,9 @@ class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+        # mandrills guild
+        self.guild = self.bot.guilds[0]
+
     @app_commands.checks.has_permissions(kick_members=True)
     @app_commands.command(name="kick", description="[MODS] Kick a user from the server")
     @app_commands.describe(user="User to be kicked from the server")
@@ -94,6 +97,18 @@ class Moderation(commands.Cog):
         await asyncio.sleep(time*60)
         await user.remove_roles(muted_role)
 
+    @commands.Cog.listener()
+    async def on_member_leave(self, member:discord.Member):
+        # get channel
+        channel = await self.guild.fetch_channel(Var.past_members_channel)
+
+        joined_at = member.joined_at.strftime(r"%m/%d/%Y, %H:%M:%S")
+
+        embed = discord.Embed(title="Membed Left", description=f"**Member ID**: {member.id}\n**Joined At**: {joined_at}")
+        
+        await channel.send(embed=embed)
+    
+    
 
 # Cog setup command
 async def setup(bot):
