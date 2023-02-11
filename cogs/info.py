@@ -252,7 +252,7 @@ Rewards and Benefits:
 
     @app_commands.command(name="members", description="Get Member Count")
     async def members(self, interaction):
-        embed = discord.Embed(title=f"Member Count:{interaction.guild.member_count}!")
+        embed = discord.Embed(title=f"Member Count: {interaction.guild.member_count}!")
         await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
