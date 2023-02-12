@@ -198,10 +198,10 @@ class Criteria(commands.Cog):
         
             result_embed.description = "You passed the Quiz…"
         else:
-            result_embed = discord.Embed(title="We appreciate your efforts!", description="You didn't make it through this round")
-            result_embed.add_field(name="ㅤ", value=f"Navigate to our website through <#{Var.official_links}>\nRead carefully “Path of the Wild Network”\nCome back in 24 hours and try again!")
+            result_embed = discord.Embed(title="We appreciate your efforts!", description="**You didn't make it through this round**")
+            result_embed.add_field(name="ㅤ", value=f"- Navigate to our website through <#{Var.official_links}>\n- Read carefully “Path of the Wild Network”\n- Come back in 24 hours and try again!")
         
-        result_embed.add_field(name="Score", value=f"{score if passed else '?'}/{len(questions)}")
+        result_embed.add_field(name="Score", value=f"{score if passed else '?'}/{len(questions)}", inline=False)
 
         # Send final result message
         await interaction.followup.send(embed=result_embed, ephemeral=True)
