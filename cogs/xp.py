@@ -48,6 +48,8 @@ class XP(commands.Cog):
     async def on_message(self, message):
         if message.author.bot: return
 
+        if message.channel.id != Var.general: return
+
         auth_id = message.author.id
         time_ = strftime("%Y-%m-%d%H:%M")
 
@@ -79,7 +81,7 @@ class XP(commands.Cog):
 
             await level_up_message(message, levels)
             
-            if current_data[1] >=4 and current_data[2] >= 4 and not current_data[3]:
+            if current_data[1] >=4 and current_data[2] >= 8 and not current_data[3]:
                 await message.reply(f"Looks like you are almost eligible for the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button to start the quiz!")
 
             

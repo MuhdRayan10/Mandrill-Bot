@@ -115,7 +115,7 @@ class Criteria(commands.Cog):
             
         db.close()
 
-        if not(data[1] >= 4 and data[2] >= 4):
+        if not(data[1] >= 4 and data[2] >= 8):
             message = "Looks like you haven't completed all 3 tasks...  press the `Criteria` button!"
             await interaction.followup.send(message, ephemeral=True)
             return
@@ -230,7 +230,7 @@ class Criteria(commands.Cog):
     @app_commands.command(name="set-req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 4 Members", value=1),
-        app_commands.Choice(name="Reach Lvl. 4", value=2),
+        app_commands.Choice(name="Reach Lvl. 8", value=2),
         app_commands.Choice(name="Complete Quiz", value=3)
     ])
     @app_commands.choices(done=[
@@ -260,7 +260,7 @@ class Criteria(commands.Cog):
         a3 = done if activity == 3 else data[3]
 
         if activity == 1 and done:
-            a1 += 3
+            a1 += 7
         elif activity == 2 and done:
             a2 += 3
 
@@ -305,12 +305,12 @@ class Criteria(commands.Cog):
         # Embed
         embed=discord.Embed(title="Rendrill Role Criteria", description="Complete all 3 tasks to get the Rendrill role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 4 else wc} Invite at least 4 users to the server", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if data[2] < 4 else wc} Reach Level - 4", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[2] < 8 else wc} Reach Level - 8", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc if not data[3] else wc} Complete the Quiz (after 1st & 2nd Tasks)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
 
-        if data[1] >= 4 and data[2] >= 4 and not data[3]:
+        if data[1] >= 4 and data[2] >= 8 and not data[3]:
             await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Rendrill` role! To complete the quiz, go to <#{Var.rendrill_channel}> and click on the `GET RENDRILL` button and start the quiz!", ephemeral=True)
 
 # Cog setup command

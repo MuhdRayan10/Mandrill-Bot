@@ -69,10 +69,10 @@ class Games(commands.Cog):
 
         for interaction_ in interactions:
             interaction_time, interaction_user_id = interaction_
-            if interaction_user_id == interaction.user.id and now - interaction_time < 4 * 24 * 60 * 60:
+            if interaction_user_id == interaction.user.id and now - interaction_time < 7 * 24 * 60 * 60:
                 
                 
-                time_left_in_seconds = 4 * 24 * 60 * 60 - (now - interaction_time)
+                time_left_in_seconds = 7 * 24 * 60 * 60 - (now - interaction_time)
                 time_left_in_days = time_left_in_seconds // (24 * 60 * 60)
                 time_left_in_hours = (time_left_in_seconds % (24 * 60 * 60)) // (60 * 60)
                 desc = f"Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
@@ -80,24 +80,14 @@ class Games(commands.Cog):
                     title="You have already opened the box!",
                     description=desc, color=Var.base_color
                 )
-                
-                db = Database("./data/prizes")
-                try:
-                    if db.if_exists("prizes", {"winner":interaction.user.id}):
-                        embed = discord.Embed(title="You have already won a prize!", description=desc, color=Var.base_color)
-                        await interaction.response.send_message(embed=embed, ephemeral=True)
-
-                        db.close()
-                        return
-                except:
-                    return
+               
                 await interaction.response.send_message(embed=embed, ephemeral=True)
                 return
 
         prize = self.wheel.spin()
 
-        if prize == 'Try Again in 4 Days':
-            desc = "Unfortunately you have chosen the empty box, Try again in 4 days!"
+        if prize == 'Try Again in 7 Days':
+            desc = "Unfortunately you have chosen the empty box, Try again in 7 days!"
         else:
             desc = f"**Congratulations!**\nYou have won the `{prize}`."
             db = Database("./data/prizes")
@@ -110,7 +100,7 @@ class Games(commands.Cog):
             title="Mystery Box Reveal", 
             description=desc,
             color=Var.base_color)
-        embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc != "Unfortunately you have chosen the empty box, Try again in 4 days!" else '')
+        embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc != "Unfortunately you have chosen the empty box, Try again in 7 days!" else '')
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 

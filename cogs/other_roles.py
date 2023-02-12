@@ -125,7 +125,7 @@ class Roles(commands.Cog):
             
         db.close()
 
-        if not(data[1] >= 8 and data[2] >= 8):
+        if not(data[1] >= 8 and data[2] >= 12):
 
             message = "Looks like you haven't completed all three tasks...  press the `Criteria` button!"
             await interaction.followup.send(message, ephemeral=True)
@@ -260,19 +260,19 @@ class Roles(commands.Cog):
         # Embed
         embed=discord.Embed(title="Promdrill Role Criteria", description="Complete all 3 tasks to get the Promdrill role!", color=Var.base_color)
         embed.add_field(name=f"{rc if data[1] < 8 else wc} Invite at least 8 users to the server", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if data[2] < 8 else wc} Reach Level - 8", value="ㅤ", inline=False)
+        embed.add_field(name=f"{rc if data[2] < 12 else wc} Reach Level - 12", value="ㅤ", inline=False)
         embed.add_field(name=f"{rc} Complete the Quiz (after 1st & 2nd tasks)", value="ㅤ", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
 
-        if data[1] >= 8 and data[2] >= 8:
+        if data[1] >= 8 and data[2] >= 12:
             await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Promdrill` role! To complete the quiz, go to <#{Var.promdrill_channel}> and click on the `GET PROMDRILL` button and start the quiz!", ephemeral=True)
 
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     @app_commands.command(name="set-req-prom", description="[MODS] Set requirements for a user to obtain Promdrill role.")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 8 Members", value=1),
-        app_commands.Choice(name="Reach Lvl. 8", value=2),
+        app_commands.Choice(name="Reach Lvl. 12", value=2),
         app_commands.Choice(name="Complete Quiz", value=3)
     ])
     @app_commands.choices(done=[
