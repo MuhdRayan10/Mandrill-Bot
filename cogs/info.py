@@ -118,7 +118,7 @@ __Exchange Minerals into the Mandrills:__
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 Rewards and Benefits:
-1. Guaranteed 4 Mineral during each phase
+1. Guaranteed 2 Mineral
 2. Considering your background and expertise as a MOD, there's a possibility for you to be officially recognized as a Moderator of The Mandrills
 \n
 """
