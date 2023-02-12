@@ -118,10 +118,11 @@ __Exchange Minerals into the Mandrills:__
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
 Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 Rewards and Benefits:
+1. Guaranteed 4 Mineral during each phase
+2. 44,444 $LEF - Native coin of the "Wild Network"
+And considering your background and expertise as a MOD, there's a possibility for you to be officially recognized as a Moderator of The Mandrills with next rewards:
 1. Stable monthly salary from the project
 2. Bonus from every phase of successful minting
-3. Guaranteed 5 Mineral during each phase 
-4. 44,444 $LEF - Native coin of the "Wild Network" 
 \n
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
@@ -252,7 +253,7 @@ Rewards and Benefits:
 
     @app_commands.command(name="members", description="Get Member Count")
     async def members(self, interaction):
-        embed = discord.Embed(title=f"Member Count:{interaction.guild.member_count}!")
+        embed = discord.Embed(title=f"Member Count: {interaction.guild.member_count}!")
         await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
