@@ -108,11 +108,7 @@ __Exchange Minerals into the Mandrills:__
 
         explorills_description = f"Explorills are the members who have not received any kind of role yet and are able to interact with the server and community."
         purmarills_description = f"Purmarills are the members who have met the criteria to purchase the Mineral."
-        rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#{Var.spinwheel_channel}> for a chance to win various prizes every 7 days:
-1. Mineral
-2. NFT Comics Series "Chronicles of the Ten unique Flowers" (1/12)
-3. 1,111 $LEF - Native coin of the "Wild Network"
-4. One Full Set of Branded Merch & Physical Artwork (1/12)
+        rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#{Var.spinwheel_channel}> for a chance to win various prizes every 7 days.
  
 """
         promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
