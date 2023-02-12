@@ -108,7 +108,7 @@ class Roles(commands.Cog):
         elif not interaction.user.get_role(Var.rendrill_role):
             embed = discord.Embed(
                 title="Required Role",
-                description=f"You must first <#{Var.rendrill_channel}> role to be a `Promdrill`!"
+                description=f"First you have to <#{Var.rendrill_channel}> role to be a `Promdrill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return

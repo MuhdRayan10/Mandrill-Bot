@@ -84,7 +84,7 @@ class Criteria(commands.Cog):
         elif not interaction.user.get_role(Var.purmarill_role):
             embed = discord.Embed(
                 title="Required Role",
-                description=f"First you have to be a <#{Var.purmarill_channel}> role to be a `Rendrill`!"
+                description=f"First you have to <#{Var.purmarill_channel}> role to be a `Rendrill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
