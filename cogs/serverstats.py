@@ -65,7 +65,8 @@ class ServerStats(commands.Cog):
 
         def time_remaining():
             now = datetime.datetime.now(tz=timezone)
-            end_of_day = datetime.datetime(now.year, 2, 28, 21, 5, 0, tzinfo=timezone)
+            end_of_day = datetime.datetime(now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
+            end_of_day += datetime.timedelta(hours=5)
             delta = end_of_day - now
             return f"{delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 

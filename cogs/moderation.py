@@ -111,6 +111,8 @@ class Moderation(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         # if it is message sent by bot
+        if message.channel.id != Var.general: return
+
         if message.author.bot is True:
             return
 

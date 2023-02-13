@@ -45,8 +45,7 @@ class Games(commands.Cog):
     @app_commands.command(name="setup-mystery-box")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_mystery_box(self, interaction, channel:discord.TextChannel):
-        embed = discord.Embed(title='Choose the Box Carefully...', color=Var.base_color)
-        embed.add_field(name="Prizes", value='- Mineral\n- NFT Comics Series "Chronicles of the Ten Unique Flowers" (1/12)\n- 1,111 $LEF - Native coin of the "Wild Network"\n- One Full Set of Branded Merch & Physical Artwork (1/12)')
+        embed = discord.Embed(title='Choose the Box Carefully...')
         
         await channel.send(embed=embed, view=self.views)
         await interaction.response.send_message(f"Added `Mystery Box` interface, to <#{channel.id}>")

@@ -111,8 +111,7 @@ __Exchange Minerals into the Mandrills:__
         rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#{Var.spinwheel_channel}> for a chance to win various prizes in every 7 days.
  
 """
-        promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. 
-Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
+        promdrills_description = f"""Promdrills are the members who already got the all three roles and became supporters of the project. Helping new members, keeping chats active and secure, sharing new pieces of information and taking care of the project in general. 
 Rewards and Benefits:
 1. Guaranteed 2 Mineral
 2. Considering your background and expertise as a MOD, there's a possibility for you to be officially recognized as a Moderator of The Mandrills
@@ -124,7 +123,7 @@ Rewards and Benefits:
         embed.add_field(name="Explorills", value=explorills_description, inline=False)
         embed.add_field(name="Purmarills", value=purmarills_description, inline=False)
         embed.add_field(name="Rendrills", value=rendrills_description, inline=False)
-        embed.add_field(name="Promdrills", value=promdrills_description, inline=False)
+        embed.add_field(name="Promdrills (available only 21 spots)", value=promdrills_description, inline=False)
         embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
         embed.add_field(name="Liberators", value=liberators_description, inline=False)
 
