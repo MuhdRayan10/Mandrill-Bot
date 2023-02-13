@@ -9,6 +9,8 @@ from easy_sqlite3 import *
 from helpers import Var as V
 Var = V()
 
+import json
+
 cache = {}
 style = discord.ButtonStyle.blurple
 
@@ -85,6 +87,25 @@ class Criteria(commands.Cog):
 
         await interaction.response.defer()
 
+        db = Database("./data/criteria")
+        data = db.select("role", where={"user":interaction.user.id}, size=1)
+
+        with open("./data/req.json") as f:
+            data = json.load(f)
+        if interaction.user.id not in data['rendrill']:
+            update_criterias(interaction.user.id, db)
+
+        if not data:
+            data = (interaction.user.id, 0, 0, 0, 0)
+            db.insert("role", data)
+            
+        db.close()
+
+        if not(data[1] >= 4 and data[2] >= 8):
+            message = "Looks like you haven't completed all 3 tasks...  press the `Criteria` button!"
+            await interaction.followup.send(message, ephemeral=True)
+            return
+
         embed = discord.Embed(title="You are about to start the Quiz!")
         embed.add_field(name="Have in mind that:", value="""• You have to answer all questions correctly in order to get the Rendrill role
 • You will have the second chance in 24 hours
@@ -125,18 +146,16 @@ class Criteria(commands.Cog):
         db = Database("./data/criteria")
         data = db.select("role", where={"user":interaction.user.id}, size=1)
 
-        update_criterias(interaction.user.id, db)
+        with open("./data/req.json") as f:
+            data = json.load(f)
+        if interaction.user.id not in data['rendrill']:
+            update_criterias(interaction.user.id, db)
 
         if not data:
             data = (interaction.user.id, 0, 0, 0, 0)
             db.insert("role", data)
             
         db.close()
-
-        if not(data[1] >= 4 and data[2] >= 8):
-            message = "Looks like you haven't completed all 3 tasks...  press the `Criteria` button!"
-            await interaction.followup.send(message, ephemeral=True)
-            return
 
         questions = [
             'How did The Mandrills come into being?', 
@@ -261,6 +280,13 @@ class Criteria(commands.Cog):
         """
         This function allows the mods to update a user's criteria stats
         """
+
+        # add to json file
+        with open("./data/req.json") as f:
+            data = json.load(f)
+            if user.id not in data["rendrills"]:
+                data["rendrill"].append(user.id)
+                json.dump(data, "./data/req.json")
 
         # Getting data from database 
         db = Database("./data/criteria")

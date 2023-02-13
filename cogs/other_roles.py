@@ -2,6 +2,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord import ui
 import discord
+import json
 from helpers import Var as V
 from easy_sqlite3 import *
 from datetime import timedelta
@@ -280,6 +281,14 @@ class Roles(commands.Cog):
         app_commands.Choice(name="False", value=0)
     ])
     async def set_req_prom(self, interaction, user:discord.Member, activity:int, done:int):
+
+        # add to json file
+        with open("./data/req.json") as f:
+            data = json.load(f)
+            if user.id not in data["promdrill"]:
+                data["promdrill"].append(user.id)
+                json.dump(data, "./data/req.json")
+
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
 

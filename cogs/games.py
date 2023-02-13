@@ -24,9 +24,11 @@ class wheel:
             'Try Again in 4 Days',
         ]
 
+        self.items_ = ['1,111 $LEF - Native coin of the "Wild Network"', 'Mineral', 'NFT Comics Series "Chronicles of the Ten unique Flowers"', '"Wild Network" Branded Merch & Physical Artwork (First Edition)', 'Try Again in 4 Days',]
+
 
     def spin(self) -> str:
-        return random.choice(self.items)
+        return random.choices(self.items_, cum_weights=(10, 10, 10, 10, 60), k=1)[0]
 
 class Games(commands.Cog):
     def __init__(self, bot):
