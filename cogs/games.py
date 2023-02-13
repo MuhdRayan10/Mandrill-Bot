@@ -11,6 +11,7 @@ from easy_sqlite3 import *
 from helpers import Var as V
 Var = V()
 
+import numpy as np
 class wheel:
     def __init__(self) -> None:
         self.items = [
@@ -28,8 +29,8 @@ class wheel:
 
 
     def spin(self) -> str:
-        return random.choices(self.items_, cum_weights=(10, 10, 10, 10, 60), k=1)[0]
-
+        return np.random.choice(self.items_, 1, p=(0.1, 0.1, 0.1, 0.1, 0.6))[0]
+        
 class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
