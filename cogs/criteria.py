@@ -87,10 +87,10 @@ class Criteria(commands.Cog):
 
         embed = discord.Embed(title="You are about to start the Quiz!")
         embed.add_field(name="Have in mind that:", value="""• You have to answer all questions correctly in order to get the Rendrill role
-•You will have the second chance in 24 hours
-•Read carefully, don’t rush and Good Luck!""")
+• You will have the second chance in 24 hours
+• Read carefully, don’t rush and Good Luck!""")
 
-        ready_button = discord.Button(text="I'm ready!", style=discord.ButtonStyle.green)
+        ready_button = ui.Button(label="I'm ready!", style=discord.ButtonStyle.green)
         ready_button.callback = self.rendrill_questionnaire
 
         view = ui.View(timeout=None)
