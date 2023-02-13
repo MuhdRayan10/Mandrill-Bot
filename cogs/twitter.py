@@ -50,16 +50,19 @@ class TwitterCog(commands.Cog):
 
     @tasks.loop(minutes=Var.twitter_loop_time)
     async def check_tweets(self):
+        print("TWITTER | CHECKING")
         url = f'https://api.twitter.com/2/tweets/search/recent?query=from:{self.screen_name}'
         response = requests.get(url, headers=self.headers)
 
         try:
             tweets = response.json()['data']
         except KeyError:
+            print(f"TWITTER | API ERROR {tweets}")
             return
 
 
         if tweets and tweets[0]['id'] != self.most_recent_tweet_id:
+            print("TWITTER | INSIDE IF (after check if recent tweet id)")
             tweet_id = tweets[0]['id']
             self.most_recent_tweet_id = tweet_id
             Var.most_recent_tweet_id = tweet_id
@@ -74,7 +77,8 @@ class TwitterCog(commands.Cog):
             channel = self.bot.get_channel(Var.tweet_channel_id)
 
             # Send the tweet link to the Discord channel
-            await channel.send(tweet_link)
+            msg = await channel.send(tweet_link)
+            print(f"TWITTER | NEW TWEET {msg}")
     
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="setup-purmarill", description="Setup the Purmarill Interface in the specified channel")
