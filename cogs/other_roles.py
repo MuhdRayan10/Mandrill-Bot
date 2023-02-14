@@ -283,11 +283,13 @@ class Roles(commands.Cog):
     async def set_req_prom(self, interaction, user:discord.Member, activity:int, done:int):
 
         # add to json file
-        with open("./data/req.json") as f:
+        with open("./data/req.json", "r") as f:
             data = json.load(f)
-            if user.id not in data["promdrill"]:
-                data["promdrill"].append(user.id)
-                json.dump(data, "./data/req.json")
+            
+        if user.id not in data["promdrill"]:
+            data["promdrill"].append(user.id)
+            with open("./data/req.json", "w") as f:
+                json.dump(data, f)
 
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
@@ -296,7 +298,7 @@ class Roles(commands.Cog):
             db.insert("role", (user.id, 0, 0, 0, 0))
             data = db.select("role", where={"user":user.id})
 
-        data = data[0]
+        data = list(data[0])
 
         # Status of all 3 activites and whether role should be given and updating
         a1 = done if activity == 1 else data[1]
@@ -304,9 +306,9 @@ class Roles(commands.Cog):
         a3 = done if activity == 3 else data[3]
 
         if activity == 1 and done:
-            a1 += 7
+            a1 = 8
         elif activity == 2 and done:
-            a2 += 7
+            a2 = 12
 
         db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":0},
              where={"user":user.id})

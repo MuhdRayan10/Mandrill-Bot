@@ -91,8 +91,8 @@ class Criteria(commands.Cog):
         data = db.select("role", where={"user":interaction.user.id}, size=1)
 
         with open("./data/req.json") as f:
-            data = json.load(f)
-        if interaction.user.id not in data['rendrill']:
+            data__ = json.load(f)
+        if interaction.user.id not in data__['rendrill']:
             update_criterias(interaction.user.id, db)
 
         if not data:
@@ -282,32 +282,39 @@ class Criteria(commands.Cog):
         """
 
         # add to json file
-        with open("./data/req.json") as f:
+        with open("./data/req.json", "r") as f:
             data = json.load(f)
-            if user.id not in data["rendrills"]:
-                data["rendrill"].append(user.id)
-                json.dump(data, "./data/req.json")
+            
+        if user.id not in data["rendrill"]:
+            data["rendrill"].append(user.id)
+            with open("./data/req.json", "w") as f:
+                json.dump(data, f)
 
         # Getting data from database 
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
+        print(data)
 
         if not data:
             db.insert("role", (user.id, 0, 0, 0, 0))
             data = db.select("role", where={"user":user.id})
 
-        data = data[0]
+        data = list(data[0])
+        print("SET REQ |", data)
         
         # Status of all 3 activites and whether role should be given and updating
         a1 = done if activity == 1 else data[1]
         a2 = done if activity == 2 else data[2]
         a3 = done if activity == 3 else data[3]
 
-        if activity == 1 and done:
-            a1 += 7
-        elif activity == 2 and done:
-            a2 += 3
+        print("SET REQ |", a1, a2, a3)
 
+        if activity == 1 and done:
+            a1 = 4
+        elif activity == 2 and done:
+            a2 = 8
+
+        print("SET REQ |", a1, a2, a3)
         db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":0},
              where={"user":user.id})
         db.close()
@@ -330,12 +337,6 @@ class Criteria(commands.Cog):
         db = Database("./data/criteria")
         data = db.select("role", where={"user":user.id})
 
-        try:
-            update_criterias(user.id, db)
-        except Exception as e:
-            print(e)
-
-
         if not data:
             db.insert("role", (user.id, 0, 0, 0, 0))
             data = db.select("role", where={"user":user.id})
@@ -343,6 +344,7 @@ class Criteria(commands.Cog):
         db.close()
 
         data = data[0]
+        print("Criteria| ", data)
 
         rc, wc = '❌', '✅'
 
