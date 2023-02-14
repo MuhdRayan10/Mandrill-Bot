@@ -12,11 +12,12 @@ Var = V()
 cache = {}
 style = discord.ButtonStyle.blurple
 
+
 class QuestionnaireMenu(ui.View):
     def __init__(self, userid):
         super().__init__(timeout=None)
         self.userid = userid
-        
+
     @discord.ui.button(label="A", style=style, custom_id='A')
     async def a(self, __, _):
         cache[self.userid].append("A")
@@ -32,26 +33,28 @@ class QuestionnaireMenu(ui.View):
 
 class Roles(commands.Cog):
     def __init__(self, bot):
-        
+
         self.bot = bot
 
-        get_explorill_button = ui.Button(label="Get Explorill", style=discord.ButtonStyle.green, custom_id="explorill:green")
+        get_explorill_button = ui.Button(
+            label="Get Explorill", style=discord.ButtonStyle.green, custom_id="explorill:green")
         get_explorill_button.callback = self.give_explorill
 
         self.views = ui.View(timeout=None)
         self.views.add_item(get_explorill_button)
 
-        get_promdrill_button = ui.Button(label="Get Promdrill", style=discord.ButtonStyle.green, custom_id="promdrill:green")
+        get_promdrill_button = ui.Button(
+            label="Get Promdrill", style=discord.ButtonStyle.green, custom_id="promdrill:green")
         get_promdrill_button.callback = self.promdrill
 
-        criteria = ui.Button(label="Criteria", style=discord.ButtonStyle.blurple, custom_id='requirements_prom:blurple')
+        criteria = ui.Button(
+            label="Criteria", style=discord.ButtonStyle.blurple, custom_id='requirements_prom:blurple')
         criteria.callback = self.view
 
         self.view2 = ui.View(timeout=None)
         self.view2.add_item(get_promdrill_button)
         self.view2.add_item(criteria)
 
-        
     async def give_explorill(self, interaction):
 
         explorill_role = interaction.guild.get_role(Var.explorill_role)
@@ -62,7 +65,7 @@ class Roles(commands.Cog):
         if unverified_role in roles:
             await interaction.response.send_message(f"Unfortunately you are still unverified... Go verify yourself at <#{Var.verification_channel}>", ephemeral=True)
             return
-        
+
         if explorill_role in roles:
             embed = discord.Embed(
                 title="Role already assigned",
@@ -77,21 +80,22 @@ class Roles(commands.Cog):
             await interaction.user.remove_roles(interaction.guild.get_role(Var.muted_role))
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    @app_commands.command(name="setup-explorill", description="[MODS] Setup explorill role interface")    
+    @app_commands.command(name="setup-explorill", description="[MODS] Setup explorill role interface")
     async def setup_explorill(self, interaction):
-        embed = discord.Embed(title='Click the button to get your Explorill role', color=Var.base_color)
-        
+        embed = discord.Embed(
+            title='Click the button to get your Explorill role', color=Var.base_color)
+
         channel = interaction.guild.get_channel(Var.explorill_channel)
         await channel.send(embed=embed, view=self.views)
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="setup-promdrill", description="[MODS] Sets up promdrill interface.")
     async def setup_promdrill(self, interaction):
-        embed = discord.Embed(title='Click the button to get your Promdrill role', color=Var.base_color)
-        
+        embed = discord.Embed(
+            title='Click the button to get your Promdrill role', color=Var.base_color)
+
         channel = interaction.guild.get_channel(Var.promdrill_channel)
         await channel.send(embed=embed, view=self.view2)
-
 
     async def promdrill(self, interaction):
         user = interaction.user
@@ -118,27 +122,28 @@ class Roles(commands.Cog):
 
         # checks if user has filled the two criteria
         db = Database("./data/criteria")
-        data = db.select("role", where={"user":interaction.user.id}, size=1)
+        data = db.select("role", where={"user": interaction.user.id}, size=1)
 
         if not data:
             data = (interaction.user.id, 0, 0, 0, 0)
             db.insert("role", data)
-            
+
         db.close()
 
-        if not(data[1] >= 8 and data[2] >= 12):
+        if not (data[1] >= 8 and data[2] >= 12):
 
             message = "Looks like you haven't completed all three tasks...  press the `Criteria` button!"
             await interaction.followup.send(message, ephemeral=True)
             return
 
         questions = [
-            'Who are the "Guardrills"?', 
-            'How many Income percentages are distributed to the "Mandrills" owners in total?', 
+            'Who are the "Guardrills"?',
+            'How many Income percentages are distributed to the "Mandrills" owners in total?',
             'What do you need to enter to out Metaverse?'
         ]
         options = [
-            ['(A) They are "Supporters"', '(B) They are "Moderators"', '(C) They are "Newcomers"'],
+            ['(A) They are "Supporters"', '(B) They are "Moderators"',
+             '(C) They are "Newcomers"'],
             ['(A) 22.22%', '(B) 44.44%', '(C) 11.11%'],
             ['(A) Mineral', '(B) All the species', '(C) At least one species']
         ]
@@ -156,7 +161,7 @@ class Roles(commands.Cog):
 
         def check(i) -> bool:
             return i.data['component_type'] == 2 and i.user.id == interaction.user.id
-        
+
         score = 0
         for i, question in enumerate(questions):
             q_embed.remove_field(0)
@@ -168,7 +173,8 @@ class Roles(commands.Cog):
             before_answer_view = ui.View()
             for j, _ in enumerate(options[i]):
                 before_answer_view.add_item(ui.Button(
-                    custom_id=chr(ord('A') + j),  # Option letter, e.g. 'A', 'B', 'C'
+                    # Option letter, e.g. 'A', 'B', 'C'
+                    custom_id=chr(ord('A') + j),
                     label=chr(ord('A') + j),
                     style=blurple_btn
                 ))
@@ -203,12 +209,15 @@ class Roles(commands.Cog):
             result_embed = discord.Embed(
                 title="Rendrill Questionnaire Results",
                 color=Var.base_color)
-        
+
             result_embed.description = "Congratulations, you have passed the questionnaire!"
         else:
-            result_embed = discord.Embed(title="We appreciate your efforts!", description="You didn't make it through this round")
-            result_embed.add_field(name="ㅤ", value=f"Navigate to our website through <#{Var.official_links}>\nRead carefully “Path of the Wild Network”\nCome back in 24 hours and try again!")
-        result_embed.add_field(name="Score", value=f"{score if passed else '?'}/{len(questions)}")
+            result_embed = discord.Embed(
+                title="We appreciate your efforts!", description="You didn't make it through this round")
+            result_embed.add_field(
+                name="ㅤ", value=f"Navigate to our website through <#{Var.official_links}>\nRead carefully “Path of the Wild Network”\nCome back in 24 hours and try again!")
+        result_embed.add_field(
+            name="Score", value=f"{score if passed else '?'}/{len(questions)}")
 
         # Send final result message
         await interaction.followup.send(embed=result_embed, ephemeral=True)
@@ -231,13 +240,13 @@ class Roles(commands.Cog):
             await user.timeout(timedelta(hours=24))
             return
 
-    async def view(self, interaction): 
+    async def view(self, interaction):
 
         user = interaction.user
         # if user already has guardrill role
         if user.get_role(Var.promdrill_role):
             embed = discord.Embed(title="Role already assigned", color=Var.base_color,
-                description="It looks like you already have the `Promdrill` role. Thank you for your interest!")
+                                  description="It looks like you already have the `Promdrill` role. Thank you for your interest!")
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -246,11 +255,11 @@ class Roles(commands.Cog):
 
         # Retrieving data from database
         db = Database("./data/criteria")
-        data = db.select("role", where={"user":user.id})
+        data = db.select("role", where={"user": user.id})
 
         if not data:
             db.insert("role", (user.id, 0, 0, 0, 0))
-            data = db.select("role", where={"user":user.id})
+            data = db.select("role", where={"user": user.id})
 
         db.close()
 
@@ -259,15 +268,16 @@ class Roles(commands.Cog):
         rc, wc = '❌', '✅'
 
         # Embed
-        embed=discord.Embed(title="Promdrill Role Criteria", description="Complete all 3 tasks to get the Promdrill role!", color=Var.base_color)
-        embed.add_field(name=f"{rc if data[1] < 8 else wc} Invite at least 8 users to the server", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc if data[2] < 12 else wc} Reach Level - 12", value="ㅤ", inline=False)
-        embed.add_field(name=f"{rc} Complete the Quiz (after 1st & 2nd tasks)", value="ㅤ", inline=False)
-        
-        await interaction.followup.send(embed=embed, ephemeral=True)
+        embed = discord.Embed(title="Promdrill Role Criteria",
+                              description="Complete all 3 tasks to get the Promdrill role!", color=Var.base_color)
+        embed.add_field(
+            name=f"{rc if data[1] < 8 else wc} Invite at least 8 users to the server", value="ㅤ", inline=False)
+        embed.add_field(
+            name=f"{rc if data[2] < 12 else wc} Reach Level - 12", value="ㅤ", inline=False)
+        embed.add_field(
+            name=f"{rc} Complete the Quiz (after 1st & 2nd tasks)", value="ㅤ", inline=False)
 
-        if data[1] >= 8 and data[2] >= 12:
-            await interaction.followup.send(content=f"Looks like you are almost eligible for obtaining the `Promdrill` role! To complete the quiz, go to <#{Var.promdrill_channel}> and click on the `GET PROMDRILL` button and start the quiz!", ephemeral=True)
+        await interaction.followup.send(embed=embed, ephemeral=True)
 
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     @app_commands.command(name="set-req-prom", description="[MODS] Set requirements for a user to obtain Promdrill role.")
@@ -280,23 +290,23 @@ class Roles(commands.Cog):
         app_commands.Choice(name="True", value=1),
         app_commands.Choice(name="False", value=0)
     ])
-    async def set_req_prom(self, interaction, user:discord.Member, activity:int, done:int):
+    async def set_req_prom(self, interaction, user: discord.Member, activity: int, done: int):
 
         # add to json file
         with open("./data/req.json", "r") as f:
-            data = json.load(f)
-            
-        if user.id not in data["promdrill"]:
-            data["promdrill"].append(user.id)
+            data__ = json.load(f)
+
+        if user.id not in data__["promdrill"]:
+            data__["promdrill"].append(user.id)
             with open("./data/req.json", "w") as f:
-                json.dump(data, f)
+                json.dump(data__, f)
 
         db = Database("./data/criteria")
-        data = db.select("role", where={"user":user.id})
+        data = db.select("role", where={"user": user.id})
 
         if not data:
             db.insert("role", (user.id, 0, 0, 0, 0))
-            data = db.select("role", where={"user":user.id})
+            data = db.select("role", where={"user": user.id})
 
         data = list(data[0])
 
@@ -310,12 +320,12 @@ class Roles(commands.Cog):
         elif activity == 2 and done:
             a2 = 12
 
-        db.update("role", {"user":user.id, "a1":a1, "a2":a2, "a3":a3, "role":0},
-             where={"user":user.id})
+        db.update("role", {"user": user.id, "a1": a1, "a2": a2, "a3": a3, "role": 0},
+                  where={"user": user.id})
         db.close()
 
         await interaction.response.send_message(f"Updated.", ephemeral=True)
 
+
 async def setup(bot):
     await bot.add_cog(Roles(bot))
-
