@@ -92,6 +92,7 @@ class Criteria(commands.Cog):
 
         with open("./data/req.json") as f:
             data = json.load(f)
+            
         if interaction.user.id not in data['rendrill']:
             update_criterias(interaction.user.id, db)
 
