@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from discord.ext import commands
 import discord
 import os
@@ -6,10 +7,12 @@ import os
 intents = discord.Intents.all()
 intents.message_content = True
 
+
 class MandrillBot(commands.Bot):
     def __init__(self):
 
-        super().__init__(intents=intents, command_prefix='+', application_id="933686254250389535")
+        super().__init__(intents=intents, command_prefix='+',
+                         application_id="933686254250389535")
         self.added = False
 
     async def on_ready(self) -> None:
@@ -22,7 +25,6 @@ class MandrillBot(commands.Bot):
                 await bot.load_extension(f'cogs.{file[:-3]}')
                 print(bot.cogs)
 
-
         from cogs.roles import Explorill, Purmarill
         views = [
             Explorill(self).view,
@@ -34,8 +36,9 @@ class MandrillBot(commands.Bot):
 
         del views
 
+
 bot = MandrillBot()
 
-     
-TOKEN = 'OTMzNjg2MjU0MjUwMzg5NTM1.G_s_Ee.KSJQZT3plra__DbWAZDe6h4bUfsdHg7fGLEwmQ'
+load_dotenv()
+TOKEN = os.getenv("TESTINGBOTTOKEN")
 bot.run(TOKEN)
