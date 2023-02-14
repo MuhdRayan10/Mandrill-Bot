@@ -45,7 +45,7 @@ class Roles(commands.Cog):
 
         get_promdrill_button = ui.Button(
             label="Get Promdrill", style=discord.ButtonStyle.green, custom_id="promdrill:green")
-        get_promdrill_button.callback = self.promdrill
+        get_promdrill_button.callback = self.warning
 
         criteria = ui.Button(
             label="Criteria", style=discord.ButtonStyle.blurple, custom_id='requirements_prom:blurple')
@@ -54,6 +54,40 @@ class Roles(commands.Cog):
         self.view2 = ui.View(timeout=None)
         self.view2.add_item(get_promdrill_button)
         self.view2.add_item(criteria)
+
+    async def warning(self, interaction):
+
+        await interaction.response.defer()
+
+        # checks if user has filled the two criteria
+        db = Database("./data/criteria")
+        data = db.select("role", where={"user": interaction.user.id}, size=1)
+
+        if not data:
+            data = (interaction.user.id, 0, 0, 0, 0)
+            db.insert("role", data)
+
+        db.close()
+
+        if not (data[1] >= 8 and data[2] >= 12):
+
+            message = "Looks like you haven't completed all three tasks...  press the `Criteria` button!"
+            await interaction.followup.send(message, ephemeral=True)
+            return
+
+        embed = discord.Embed(title="You are about to start the Quiz!")
+        embed.add_field(name="Have in mind that:", value="""• You have to answer all questions correctly in order to get the Promdrill role
+• You will have the second chance in 24 hours
+• Read carefully, don’t rush and Good Luck!""")
+
+        ready_button = ui.Button(
+            label="I'm ready!", style=discord.ButtonStyle.green)
+        ready_button.callback = self.promdrill
+
+        view = ui.View(timeout=None)
+        view.add_item(ready_button)
+
+        await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
     async def give_explorill(self, interaction):
 
