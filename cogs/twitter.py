@@ -1,3 +1,4 @@
+from helpers import Var as V
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -13,25 +14,29 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # import stored variables
-from helpers import Var as V
 Var = V()
 
-#cog
+# cog
+
+
 class TwitterCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
         # Database stuff
         db = Database("data/data")
-        db.create_table("users", {"user":'INTEGER', "name": 'TEXT', "twitter":'TEXT', "wallet":'TEXT'})
+        db.create_table(
+            "users", {"user": 'INTEGER', "name": 'TEXT', "twitter": 'TEXT', "wallet": 'TEXT'})
 
         # View stuff
-        get_prumarill_button = ui.Button(label="Get Purmarill", style=discord.ButtonStyle.green, custom_id="purmarill:green")
-        get_prumarill_button.callback = self.link # Link function called when button clicked.
+        get_prumarill_button = ui.Button(
+            label="Get Purmarill", style=discord.ButtonStyle.green, custom_id="purmarill:green")
+        # Link function called when button clicked.
+        get_prumarill_button.callback = self.link
 
         self.views = ui.View(timeout=None)
         self.views.add_item(get_prumarill_button)
-        
+
         db.close()
         # self.db.create_table("")
 
@@ -40,7 +45,8 @@ class TwitterCog(commands.Cog):
         self.headers = {
             'Authorization': f'Bearer {self.bearer_token}'
         }
-        self.screen_name = Var.twitter_account # this is the name of the thing the other thing
+        # this is the name of the thing the other thing
+        self.screen_name = Var.twitter_account
 
         # vairables
         self.most_recent_tweet_id = Var.most_recent_tweet_id
@@ -55,15 +61,15 @@ class TwitterCog(commands.Cog):
         response = requests.get(url, headers=self.headers)
 
         try:
-            tweets = response.json()['data']
-        except KeyError:
+            tweets = response.json()
+        except:
             print(f"TWITTER | API ERROR {tweets}")
             return
 
-
-        if tweets and tweets[0]['id'] != self.most_recent_tweet_id:
+        if tweets and tweets['meta']['newest_id'] != self.most_recent_tweet_id:
             print("TWITTER | INSIDE IF (after check if recent tweet id)")
-            tweet_id = tweets[0]['id']
+            tweet_id = tweets['data'][0]['id']
+            print(tweet_id, type(tweet_id))
             self.most_recent_tweet_id = tweet_id
             Var.most_recent_tweet_id = tweet_id
 
@@ -79,13 +85,14 @@ class TwitterCog(commands.Cog):
             # Send the tweet link to the Discord channel
             msg = await channel.send(tweet_link)
             print(f"TWITTER | NEW TWEET {msg}")
-    
+
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="setup-purmarill", description="Setup the Purmarill Interface in the specified channel")
     async def setup_purmarill(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
-        embed = discord.Embed(title='Click the button to get your Purmarill role',color=Var.base_color)
-        
+        embed = discord.Embed(
+            title='Click the button to get your Purmarill role', color=Var.base_color)
+
         # Sending message
         await channel.send(embed=embed, view=self.views)
         await interaction.response.send_message(f"Added `get prumarill` app, to <#{channel.id}>")
@@ -133,16 +140,16 @@ class TwitterCog(commands.Cog):
                 if not validify_twitter(str(self.twitter_username)):
                     await interaction.response.send_message("Twitter username does not exist.", ephemeral=True)
                     return
-                
+
                 # checks if it is a valid wallet address
                 if not validify_wallet(str(self.wallet_id)):
                     await interaction.response.send_message("FLR address is not valid.", ephemeral=True)
                     return
 
-
                 db = Database("./data/data")
                 # Adding name to db ## TODO: HERE NIVED
-                db.insert("users", (interaction.user.id, interaction.user.name, str(self.twitter_username), str(self.wallet_id)))
+                db.insert("users", (interaction.user.id, interaction.user.name, str(
+                    self.twitter_username), str(self.wallet_id)))
                 await interaction.response.send_message("You are now officially a Purmarill!", ephemeral=True)
 
                 await interaction.user.add_roles(role)
@@ -153,23 +160,22 @@ class TwitterCog(commands.Cog):
         await interaction.response.send_modal(PurmarillVerificationModal())
 
         # Check if twitter account is valid
-        def validify_twitter(twitter:str):
+        def validify_twitter(twitter: str):
             url = f"https://api.twitter.com/2/users/by/username/{twitter}"
             response = requests.get(url, headers=self.headers)
 
             data = response.json()
 
             try:
-                if data["data"]["id"].isdigit(): # checks if id exists, and id int
+                if data["data"]["id"].isdigit():  # checks if id exists, and id int
                     return True
             except KeyError:
                 return False
- 
+
         # Check if wallet adress is valid
-        def validify_wallet(wallet:str):
+        def validify_wallet(wallet: str):
             return Web3.isAddress(wallet)
 
 
 async def setup(bot):
     await bot.add_cog(TwitterCog(bot))
-    
