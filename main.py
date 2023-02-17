@@ -10,10 +10,12 @@ Var = V()
 intents = discord.Intents.all()
 intents.message_content = True
 
+
 class MandrillBot(commands.Bot):
     def __init__(self):
 
-        super().__init__(intents=intents, command_prefix='+', application_id="1059476420977504378")
+        super().__init__(intents=intents, command_prefix='+',
+                         application_id="1059476420977504378")
         self.added = False
 
     async def on_ready(self) -> None:
@@ -29,9 +31,11 @@ class MandrillBot(commands.Bot):
             from cogs.other_roles import Roles
             from cogs.games import Games
             from cogs.ticket import Tickets
+            from cogs.collaborations import Collaborations
 
-            views = (Verification(self), Criteria(self), TwitterCog(self), Games(self), Tickets(self), Roles(self))
-            
+            views = (Verification(self), Criteria(self), TwitterCog(self), Games(
+                self), Tickets(self), Roles(self), Collaborations(self))
+
             for view in views:
                 self.add_view(view.views)
 
@@ -39,9 +43,12 @@ class MandrillBot(commands.Bot):
 
             del views
 
+
 bot = MandrillBot()
 
 # Loading the cog files from cogs folder
+
+
 async def load_cogs():
     for file in os.listdir('./cogs'):
         if file.endswith('.py'):
