@@ -51,9 +51,6 @@ class TwitterCog(commands.Cog):
         # vairables
         self.most_recent_tweet_id = Var.most_recent_tweet_id
 
-        # start the task
-        self.check_tweets.start()
-
     @tasks.loop(minutes=Var.twitter_loop_time)
     async def check_tweets(self):
         print("TWITTER | CHECKING")
