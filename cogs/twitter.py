@@ -32,7 +32,7 @@ class TwitterCog(commands.Cog):
         get_prumarill_button = ui.Button(
             label="Get Purmarill", style=discord.ButtonStyle.green, custom_id="purmarill:green")
         # Link function called when button clicked.
-        get_prumarill_button.callback = self.link
+        get_prumarill_button.callback = self.partnership_embed
 
         self.views = ui.View(timeout=None)
         self.views.add_item(get_prumarill_button)
@@ -172,6 +172,35 @@ class TwitterCog(commands.Cog):
         # Check if wallet adress is valid
         def validify_wallet(wallet: str):
             return Web3.isAddress(wallet)
+        
+    async def partnership_embed(self, interaction):
+        desc = """This address will also be used to recognize our partner projects assets,
+If you want to gain the partnership roles, you have to provide the address that you are using for holding relevant products of these projects."""
+        
+        embed = discord.Embed(title="Before you submit...", description=desc, color=Var.base_color)
+        view = ui.View()
+        btn = ui.Button(label="Sure!", style=discord.ButtonStyle.green)
+        btn.callback = self.link
+        
+        view.add_item(btn)
+
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+        
+    @app_commands.command(name='update-wallet', description='Update FLR Wallet Address')
+    async def update_wallet(self, interaction, address:str):
+        db = Database("./data/data")
+        data = db.select("users", where={"user":interaction.user.id}, size=1)
+
+        if not data:
+            await interaction.response.send_message("Looks like there is no Wallet address currently linked to your account...", ephemeral=True)
+            return
+        
+        db.update("users", information={"wallet":address}, where={"user":interaction.user.id})
+
+        await interaction.response.send_message(f"Succesfully updated wallet address from `{data[3]}` to `{address}`!", ephemeral=True)
+
 
 
 async def setup(bot):

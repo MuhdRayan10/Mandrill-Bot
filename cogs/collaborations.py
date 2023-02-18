@@ -51,7 +51,7 @@ class Collaborations(commands.Cog):
 
         bool_ = self.check_1(interaction.user.id)
         if bool_:
-            role = self.bot.guilds[0].get_role(Var.white_realm_space_role)
+            role = interaction.guild.get_role(Var.white_realm_space_role)
 
             await interaction.user.add_roles(role)
             embed = discord.Embed(
@@ -70,25 +70,24 @@ class Collaborations(commands.Cog):
     def check_1(self, user_id: int) -> bool:
         db = Database("./data/data.db")
         data = db.select("users", where={"user": user_id}, size=1)
-        print(data)
-        for x in data:
-            print(x, type(data))
-        print()
-
-        if data is None:  # user has not given purmarill
+        
+        
+        if not data:
             return False
-
+        
         with open("./data/white_realm_holders.csv") as f:
             reader = csv.reader(f, delimiter=",")
             white_realm_holders = [str(row[0]) for row in reader]
-        print(white_realm_holders)
-
-        return True if data[3] in white_realm_holders else False
+            
+        print(white_realm_holders[:10])
+        print(data[3], data[3] in white_realm_holders)
+        
+        return data[3].lower() in white_realm_holders
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="superbadseries", description="Embed for superbadseries")
     async def super_bad_series(self, interaction: discord.Interaction, channel: discord.TextChannel):
-        embed = discord.Embed(title="Claim your Genesis Seed Capsule role!")
+        embed = discord.Embed(title="Claim your Genesis Seed Capsule role!", color=Var.base_color)
 
         await channel.send(embed=embed, view=self.view2)
 
@@ -121,7 +120,6 @@ class Collaborations(commands.Cog):
     def check_2(self, user_id: int):
         db = Database("./data/data.db")
         return not db.if_exists("users", where={"user": user_id})
-
 
 async def setup(bot):
     await bot.add_cog(Collaborations(bot))

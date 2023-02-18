@@ -112,7 +112,7 @@ class Criteria(commands.Cog):
             await interaction.followup.send(message, ephemeral=True)
             return
 
-        embed = discord.Embed(title="You are about to start the Quiz!")
+        embed = discord.Embed(title="You are about to start the Quiz!", color=Var.base_color)
         embed.add_field(name="Have in mind that:", value="""- You have to answer all questions correctly in order to get the Rendrill role
 - You will have the second chance in 24 hours
 - Read carefully, don’t rush and Good Luck!""")
