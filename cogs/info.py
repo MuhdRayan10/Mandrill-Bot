@@ -196,6 +196,7 @@ Rewards and Benefits:
         embed.add_field(name="Path of the Wild Network", value="[themandrills.xyz/journey](https://themandrills.xyz/journey)", inline=False)
         embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
         embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
+        embed.add_field(name="Flarepedia", value="[the-mandrills](https://www.flarepedia.com/i/the-mandrills)")
         embed.add_field(name="Medium", value="[@wildnetwork](https://medium.com/@wildnetwork)", inline=False)
         embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
 
