@@ -179,7 +179,7 @@ If you want to gain the partnership roles, you have to provide the address that 
         
         embed = discord.Embed(title="Before you submit...", description=desc, color=Var.base_color)
         view = ui.View()
-        btn = ui.Button(label="Sure!", style=discord.ButtonStyle.green)
+        btn = ui.Button(label="Continue", style=discord.ButtonStyle.green)
         btn.callback = self.link
         
         view.add_item(btn)
