@@ -43,14 +43,16 @@ class Collaborations(commands.Cog):
 
         bool_ = self.check_(interaction.user.id)
         if bool_:
-            role = await self.bot.guild.fetch_roles(Var.white_realm_space_role)
+            role = self.bot.guilds[0].get_role(Var.white_realm_space_role)
+
             await interaction.user.add_roles(role)
-            embed = discord.Embed(color=Var.base_color)
+            embed = discord.Embed(
+                description="Congratulations, now you have White Realm Space role!", color=Var.base_color)
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
         else:
             embed = discord.Embed(
-                description='Unfortunately, you are not eligible to claim the "White Realm Space” role.'
+                description='Unfortunately, you are not eligible to claim the "White Realm Space” role.', color=Var.base_color
             )
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
