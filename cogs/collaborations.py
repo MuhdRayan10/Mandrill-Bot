@@ -47,6 +47,7 @@ class Collaborations(commands.Cog):
                 description="You already claimed your role, thank you for your interest.", color=Var.base_color
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
         bool_ = self.check_1(interaction.user.id)
         if bool_:
@@ -56,6 +57,7 @@ class Collaborations(commands.Cog):
             embed = discord.Embed(
                 description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
         else:
             embed = discord.Embed(
@@ -63,6 +65,7 @@ class Collaborations(commands.Cog):
             )
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
     def check_1(self, user_id: int) -> bool:
         db = Database("./data/data.db")
