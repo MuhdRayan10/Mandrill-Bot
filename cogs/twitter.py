@@ -184,7 +184,7 @@ If you want to gain the partnership roles, you have to provide the address that 
         
         view.add_item(btn)
 
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
 
         
