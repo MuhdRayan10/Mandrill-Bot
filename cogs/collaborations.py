@@ -110,14 +110,11 @@ class Collaborations(commands.Cog):
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        def check_2(self, user_id: int):
-            db = Database("./data/data.db")
-            data = db.select("users", where={"user": user_id}, size=1)
+    def check_2(self, user_id: int):
+        db = Database("./data/data.db")
+        data = db.select("users", where={"user": user_id}, size=1)
 
-            if data is None:  # user has not given purmarill
-                return False
-
-            return True  # todo
+        return data is not None
 
 
 async def setup(bot):
