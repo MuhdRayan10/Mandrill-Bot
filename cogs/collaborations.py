@@ -49,7 +49,7 @@ class Collaborations(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        bool_ = self.check_1(interaction.user.id)
+        bool_ = self.check_1(interaction.user.id)D
         if bool_:
             role = self.bot.guilds[0].get_role(Var.white_realm_space_role)
 
@@ -98,6 +98,7 @@ class Collaborations(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
         bool_ = self.check_2(interaction.user.id)
+        bool_ = False
         if bool_:
             role = self.bot.guilds[0].get_role(Var.genesis_speed_capsule)
 
@@ -115,9 +116,7 @@ class Collaborations(commands.Cog):
 
     def check_2(self, user_id: int):
         db = Database("./data/data.db")
-        data = db.select("users", where={"user": user_id}, size=1)
-
-        return data is not None
+        return not db.if_exists("users", where={"user": user_id})
 
 
 async def setup(bot):
