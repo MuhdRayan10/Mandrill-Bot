@@ -49,7 +49,7 @@ class Collaborations(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        bool_ = self.check_1(interaction.user.id)D
+        bool_ = self.check_1(interaction.user.id)
         if bool_:
             role = self.bot.guilds[0].get_role(Var.white_realm_space_role)
 
@@ -70,6 +70,10 @@ class Collaborations(commands.Cog):
     def check_1(self, user_id: int) -> bool:
         db = Database("./data/data.db")
         data = db.select("users", where={"user": user_id}, size=1)
+        print(data)
+        for x in data:
+            print(x, type(data))
+        print()
 
         if data is None:  # user has not given purmarill
             return False
