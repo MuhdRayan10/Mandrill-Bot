@@ -174,8 +174,7 @@ class TwitterCog(commands.Cog):
             return Web3.isAddress(wallet)
         
     async def partnership_embed(self, interaction):
-        desc = """This address will also be used to recognize our partner projects assets,
-If you want to gain the partnership roles, you have to provide the address that you are using for holding relevant products of these projects."""
+        desc = """The FLR address you provide, besides for Mineral whitelisting, will also be used to recognize our partner projects' assets, for the assignment of partnership roles."""
         
         embed = discord.Embed(title="Before you submit...", description=desc, color=Var.base_color)
         view = ui.View()
@@ -195,6 +194,10 @@ If you want to gain the partnership roles, you have to provide the address that 
 
         if not data:
             await interaction.response.send_message("Looks like there is no Wallet address currently linked to your account...", ephemeral=True)
+            return
+        
+        if not Web3.isAddress(address):
+            await interaction.response.send_message("Invalid Wallet Address", ephemeral=True)
             return
         
         db.update("users", information={"wallet":address}, where={"user":interaction.user.id})
