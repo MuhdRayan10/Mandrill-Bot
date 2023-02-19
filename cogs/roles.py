@@ -7,6 +7,9 @@ from easy_sqlite3 import *
 from web3 import Web3
 from cogs.twitter import Twitter
 
+from functions import update_criterias
+import json
+
 # global config variables
 from helpers import Var
 Var = Var()
@@ -159,6 +162,71 @@ class Purmarill(app_commands.Group):
         await interaction.response.send_modal(PurmarillVerificationModal())
 
 
+class Rendrill(app_commands.Group):
+    def __init__(self, bot, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.bot = bot
+
+        self.view = ui.View(timeout=None)
+
+        # create table in db
+        db = Database("./data/criteria")
+        db.create_table("role", {"user": INT, "a1": INT,
+                        "a2": INT, "a3": INT, "role": INT})
+        db.close()
+
+        button = ui.Button(
+            label="Get Rendrill", style=discord.ButtonStyle.green, custom_id="rendrill:green")
+        button.callback = self.alert
+
+        criteria = ui.Button(
+            label="Criteria", style=discord.ButtonStyle.blurple, custom_id='requirements:blurple')
+        criteria.callback = self.criteria
+
+        self.view.add_item(button)
+        self.view.add_item(criteria)
+
+    async def setup(self, interaction: discord.Interaction, channel: discord.TextChannel):
+        """Sets up the Rendrill interface in the particular channel."""
+
+        # The Verify Embed
+        embed = discord.Embed(
+            title='Click the button to get your Rendrill role', color=Var.base_color)
+
+        # Sending message
+        await channel.send(embed=embed, view=self.view)
+        await interaction.response.send_message(f"Added `Rendrill` role interface, to <#{channel.id}>", ephemeral=True)
+
+    async def alert(self, interaction: discord.Interaction):
+        """Alerts the user on details about the quiz."""
+        await interaction.response.defer()
+
+        # check if user is eligible
+
+    def eligibility_check(self, user_id: int):
+        """Checks if the user is eligible for the Rendrill role."""
+        db = Database("./data/criteria")
+        data = db.select("role", where={"user": user_id}, size=1)
+
+        # i dont understand what this is for, but rayan said so this exists
+        with open("./data/req.json") as f:
+            data__ = json.load(f)
+        if user_id not in data__['rendrill']:
+            update_criterias(user_id, db)
+
+        if not data:
+            data = (user_id, 0, 0, 0, 0)
+            db.insert("role", data)
+
+        db.close()
+
+        if not (data[1] >= 4 and data[2] >= 8):
+            return False
+        else:
+            return True
+
+
 async def setup(bot):
     bot.tree.add_command(
         Explorill(
@@ -172,5 +240,13 @@ async def setup(bot):
             bot=bot,
             name="purmarill",
             description="Commands related to Purmarill Role"
+        )
+    )
+
+    bot.tree.add_command(
+        Rendrill(
+            bot=bot,
+            name="rendrill",
+            description="Commands related to Rendrill Role"
         )
     )

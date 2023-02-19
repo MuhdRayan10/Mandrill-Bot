@@ -25,10 +25,11 @@ class MandrillBot(commands.Bot):
                 await bot.load_extension(f'cogs.{file[:-3]}')
                 print(bot.cogs)
 
-        from cogs.roles import Explorill, Purmarill
+        from cogs.roles import Explorill, Purmarill, Rendrill
         views = [
             Explorill(self).view,
-            Purmarill(self).view
+            Purmarill(self).view,
+            Rendrill(self).view
         ]
 
         for view in views:

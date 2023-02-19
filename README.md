@@ -17,6 +17,8 @@ For more information or assistance with Mandrills Bot, please contact the develo
   - [x] Verification of Web3 Address
   - [ ] Verification of FLR Address
 - [ ] Rendrill
+  - [x] init Parameters
+  - [x] Setup
 - [ ] Promdrill
 
 #### Twitter
