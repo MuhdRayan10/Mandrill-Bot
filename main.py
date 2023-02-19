@@ -37,6 +37,10 @@ class MandrillBot(commands.Bot):
 
         del views
 
+        x = await self.tree.fetch_commands()
+        print(x)
+        
+
 
 bot = MandrillBot()
 
