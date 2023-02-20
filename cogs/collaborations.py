@@ -5,8 +5,62 @@ from discord import ui, app_commands
 from easy_sqlite3 import *
 import csv
 
-from helpers import Var as V
+from helpers import Var as V, check_in_csv
 Var = V()
+
+
+class WhiteRealmSpaceModal(ui.Modal, title='White Realm Space'):
+    wallet_id = ui.TextInput(
+        label="Wallet Address",
+        placeholder='Enter your FLR wallet address',
+        style=discord.TextStyle.short
+    )
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        bool_ = check_in_csv(self.wallet_id, "./data/white_realm_holders.csv")
+        if bool_:
+            role = interaction.guild.get_role(Var.white_realm_space_role)
+
+            await interaction.user.add_roles(role)
+            embed = discord.Embed(
+                description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        else:
+            embed = discord.Embed(
+                description='Unfortunately, you are not eligible to get White Realm Space role.', color=Var.base_color
+            )
+
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+
+class SuperBadSeriesModal(ui.Modal, title='Genisis Seed Capsule'):
+    wallet_id = ui.TextInput(
+        label="Wallet Address",
+        placeholder='Enter your FLR wallet address',
+        style=discord.TextStyle.short
+    )
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        bool_ = check_in_csv(self.wallet_id, "filepath/goes/here")  # TODO
+        if bool_:
+            role = interaction.guild.get_role(Var.genesis_speed_capsule)
+
+            await interaction.user.add_roles(role)
+            embed = discord.Embed(
+                description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        else:
+            embed = discord.Embed(
+                description='Unfortunately, you are not eligible to get White Realm Space role.', color=Var.base_color
+            )
+
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
 
 class Collaborations(commands.Cog):
@@ -49,45 +103,14 @@ class Collaborations(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        bool_ = self.check_1(interaction.user.id)
-        if bool_:
-            role = interaction.guild.get_role(Var.white_realm_space_role)
-
-            await interaction.user.add_roles(role)
-            embed = discord.Embed(
-                description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-
-        else:
-            embed = discord.Embed(
-                description='Unfortunately, you are not eligible to get White Realm Space role.', color=Var.base_color
-            )
-
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-
-    def check_1(self, user_id: int) -> bool:
-        db = Database("./data/data.db")
-        data = db.select("users", where={"user": user_id}, size=1)
-        
-        
-        if not data:
-            return False
-        
-        with open("./data/white_realm_holders.csv") as f:
-            reader = csv.reader(f, delimiter=",")
-            white_realm_holders = [str(row[0]) for row in reader]
-            
-        print(white_realm_holders[:10])
-        print(data[3], data[3] in white_realm_holders)
-        
-        return data[3].lower() in white_realm_holders
+        # send the modal
+        await interaction.response.send_modal(WhiteRealmSpaceModal())
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name="superbadseries", description="Embed for superbadseries")
     async def super_bad_series(self, interaction: discord.Interaction, channel: discord.TextChannel):
-        embed = discord.Embed(title="Claim your Genesis Seed Capsule role!", color=Var.base_color)
+        embed = discord.Embed(
+            title="Claim your Genesis Seed Capsule role!", color=Var.base_color)
 
         await channel.send(embed=embed, view=self.view2)
 
@@ -100,26 +123,8 @@ class Collaborations(commands.Cog):
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        bool_ = self.check_2(interaction.user.id)
-        bool_ = False
-        if bool_:
-            role = self.bot.guilds[0].get_role(Var.genesis_speed_capsule)
+        await interaction.response.send_modal(SuperBadSeriesModal())
 
-            await interaction.user.add_roles(role)
-            embed = discord.Embed(
-                description='Congratulations, now you have "Genesis Seed Capsule" role!', color=Var.base_color)
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-
-        else:
-            embed = discord.Embed(
-                description='Unfortunately, you are not eligible to claim the "Genesis Seed Capsule" role.', color=Var.base_color
-            )
-
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-
-    def check_2(self, user_id: int):
-        db = Database("./data/data.db")
-        return not db.if_exists("users", where={"user": user_id})
 
 async def setup(bot):
     await bot.add_cog(Collaborations(bot))
