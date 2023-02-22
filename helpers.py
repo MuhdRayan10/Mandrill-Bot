@@ -25,9 +25,9 @@ class Var:
             json.dump(self.data, f, indent=4)
 
 
-def check_in_csv(item, fp):
+def check_in_csv(item, fp, i):
     with open(fp, "r") as f:
         reader = csv.reader(f, delimiter=",")
-        items = [str(row[0]) for row in reader]
+        items = [str(row[i]).lower() for row in reader]
 
     return item in items

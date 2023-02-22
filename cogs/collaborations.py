@@ -17,8 +17,8 @@ class WhiteRealmSpaceModal(ui.Modal, title='White Realm Space'):
     )
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        bool_ = check_in_csv(str(self.wallet_id),
-                             "./data/white_realm_holders.csv")
+        bool_ = check_in_csv(str(self.wallet_id).lower(),
+                             "./data/white_realm_holders.csv", 0)
         print(bool_, self.wallet_id)
         if bool_:
             role = interaction.guild.get_role(Var.white_realm_space_role)
@@ -46,13 +46,12 @@ class SuperBadSeriesModal(ui.Modal, title='Genisis Seed Capsule'):
     )
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        bool_ = check_in_csv(str(self.wallet_id), "filepath/goes/here")  # TODO
+        bool_ = check_in_csv(str(self.wallet_id), "./data/sss.csv", 1)
         if bool_:
             role = interaction.guild.get_role(Var.genesis_speed_capsule)
 
             await interaction.user.add_roles(role)
-            embed = discord.Embed(
-                description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
+            embed = discord.Embed(description="Congratulations! Now you have Genesis Seed Capsule role!", color=Var.base_color)
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
