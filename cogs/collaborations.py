@@ -77,7 +77,7 @@ class Collaborations(commands.Cog):
         
         with open("./data/white_realm_holders.csv") as f:
             reader = csv.reader(f, delimiter=",")
-            white_realm_holders = [str(row[0]) for row in reader]
+            white_realm_holders = [(str(row[0])).lower() for row in reader]
             
         print(white_realm_holders[:10])
         print(data[3], data[3] in white_realm_holders)
