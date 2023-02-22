@@ -30,4 +30,4 @@ def check_in_csv(item, fp):
         reader = csv.reader(f, delimiter=",")
         items = [str(row[0]) for row in reader]
 
-    return True if item in items else False
+    return item in items
