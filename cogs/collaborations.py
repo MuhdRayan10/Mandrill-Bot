@@ -57,7 +57,7 @@ class SuperBadSeriesModal(ui.Modal, title='Genisis Seed Capsule'):
 
         else:
             embed = discord.Embed(
-                description='Unfortunately, you are not eligible to get White Realm Space role.', color=Var.base_color
+                description='Unfortunately, you are not eligible to get Genesis Seed Capsule role.', color=Var.base_color
             )
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -104,23 +104,7 @@ class Collaborations(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        bool_ = self.check_1(interaction.user.id)
-        if bool_:
-            role = interaction.guild.get_role(Var.white_realm_space_role)
-
-            await interaction.user.add_roles(role)
-            embed = discord.Embed(
-                description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-
-        else:
-            embed = discord.Embed(
-                description='Unfortunately, you are not eligible to get White Realm Space role.', color=Var.base_color
-            )
-
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
+        await interaction.response.send_modal(WhiteRealmSpaceModal())
 
     def check_1(self, user_id: int) -> bool:
         db = Database("./data/data.db")

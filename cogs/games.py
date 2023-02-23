@@ -16,13 +16,13 @@ class wheel:
     def __init__(self) -> None:
         self.items = [
             '1,111 $LEF - Native coin of the "Wild Network"',
-            'Try Again in 4 Days',
+            'Try Again in 7 Days',
             'Mineral',
-            'Try Again in 4 Days',
+            'Try Again in 7 Days',
             'NFT Comics Series "Chronicles of the Ten unique Flowers"',
-            'Try Again in 4 Days',
+            'Try Again in 7 Days',
             '"Wild Network" Branded Merch & Physical Artwork (First Edition)',
-            'Try Again in 4 Days',
+            'Try Again in 7 Days',
         ]
 
         self.items_ = ['1,111 $LEF - Native coin of the "Wild Network"', 'Mineral', 'NFT Comics Series "Chronicles of the Ten unique Flowers"', '"Wild Network" Branded Merch & Physical Artwork (First Edition)', 'Try Again in 4 Days',]
@@ -89,9 +89,12 @@ class Games(commands.Cog):
         prize = self.wheel.spin()
 
         if prize == 'Try Again in 7 Days':
-            desc = "Unfortunately you have chosen the empty box, Try again in 7 days!"
+            title = "Unfortunately You chose the Empty Box"
+            desc = "Try again in 7 days"
         else:
+            title = "Mystery Box Reveal"
             desc = f"**Congratulations!**\nYou have won the `{prize}`."
+            
             db = Database("./data/prizes")
             db.create_table("prizes", {"winner":INT, "name":"TEXT", "prize":"TEXT"})
 
@@ -99,7 +102,7 @@ class Games(commands.Cog):
             db.close()
 
         embed = discord.Embed(
-            title="Mystery Box Reveal", 
+            title=title, 
             description=desc,
             color=Var.base_color)
         embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc != "Unfortunately you have chosen the empty box, Try again in 7 days!" else '')

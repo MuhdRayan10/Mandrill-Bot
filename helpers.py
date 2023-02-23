@@ -28,6 +28,10 @@ class Var:
 def check_in_csv(item, fp, i):
     with open(fp, "r") as f:
         reader = csv.reader(f, delimiter=",")
-        items = [str(row[i]).lower() for row in reader]
+        
+        if i == 0:
+            return item.lower() in [str(row[0]).lower() for row in reader]
+        elif i == 1:
+            return item.lower() in [row[0].lower().split(";")[1].strip('"') for row in reader]
 
-    return item in items
+        

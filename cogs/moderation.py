@@ -111,7 +111,6 @@ class Moderation(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         # if it is message sent by bot
-        if message.channel.id != Var.general: return
 
         if message.author.bot is True:
             return
@@ -123,13 +122,12 @@ class Moderation(commands.Cog):
             return
 
         # check for links and gifs
-        keywords = ["https://", "http://", "tenor.com"]
+        keywords = ["https://", "http://", "tenor.com", "discord.gg/"]
 
         for keyword in keywords:
             if keyword in message.content:
 
                 await message.reply(content="**⛔ Sorry. Links and Embeds are not allowed in our Server!**", delete_after=10)
-
                 await message.delete()
 
                 return
