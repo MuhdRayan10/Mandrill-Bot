@@ -105,7 +105,8 @@ class Games(commands.Cog):
             title=title, 
             description=desc,
             color=Var.base_color)
-        embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc != "Unfortunately you have chosen the empty box, Try again in 7 days!" else '')
+        if prize != 'Try Again in 7 Days':
+            embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if desc != "Unfortunately you have chosen the empty box, Try again in 7 days!" else '')
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
