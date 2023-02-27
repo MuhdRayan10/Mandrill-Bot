@@ -114,7 +114,7 @@ class Criteria(commands.Cog):
 
         embed = discord.Embed(title="You are about to start the Quiz!", color=Var.base_color)
         embed.add_field(name="Have in mind that:", value="""- You have to answer all questions correctly in order to get the Rendrill role
-- You will have the second chance in 24 hours
+- You will have the second chance in 8 hours
 - Read carefully, don’t rush and Good Luck!""")
 
         ready_button = ui.Button(
@@ -249,7 +249,7 @@ class Criteria(commands.Cog):
             result_embed = discord.Embed(
                 title="We appreciate your efforts!", description="**You didn't make it through this round**")
             result_embed.add_field(
-                name="ㅤ", value=f"- Navigate to our website through <#{Var.official_links}>\n- Read carefully “Path of the Wild Network”\n- Come back in 24 hours and try again!")
+                name="ㅤ", value=f"- Navigate to our website through <#{Var.official_links}>\n- Read carefully “Path of the Wild Network”\n- Come back in 8 hours and try again!")
 
         result_embed.add_field(
             name="Score", value=f"{score if passed else '?'}/{len(questions)}", inline=False)
@@ -270,7 +270,7 @@ class Criteria(commands.Cog):
             return
 
         if score < 2:
-            await user.timeout(timedelta(hours=24))
+            await user.timeout(timedelta(hours=8))
             return
 
     # Command for Moderator to update user's criteria stats

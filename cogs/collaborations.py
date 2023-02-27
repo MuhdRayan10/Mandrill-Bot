@@ -37,6 +37,33 @@ class WhiteRealmSpaceModal(ui.Modal, title='White Realm Space'):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
+class ClubXModal(ui.Modal, title='Extremely Bullish'):
+    wallet_id = ui.TextInput(
+        label="Wallet Address",
+        placeholder='Enter your  XRPL wallet address',
+        style=discord.TextStyle.short
+    )
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        bool_ = check_in_csv(str(self.wallet_id).lower(),
+                             "./data/clubx.csv", 0)
+        print(bool_, self.wallet_id)
+        if bool_:
+            role = interaction.guild.get_role(Var.clubx_role)
+
+            await interaction.user.add_roles(role)
+            embed = discord.Embed(
+                description="Congratulations! Now you have the Extremely Bullish role!", color=Var.base_color)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        else:
+            embed = discord.Embed(
+                description='Unfortunately, you are not eligible to get the Extremely Bullish role.', color=Var.base_color
+            )
+
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
 
 class SuperBadSeriesModal(ui.Modal, title='Genisis Seed Capsule'):
     wallet_id = ui.TextInput(
@@ -82,6 +109,13 @@ class Collaborations(commands.Cog):
 
         self.view2 = ui.View(timeout=None)
         self.view2.add_item(genisis_capsule_btn)
+
+        clubx_btn = ui.Button(
+            label="Get It!", style=discord.ButtonStyle.green, custom_id="collaborations:clubx")
+        clubx_btn.callback = self.clubx_btn_callback
+
+        self.view3 = ui.View(timeout=None)
+        self.view3.add_item(clubx_btn)
 
     @ app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @ app_commands.command(name="setup-888innercircle", description="Setup the 888innercircle Interface in the specified channel")
@@ -142,6 +176,26 @@ class Collaborations(commands.Cog):
 
         await interaction.response.send_modal(SuperBadSeriesModal())
 
+    @ app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @ app_commands.command(name="clubx", description="Embed for Club X")
+    async def clubx(self, interaction: discord.Interaction, channel: discord.TextChannel):
+        embed = discord.Embed(
+            title="Claim your Extremely Bullish role!", color=Var.base_color)
+
+        await channel.send(embed=embed, view=self.view3)
+
+    async def clubx_btn_callback(self, interaction: discord.Interaction):
+
+        role = interaction.user.get_role(Var.clubx_role)
+
+        if role is not None:
+            embed = discord.Embed(
+                description="You already claimed your role, thank you for your interest.", color=Var.base_color
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        await interaction.response.send_modal(ClubXModal())
 
 async def setup(bot):
     await bot.add_cog(Collaborations(bot))

@@ -32,7 +32,7 @@ class TwitterCog(commands.Cog):
         get_prumarill_button = ui.Button(
             label="Get Purmarill", style=discord.ButtonStyle.green, custom_id="purmarill:green")
         # Link function called when button clicked.
-        get_prumarill_button.callback = self.partnership_embed
+        get_prumarill_button.callback = self.link
 
         self.views = ui.View(timeout=None)
         self.views.add_item(get_prumarill_button)
