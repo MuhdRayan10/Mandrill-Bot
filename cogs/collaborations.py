@@ -105,40 +105,7 @@ class Collaborations(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        bool_ = self.check_1(interaction.user.id)
-        if bool_:
-            role = interaction.guild.get_role(Var.white_realm_space_role)
-
-            await interaction.user.add_roles(role)
-            embed = discord.Embed(
-                description="Congratulations! Now you have White Realm Space role!", color=Var.base_color)
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-
-        else:
-            embed = discord.Embed(
-                description='Unfortunately, you are not eligible to get White Realm Space role.', color=Var.base_color
-            )
-
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-
-    def check_1(self, user_id: int) -> bool:
-        db = Database("./data/data.db")
-        data = db.select("users", where={"user": user_id}, size=1)
-        
-        
-        if not data:
-            return False
-        
-        with open("./data/white_realm_holders.csv") as f:
-            reader = csv.reader(f, delimiter=",")
-            white_realm_holders = [(str(row[0])).lower() for row in reader]
-            
-        print(white_realm_holders[:10])
-        print(data[3], data[3] in white_realm_holders)
-        
-        return data[3].lower() in white_realm_holders
+        await interaction.response.send_modal(WhiteRealmSpaceModal())
 
     @ app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @ app_commands.command(name="superbadseries", description="Embed for superbadseries")

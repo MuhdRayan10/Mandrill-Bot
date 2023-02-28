@@ -12,9 +12,11 @@ from discord.ext import commands, tasks
 from helpers import Var as V
 Var = V()
 
+
 class CryptoToUsd:
     def __init__(self) -> None:
-        self.url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'  # Coinmarketcap API url
+        # Coinmarketcap API url
+        self.url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
         headers = {
             'Accepts': 'application/json',
@@ -33,13 +35,15 @@ class CryptoToUsd:
         print(info)
 
         if info:
-            if info['data']['FLR']['quote']['USD']['percent_change_1h'] > 0: # other available options: percent_change_24h,percent_change_7d upto 90d 
+            # other available options: percent_change_24h,percent_change_7d upto 90d
+            if info['data']['FLR']['quote']['USD']['percent_change_1h'] > 0:
                 trend = 1
             else:
                 trend = 0
 
             return round(info['data']['FLR']['quote']['USD']['price'], 7), trend
-        
+
+
 class ServerStats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -47,11 +51,21 @@ class ServerStats(commands.Cog):
         self.crypto_helper = CryptoToUsd()
 
         self.update_mint_date.start()
+        self.update_members.start()
 
+    @tasks.loop(minutes=5)
+    async def update_members(self):
+        no_members = len(self.guild.members)
+
+        members_channel = await self.guild.fetch_channel(Var.members_stat_channel)
+
+        await members_channel.edit(
+            name=f"👤| Members: {no_members}"
+        )
 
     @tasks.loop(minutes=5)
     async def update_mint_date(self):
-        
+
         FLR, trend = self.crypto_helper.flare()
 
         flr_channel = await self.guild.fetch_channel(Var.flr_stats_channel)
@@ -65,7 +79,8 @@ class ServerStats(commands.Cog):
 
         def time_remaining():
             now = datetime.datetime.now(tz=timezone)
-            end_of_day = datetime.datetime(now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
+            end_of_day = datetime.datetime(
+                now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
             end_of_day += datetime.timedelta(hours=5)
             delta = end_of_day - now
             return f"{delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
@@ -73,5 +88,7 @@ class ServerStats(commands.Cog):
         await mint_channel.edit(name=f"MINT In {time_remaining()}")
 
 # Cog setup command
+
+
 async def setup(bot):
     await bot.add_cog(ServerStats(bot))

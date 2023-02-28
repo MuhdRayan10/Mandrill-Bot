@@ -27,7 +27,8 @@ class Var:
 
 def check_in_csv(item, fp):
     with open(fp, "r") as f:
-        reader = csv.reader(f, delimiter=",")
+        reader = csv.reader(f)
         items = [str(row[0]) for row in reader]
+        print(items)
 
     return item in items
