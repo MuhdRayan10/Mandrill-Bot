@@ -40,7 +40,7 @@ class WhiteRealmSpaceModal(ui.Modal, title='White Realm Space'):
 class ClubXModal(ui.Modal, title='Extremely Bullish'):
     wallet_id = ui.TextInput(
         label="Wallet Address",
-        placeholder='Enter your  XRPL wallet address',
+        placeholder='Enter your XRPL wallet address',
         style=discord.TextStyle.short
     )
 
