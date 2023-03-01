@@ -71,9 +71,12 @@ class ServerStats(commands.Cog):
             end_of_day = datetime.datetime(now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
             end_of_day += datetime.timedelta(hours=5, minutes=21)
             delta = end_of_day - now
-            return f"{delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 
-        await mint_channel.edit(name=f"MINT In {time_remaining()}")
+            if delta.seconds < 0:
+                return "MINT is LIVE"
+            return f"MINT In {delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
+
+        await mint_channel.edit(name=f"{time_remaining()}")
 
 # Cog setup command
 async def setup(bot):

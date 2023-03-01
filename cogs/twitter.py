@@ -105,9 +105,9 @@ class TwitterCog(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
         
-        whitelisting = True
+        whitelisting = False
         if not whitelisting:
-            await interaction.response.send_message(embed=discord.Embed(title="Whitelisting over", description="Unfortunately the time to <#{Var.purmarill_channel}> has finished."))
+            await interaction.response.send_message(embed=discord.Embed(title="Unfortunately, Purmarill Whitelisting is already closed"), ephemeral=True)
             return
 
         elif not interaction.user.get_role(Var.explorill_role):
