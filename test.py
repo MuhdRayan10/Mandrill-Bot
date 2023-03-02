@@ -1,8 +1,7 @@
 import os
 
+
 i = os.listdir()
-
-
 l = 0
 
 def func(items, cog=''):
@@ -16,5 +15,5 @@ def func(items, cog=''):
         elif item == "cogs":
             func(os.listdir(item), './cogs/')
 
-func(i)
-print(l)
+
+

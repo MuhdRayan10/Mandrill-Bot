@@ -138,14 +138,6 @@ class Criteria(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        elif not interaction.user.get_role(Var.purmarill_role):
-            embed = discord.Embed(
-                title="Required Role",
-                description=f"First you have to <#{Var.purmarill_channel}> role to be a `Rendrill`!"
-            )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-
         await interaction.response.defer()
 
         # checks if user has filled the two criteria
