@@ -2,10 +2,9 @@ import discord
 from discord import ui
 from discord import app_commands
 from discord.ext import commands
-from easy_sqlite3 import *
 
-from web3 import Web3
-from cogs.twitter import Twitter
+from easy_sqlite3 import *
+from cogs.web3 import Web3
 
 from functions import update_criterias
 import json
@@ -95,7 +94,7 @@ class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
             return
 
         # check if the twitter is valid
-        if not Twitter(bot=None).validify_twitter(str(self.twitter_username)):
+        if not Web3(bot=None).validify_twitter(str(self.twitter_username)):
             await interaction.response.send_message("Twitter username does not exist.", ephemeral=True)
             return
 

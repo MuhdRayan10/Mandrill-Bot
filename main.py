@@ -26,10 +26,12 @@ class MandrillBot(commands.Bot):
                 print(bot.cogs)
 
         from cogs.roles import Explorill, Purmarill, Rendrill
+        from cogs.games import Games
         views = [
             Explorill(self).view,
             Purmarill(self).view,
-            Rendrill(self).view
+            Rendrill(self).view,
+            Games(self).view
         ]
 
         for view in views:
@@ -39,7 +41,6 @@ class MandrillBot(commands.Bot):
 
         x = await self.tree.fetch_commands()
         print(x)
-        
 
 
 bot = MandrillBot()
