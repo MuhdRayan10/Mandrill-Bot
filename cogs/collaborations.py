@@ -37,6 +37,7 @@ class WhiteRealmSpaceModal(ui.Modal, title='White Realm Space'):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
+
 class ClubXModal(ui.Modal, title='Extremely Bullish'):
     wallet_id = ui.TextInput(
         label="Wallet Address",
@@ -65,6 +66,7 @@ class ClubXModal(ui.Modal, title='Extremely Bullish'):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
+
 class SuperBadSeriesModal(ui.Modal, title='Genisis Seed Capsule'):
     wallet_id = ui.TextInput(
         label="Wallet Address",
@@ -78,7 +80,8 @@ class SuperBadSeriesModal(ui.Modal, title='Genisis Seed Capsule'):
             role = interaction.guild.get_role(Var.genesis_speed_capsule)
 
             await interaction.user.add_roles(role)
-            embed = discord.Embed(description="Congratulations! Now you have Genesis Seed Capsule role!", color=Var.base_color)
+            embed = discord.Embed(
+                description="Congratulations! Now you have Genesis Seed Capsule role!", color=Var.base_color)
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
@@ -143,18 +146,17 @@ class Collaborations(commands.Cog):
     def check_1(self, user_id: int) -> bool:
         db = Database("./data/data.db")
         data = db.select("users", where={"user": user_id}, size=1)
-        
-        
+
         if not data:
             return False
-        
+
         with open("./data/white_realm_holders.csv") as f:
             reader = csv.reader(f, delimiter=",")
             white_realm_holders = [(str(row[0])).lower() for row in reader]
-            
+
         print(white_realm_holders[:10])
         print(data[3], data[3] in white_realm_holders)
-        
+
         return data[3].lower() in white_realm_holders
 
     @ app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
@@ -196,6 +198,7 @@ class Collaborations(commands.Cog):
             return
 
         await interaction.response.send_modal(ClubXModal())
+
 
 async def setup(bot):
     await bot.add_cog(Collaborations(bot))
