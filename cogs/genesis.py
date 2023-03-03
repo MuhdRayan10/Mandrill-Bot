@@ -30,8 +30,4 @@ class Genesis(commands.Cog):
 
 
 async def setup(bot):
-    c = Genesis(bot)
-    await bot.add_cog(c)
-    await bot.add_view(c.views)
-
-    del c
+    await bot.add_cog(Genesis(bot))

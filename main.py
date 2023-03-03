@@ -32,9 +32,10 @@ class MandrillBot(commands.Bot):
             from cogs.games import Games
             from cogs.ticket import Tickets
             from cogs.collaborations import Collaborations
+            from cogs.genesis import Genesis
 
-            views = (Verification(self), Criteria(self), TwitterCog(self), Games(
-                self), Tickets(self), Collaborations(self), Roles(self))
+            views = (Verification(self), Criteria(self), TwitterCog(self), Games(self),
+                      Tickets(self), Collaborations(self), Roles(self), Genesis(self))
 
             for view in views:
                 self.add_view(view.views)
