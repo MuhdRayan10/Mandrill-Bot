@@ -41,6 +41,7 @@ class MandrillBot(commands.Bot):
 
             self.add_view(views[-1].view2) # roles 2
             self.add_view(views[-2].view2) # collaborations 2
+            self.add_view(views[-2].view3) # collaborations 3
 
             del views
 

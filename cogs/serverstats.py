@@ -51,6 +51,7 @@ class ServerStats(commands.Cog):
         self.crypto_helper = CryptoToUsd()
 
         self.update_mint_date.start()
+        self.update_crypto.start()
         self.update_members.start()
 
     @tasks.loop(minutes=5)
@@ -66,12 +67,19 @@ class ServerStats(commands.Cog):
     @tasks.loop(minutes=5)
     async def update_mint_date(self):
 
+        self.update_crypto.start()
+
+    @tasks.loop(minutes=5)
+    async def update_crypto(self):
         FLR, trend = self.crypto_helper.flare()
 
         flr_channel = await self.guild.fetch_channel(Var.flr_stats_channel)
 
         up, down = "🟢 (↗)", "🔴 (↘)"
         await flr_channel.edit(name=f"FLR {up if trend == 1 else down} {FLR}")
+
+    @tasks.loop(minutes=1)
+    async def update_mint_date(self):
 
         mint_channel = await self.guild.fetch_channel(Var.mint_date_channel)
 
@@ -81,11 +89,14 @@ class ServerStats(commands.Cog):
             now = datetime.datetime.now(tz=timezone)
             end_of_day = datetime.datetime(
                 now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
-            end_of_day += datetime.timedelta(hours=5)
+            end_of_day += datetime.timedelta(hours=5, minutes=21)
             delta = end_of_day - now
-            return f"{delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 
-        await mint_channel.edit(name=f"MINT In {time_remaining()}")
+            if delta.seconds < 0:
+                return "MINT is LIVE"
+            return f"MINT In {delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
+
+        await mint_channel.edit(name=f"{time_remaining()}")
 
 # Cog setup command
 

@@ -32,7 +32,7 @@ class TwitterCog(commands.Cog):
         get_prumarill_button = ui.Button(
             label="Get Purmarill", style=discord.ButtonStyle.green, custom_id="purmarill:green")
         # Link function called when button clicked.
-        get_prumarill_button.callback = self.partnership_embed
+        get_prumarill_button.callback = self.link
 
         self.views = ui.View(timeout=None)
         self.views.add_item(get_prumarill_button)
@@ -103,6 +103,11 @@ class TwitterCog(commands.Cog):
                 description="It looks like you are already a `Purmarill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+        
+        whitelisting = False
+        if not whitelisting:
+            await interaction.response.send_message(embed=discord.Embed(title="Unfortunately, Purmarill Whitelisting is already closed"), ephemeral=True)
             return
 
         elif not interaction.user.get_role(Var.explorill_role):

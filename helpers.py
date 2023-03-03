@@ -25,10 +25,19 @@ class Var:
             json.dump(self.data, f, indent=4)
 
 
-def check_in_csv(item, fp):
+def check_in_csv(item, fp, i):
     with open(fp, "r") as f:
+<<<<<<< HEAD
         reader = csv.reader(f)
         items = [str(row[0]) for row in reader]
         print(items)
+=======
+        reader = csv.reader(f, delimiter=",")
+        
+        if i == 0:
+            return item.lower() in [str(row[0]).lower() for row in reader]
+        elif i == 1:
+            return item.lower() in [row[0].lower().split(";")[1].strip('"') for row in reader]
+>>>>>>> fb972f1a5759b452ef2c1504efbeccd578d0b767
 
-    return item in items
+        

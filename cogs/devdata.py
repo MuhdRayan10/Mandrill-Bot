@@ -18,7 +18,17 @@ class DevData(commands.Cog):
         app_commands.Choice(name="Levels Data", value=3)
             ])
     async def export(self, interaction, data:int):
-        pass
+        
+        await interaction.response.defer()
+        
+        if data == 1:
+            db = Database("./data/data")
+            data = db.select("users")
+
+            db.close()
+
+        await interaction.followup.send("Command not ready yet :/")
+            
 
 async def setup(bot):
     await bot.add_cog(DevData(bot))

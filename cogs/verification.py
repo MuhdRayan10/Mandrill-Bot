@@ -167,7 +167,7 @@ class Verification(commands.Cog):
 
 ➡️  To navigate safe ONLY use <#{Var.official_links}> channel
 
-➡️  Identify easily The Mandrills team members through our roles\n\n⚪ Liberators, 🔵 Guardrills"""
+➡️  Identify easily The Mandrills team members through our roles\n\n⚪ Liberators & 🔵 Guardrills"""
         embed = discord.Embed(title="Discord Security", color=Var.base_color)
         embed.add_field(
             name="Please stay safe and take the time to review our security tips below.", value=val)

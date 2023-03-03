@@ -107,7 +107,7 @@ __Exchange Minerals into the Mandrills:__
         embed = discord.Embed(title="Role Information", color=Var.base_color)
 
         explorills_description = f"Explorills are the members who have not received any kind of role yet and are able to interact with the server and community."
-        purmarills_description = f"Purmarills are the members who have met the criteria to purchase the Mineral."
+        purmarills_description = f"Genesis are the members who own at least one Mineral from the collection."
         rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#{Var.spinwheel_channel}> for a chance to win various prizes in every 7 days.
  
 """
@@ -121,7 +121,7 @@ Rewards and Benefits:
         liberators_description = "The Liberators will lead the project for the rest of the journey."
 
         embed.add_field(name="Explorills", value=explorills_description, inline=False)
-        embed.add_field(name="Purmarills", value=purmarills_description, inline=False)
+        embed.add_field(name="Genesis", value=purmarills_description, inline=False)
         embed.add_field(name="Rendrills", value=rendrills_description, inline=False)
         embed.add_field(name="Promdrills (available only 21 spots)", value=promdrills_description, inline=False)
         embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
