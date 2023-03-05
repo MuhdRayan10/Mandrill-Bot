@@ -48,6 +48,17 @@ class Games(commands.Cog):
             spin_wheel.callback = self.spin_wheel
             self.views.add_item(spin_wheel)
 
+        self.views1 = ui.View(timeout=None)
+
+        self.views1.add_item(
+            ui.Button(label="A", custom_id="giveaway:A", style=discord.ButtonStyle.green))
+        self.views1.add_item(
+            ui.Button(label="B", custom_id="giveaway:B", style=discord.ButtonStyle.green))
+        self.views1.add_item(
+            ui.Button(label="C", custom_id="giveaway:C", style=discord.ButtonStyle.green))
+        self.views1.add_item(
+            ui.Button(label="D", custom_id="giveaway:D", style=discord.ButtonStyle.green))
+
     @app_commands.command(name="setup-mystery-box")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def setup_mystery_box(self, interaction, channel: discord.TextChannel):
@@ -121,6 +132,20 @@ class Games(commands.Cog):
 
         with open('./data/games/spin_wheel_interactions.json', 'w') as f:
             json.dump(interactions, f)
+
+    @app_commands.command(name="giveaway-box")
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    async def giveaway_box(self, interaction, channel: discord.TextChannel):
+        id_ = 0
+        embed = discord.Embed(
+            title='Answer first - Win 1 Mineral', color=Var.base_color)
+        embed.add_field(name=f"Question #{id_}",
+                        value="Question goes here!", inline=False)
+        embed.add_field(
+            name="Options", value="(A)\n(B)\n(C)\n(D)", inline=False)
+
+        await channel.send(embed=embed, view=self.views1)
+        await interaction.response.send_message(f"Added `Mystery Box` interface, to <#{channel.id}>")
 
 # Cog setup command
 
