@@ -8,9 +8,9 @@ from web3 import Web3
 import os
 
 
-from helpers import Var as V
-Var = V()
+from configparser import ConfigParser
 
+var = ConfigParser().read("./data/config.ini")
 
 class Web3_(app_commands.Group):
     def __init__(self, bot, *args, **kwargs):
@@ -24,10 +24,10 @@ class Web3_(app_commands.Group):
             'Authorization': f'Bearer {self.bearer_token}'
         }
         # this is the name of the thing the other thing
-        self.screen_name = Var.twitter_account
+        self.screen_name = var["t"]["account"]
 
         # vairables
-        self.most_recent_tweet_id = Var.most_recent_tweet_id
+        self.most_recent_tweet_id = var["t"]["tweet-id"]
 
     # Check if Web3 account is valid
     def validify_Web3(self, Web3: str):

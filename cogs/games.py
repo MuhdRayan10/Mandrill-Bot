@@ -8,8 +8,9 @@ import random
 import time
 import json
 
-from helpers import Var
-Var = Var()
+from configparser import ConfigParser
+
+var = ConfigParser().read('./data/config.ini')
 
 
 class MysteryBox:
@@ -41,21 +42,21 @@ class Games(app_commands.Group):
             self.view.add_item(box)
 
     @app_commands.command(name="setup", description="Sets up the mystery box in the desired channel")
-    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(var["r"]["guardrill"], var["r"]["liberator"])
     async def setup(self, interaction, channel: discord.TextChannel):
         embed = discord.Embed(
-            title='Choose the Box Carefully...', color=Var.base_color)
+            title='Choose the Box Carefully...', color=var["col"]["base"])
 
         await channel.send(embed=embed, view=self.view)
         await interaction.response.send_message(f"Added `Mystery Box` interface, to <#{channel.id}>")
 
     async def pick(self, interaction):
         user = interaction.user
-        if user.get_role(Var.rendrill_role) is None:
+        if user.get_role(var["r"]["rendrill"]) is None:
             embed = discord.Embed(
                 title="Required Role",
-                description=f"You will be eligible to open the Mystery Box after you <#{Var.rendrill_channel}> role.",
-                color=Var.base_color
+                description=f"You will be eligible to open the Mystery Box after you <#{var['c']['rendrill']}> role.",
+                color=var["col"]["base"]
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -77,7 +78,7 @@ class Games(app_commands.Group):
                 desc = f"Please try again in {time_left_in_days} days and {time_left_in_hours} hours."
                 embed = discord.Embed(
                     title="You have already opened the box!",
-                    description=desc, color=Var.base_color
+                    description=desc, color=var["col"]["base"]
                 )
 
                 await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -102,7 +103,7 @@ class Games(app_commands.Group):
         embed = discord.Embed(
             title="Mystery Box Reveal",
             description=desc,
-            color=Var.base_color)
+            color=var["col"]["base"])
 
         embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if prize !=
                         "Try Again in 7 Days" else 'Try again in 7 days')

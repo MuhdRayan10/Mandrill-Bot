@@ -11,8 +11,9 @@ import json
 from datetime import timedelta
 
 # global config variables
-from helpers import Var
-Var = Var()
+from configparser import ConfigParser
+
+var = ConfigParser().read('./data/config.ini')
 
 
 class Explorill(app_commands.Group):
@@ -28,13 +29,13 @@ class Explorill(app_commands.Group):
 
         self.view.add_item(button)
 
-    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(var["r"]["guardrill"], var["r"]["liberator"])
     @app_commands.command(name="setup", description="[MODS] Setup explorill role interface")
     async def setup(self, interaction: discord.Interaction, channel: discord.TextChannel):
         await interaction.response.defer()
 
         embed = discord.Embed(
-            title='Click the button to get your Explorill role', color=Var.base_color)
+            title='Click the button to get your Explorill role', color=var["col"]["base"])
 
         await channel.send(embed=embed, view=self.view)
         await interaction.response.send_message(content=f"Added Explorill Interface to <#{channel.id}>.", ephemeral=True)
@@ -43,8 +44,8 @@ class Explorill(app_commands.Group):
 
     async def give_explorill(self, interaction: discord.Interaction):
 
-        explorill_role = interaction.guild.get_role(Var.explorill_role)
-        unverified_role = interaction.guild.get_role(Var.mute_role)
+        explorill_role = interaction.guild.get_role(var["r"]["explorill"])
+        unverified_role = interaction.guild.get_role(var["r"]["unverified"])
 
         roles = interaction.user.roles
 
@@ -63,7 +64,7 @@ class Explorill(app_commands.Group):
         else:
             await interaction.user.add_roles(explorill_role)
             await interaction.response.send_message(f"You are now officially an `Explorill`!", ephemeral=True)
-            await interaction.user.remove_roles(interaction.guild.get_role(Var.muted_role))
+            await interaction.user.remove_roles(interaction.guild.get_role(var["r"]["unverified"]))
 
         return
 
@@ -88,7 +89,7 @@ class PurmarillVerificationModal(ui.Modal, title='Purmarill Verification'):
     async def on_submit(self, interaction: discord.Interaction) -> None:
 
         # Checking if twitter / walled account / user already exists db
-        role = interaction.guild.get_role(Var.purmarill_role)
+        role = interaction.guild.get_role(var["r"]["purmarill"])
         if role in interaction.user.roles:
             await interaction.response.send_message("Twitter account / Wallet ID already registered...", ephemeral=True)
             return
@@ -127,12 +128,12 @@ class Purmarill(app_commands.Group):
 
         self.view.add_item(button)
 
-    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(var["r"]["guardrill"], var["r"]["liberator"])
     @app_commands.command(name="setup", description="[MODS] Setup purmarill role interface")
     async def setup(self, interaction, channel: discord.TextChannel):
         # The Verify Embed
         embed = discord.Embed(
-            title='Click the button to get your Purmarill role', color=Var.base_color)
+            title='Click the button to get your Purmarill role', color=var["col"]["base"])
 
         # Sending message
         await channel.send(embed=embed, view=self.view)
@@ -142,7 +143,7 @@ class Purmarill(app_commands.Group):
 
     async def give_purmarill(self, interaction: discord.Interaction):
 
-        if interaction.user.get_role(Var.purmarill_role):
+        if interaction.user.get_role(var["r"]["purmarill"]):
             embed = discord.Embed(
                 title="Role already assigned",
                 description="It looks like you are already a `Purmarill`!"
@@ -150,10 +151,10 @@ class Purmarill(app_commands.Group):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        elif not interaction.user.get_role(Var.explorill_role):
+        elif not interaction.user.get_role(var["r"]["explorill"]):
             embed = discord.Embed(
                 title="Required Role",
-                description=f"First you have to <#{Var.explorill_channel}> role to be a `Purmarill`!"
+                description=f"First you have to <#{var['c']['explorill']}> role to be a `Purmarill`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -212,14 +213,14 @@ class Rendrill(app_commands.Group):
         self.view.add_item(button)
         self.view.add_item(criteria)
 
-    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(var["r"]["guardrill"], var["r"]["liberator"])
     @app_commands.command(name="setup", description="[MODS] Setup the rendrill button in the channel specified")
     async def setup(self, interaction: discord.Interaction, channel: discord.TextChannel):
         """Sets up the Rendrill interface in the particular channel."""
 
         # The Verify Embed
         embed = discord.Embed(
-            title='Click the button to get your Rendrill role', color=Var.base_color)
+            title='Click the button to get your Rendrill role', color=var["col"]["base"])
 
         # Sending message
         await channel.send(embed=embed, view=self.view)
@@ -227,18 +228,18 @@ class Rendrill(app_commands.Group):
 
     async def alert(self, interaction: discord.Interaction):
         """Alerts the user on details about the quiz."""
-        if interaction.user.get_role(Var.rendrill_role):
+        if interaction.user.get_role(var["r"]["rendrill"]):
             embed = discord.Embed(
                 title="Role already assigned",
-                description="It looks like you are already a `Rendrill`!", color=Var.base_color
+                description="It looks like you are already a `Rendrill`!", color=var["col"]["base"]
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        elif not interaction.user.get_role(Var.purmarill_role):
+        elif not interaction.user.get_role(var["r"]["purmarill"]):
             embed = discord.Embed(
                 title="Required Role",
-                description=f"First you have to <#{Var.purmarill_channel}> role to be a `Rendrill`!", color=Var.base_color
+                description=f"First you have to <#{var['c']['purmarill']}> role to be a `Rendrill`!", color=var["col"]["base"]
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -256,7 +257,7 @@ class Rendrill(app_commands.Group):
             return
 
         embed = discord.Embed(
-            title="You are about to start the Quiz!", color=Var.base_color)
+            title="You are about to start the Quiz!", color=var["col"]["base"])
         embed.add_field(name="Have in mind that:", value="""- You have to answer all questions correctly in order to get the Rendrill role
 - You will have the second chance in 24 hours
 - Read carefully, don’t rush and Good Luck!""")
@@ -301,7 +302,7 @@ class Rendrill(app_commands.Group):
         ]
 
         q_embed = discord.Embed(
-            title='Choose the answer carefully.', color=Var.base_color
+            title='Choose the answer carefully.', color=var["col"]["base"]
         )
 
         def _check(i) -> bool:
@@ -351,14 +352,14 @@ class Rendrill(app_commands.Group):
         result_embed = None
         if passed:
             result_embed = discord.Embed(
-                title="Marvelous!", color=Var.base_color)
+                title="Marvelous!", color=var["col"]["base"])
 
             result_embed.description = "You passed the Quiz…"
         else:
             result_embed = discord.Embed(
                 title="We appreciate your efforts!", description="**You didn't make it through this round**")
             result_embed.add_field(
-                name="ㅤ", value=f"- Navigate to our website through <#{Var.official_links}>\n- Read carefully “Path of the Wild Network”\n- Come back in 24 hours and try again!")
+                name="ㅤ", value=f"- Navigate to our website through <#{var['c']['official_links']}>\n- Read carefully “Path of the Wild Network”\n- Come back in 24 hours and try again!")
 
         result_embed.add_field(
             name="Score", value=f"{score if passed else '?'}/{len(questions)}", inline=False)
@@ -367,7 +368,7 @@ class Rendrill(app_commands.Group):
         await interaction.followup.send(embed=result_embed, ephemeral=True)
 
         if passed:
-            role = interaction.user.guild.get_role(Var.rendrill_role)
+            role = interaction.user.guild.get_role(var['r']['rendrill'])
             await interaction.user.add_roles(role)
 
             db = Database("./data/criteria")
@@ -375,7 +376,7 @@ class Rendrill(app_commands.Group):
 
             db.close()
 
-            await interaction.followup.send(f"Congratulations! You are now officially a Rendrill !\nGo to the <#{Var.spinwheel_channel}>, you've earned this success ^‿^", ephemeral=True)
+            await interaction.followup.send(f"Congratulations! You are now officially a Rendrill !\nGo to the <#{var['c']['spinwheel']}>, you've earned this success ^‿^", ephemeral=True)
             return
 
         if score < 2:
@@ -404,7 +405,7 @@ class Rendrill(app_commands.Group):
         else:
             return True
 
-    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    @app_commands.checks.has_any_role(var["r"]["guardrill"], var["r"]["liberator"])
     @app_commands.command(name="set-criteria", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 4 Members", value=1),
@@ -465,8 +466,8 @@ class Rendrill(app_commands.Group):
     async def view_criteria(self, interaction: discord.Interaction):
 
         # if user already has guardrill role
-        if interaction.user.get_role(Var.rendrill_role):
-            embed = discord.Embed(title="Role already assigned", color=Var.base_color,
+        if interaction.user.get_role(var['r']['rendrill']):
+            embed = discord.Embed(title="Role already assigned", color=var["col"]["base"],
                                   description="It looks like you already have the `Rendrill` role. Thank you for your interest!")
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
@@ -490,7 +491,7 @@ class Rendrill(app_commands.Group):
 
         # Embed
         embed = discord.Embed(title="Rendrill Role Criteria",
-                              description="Complete all 3 tasks to get the Rendrill role!", color=Var.base_color)
+                              description="Complete all 3 tasks to get the Rendrill role!", color=var["col"]["base"])
         embed.add_field(
             name=f"{rc if data[1] < 4 else wc} Invite at least 4 users to the server", value="ㅤ", inline=False)
         embed.add_field(
