@@ -35,14 +35,14 @@ class MandrillBot(commands.Bot):
             from cogs.genesis import Genesis
 
             views = (Verification(self), Criteria(self), TwitterCog(self), Games(self),
-                      Tickets(self), Collaborations(self), Roles(self), Genesis(self))
+                     Tickets(self), Collaborations(self), Roles(self), Genesis(self))
 
             for view in views:
                 self.add_view(view.views)
 
-            self.add_view(views[-1].view2) # roles 2
-            self.add_view(views[-2].view2) # collaborations 2
-            self.add_view(views[-2].view3) # collaborations 3
+            self.add_view(views[-1].view2)  # roles 2
+            self.add_view(views[-2].view2)  # collaborations 2
+            self.add_view(views[-2].view3)  # collaborations 3
 
             del views
 

@@ -107,12 +107,13 @@ class Criteria(commands.Cog):
 
         db.close()
 
-        if not (data[1] >= 4 and data[2] >= 8):
+        if not (data[1] >= 4 and data[2] >= 6):
             message = "Looks like you haven't completed all 3 tasks...  press the `Criteria` button!"
             await interaction.followup.send(message, ephemeral=True)
             return
 
-        embed = discord.Embed(title="You are about to start the Quiz!", color=Var.base_color)
+        embed = discord.Embed(
+            title="You are about to start the Quiz!", color=Var.base_color)
         embed.add_field(name="Have in mind that:", value="""- You have to answer all questions correctly in order to get the Rendrill role
 - You will have the second chance in 8 hours
 - Read carefully, don’t rush and Good Luck!""")
@@ -271,7 +272,7 @@ class Criteria(commands.Cog):
     @app_commands.command(name="set-req", description="[MODS] Update user's criteria for acquiring Rendrill Role")
     @app_commands.choices(activity=[
         app_commands.Choice(name="Invite 4 Members", value=1),
-        app_commands.Choice(name="Reach Lvl. 8", value=2),
+        app_commands.Choice(name="Reach Lvl. 6", value=2),
         app_commands.Choice(name="Complete Quiz", value=3)
     ])
     @app_commands.choices(done=[
@@ -316,7 +317,7 @@ class Criteria(commands.Cog):
         if activity == 1 and done:
             a1 = 4
         elif activity == 2 and done:
-            a2 = 8
+            a2 = 6
 
         print("SET REQ |", a1, a2, a3)
         db.update("role", {"user": user.id, "a1": a1, "a2": a2, "a3": a3, "role": 0},
@@ -358,7 +359,7 @@ class Criteria(commands.Cog):
         embed.add_field(
             name=f"{rc if data[1] < 4 else wc} Invite at least 4 users to the server", value="ㅤ", inline=False)
         embed.add_field(
-            name=f"{rc if data[2] < 8 else wc} Reach Level - 8", value="ㅤ", inline=False)
+            name=f"{rc if data[2] < 6 else wc} Reach Level - 6", value="ㅤ", inline=False)
         embed.add_field(
             name=f"{rc if not data[3] else wc} Complete the Quiz (after 1st & 2nd Tasks)", value="ㅤ", inline=False)
 
