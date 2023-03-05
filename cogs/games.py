@@ -1,5 +1,6 @@
 import discord
 from discord import ui
+from discord.ext import commands, tasks
 from discord import app_commands
 
 from easy_sqlite3 import *
@@ -7,6 +8,9 @@ import random
 
 import time
 import json
+
+import datetime
+import pytz
 
 from helpers import Var
 Var = Var()
@@ -30,9 +34,18 @@ class Games(app_commands.Group):
         super().__init__(*args, **kwargs)
 
         self.bot = bot
+
+
+class MysteryBoxGrp(app_commands.Group):
+    def __init__(self, bot, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.bot = bot
+        self.parent = Games(self.bot)
+
         self.MysteryBox = MysteryBox()
 
-        self.view = discord.ui.View(timeout=None)
+        self.view = ui.View(timeout=None)
 
         for i in range(10):
             box = discord.ui.Button(
@@ -116,11 +129,43 @@ class Games(app_commands.Group):
             json.dump(interactions, f)
 
 
+class Giveaway:
+    pass
+
+
+# utc = pytz.UTC
+
+# start_time = datetime.time(12)
+# random_time = utc.localize(datetime.datetime.combine(datetime.date.today(
+# ), start_time) + datetime.timedelta(seconds=random.randint(0, 43199)))
+
+class GiveawayGrp(app_commands.Group):
+    def __init__(self, bot, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.bot = bot
+        self.parent = Games(self.bot)
+
+        self.view = ui.View(timeout=None)
+
+    # @tasks.loop(time=random_time)
+    @app_commands.command(name="giveaway")
+    async def giveaway(self, interaction: discord.Interaction):
+        pass
+
+
 async def setup(bot):
+    mysterybox = MysteryBoxGrp(
+        bot=bot,
+        name="mysterybox",
+        description="Commands related to Mystery Box",
+    )
+    bot.tree.add_command(mysterybox)
+
     bot.tree.add_command(
-        Games(
+        GiveawayGrp(
             bot=bot,
-            name="games",
-            description="Commands related to Games"
-        )
+            name="giveaway",
+            description="Commands related to Giveaway Box",
+        ), override=True
     )
