@@ -47,7 +47,9 @@ class GiveawayCog(commands.Cog):
 
     @app_commands.command(name="giveaway", description="Send giveaway of latest (most upcoming) one in database.")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    async def giveaway(self, interaction: discord.Interaction):
+    async def giveaway(self, interaction: discord.Interaction, question_id: int, channel: discord.TextChannel):
+        previous_giveaway = self.db.retrive_question(question_id-1)
+        newest_giveaway = self.db.retrive_question(question_id)
 
         embed1 = discord.Embed(
             title="Top 8 Participants",
@@ -69,7 +71,7 @@ class GiveawayCog(commands.Cog):
             inline=False
         )
 
-        await interaction.channel.send(embeds=[embed1, embed], view=self.views)
+        await channel.send(embeds=[embed1, embed], view=self.views)
 
     async def giveaway_interaction(self, interaction: discord.Interaction):
         # get correct answer of latest sent giveaway
