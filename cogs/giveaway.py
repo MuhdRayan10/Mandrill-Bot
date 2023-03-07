@@ -33,8 +33,6 @@ class GiveawayDB:
         self.df['datetime'] = pd.to_datetime(
             self.df['Date'].astype(str) + ' ' + self.df['Time'].astype(str))
 
-        # delete the seprate date and time columns
-        self.df.drop(["date", "time"])
         print(self.df)
 
     def get_upcoming_occurance(self):
@@ -57,9 +55,6 @@ class GiveawayDB:
             # Convert the row to a dictionary
             result = upcoming_row.to_dict()
 
-            del result['Date']
-            del result['Time']
-
         return result
 
     def get_previous_occurrence(self):
@@ -81,9 +76,6 @@ class GiveawayDB:
 
             # Convert the row to a dictionary
             result = previous_row.to_dict()
-
-            del result['Date']
-            del result['Time']
 
         return result
 
