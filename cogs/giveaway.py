@@ -148,3 +148,7 @@ class GiveawayCog(commands.Cog):
         )
 
         await interaction.response.send_message(embeds=[embed1, embed], view=self.view)
+
+
+async def setup(bot):
+    await bot.add_cog(GiveawayCog(bot))
