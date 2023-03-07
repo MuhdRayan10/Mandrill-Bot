@@ -26,7 +26,10 @@ class GiveawayDB:
         self.raw_df = self.df.copy(deep=True)
 
     def retrive_question(self, id_: int):
-        return self.df.loc[self.df['ID'] == id_].to_dict('records')[0]
+        try:
+            return self.df.loc[self.df['ID'] == id_].to_dict('records')[0]
+        except IndexError:
+            return -1
 
 
 class GiveawayCog(commands.Cog):
