@@ -1,5 +1,6 @@
 import pygsheets
 import pandas as pd
+from pandas import Timestamp
 from datetime import datetime
 import discord
 from discord import app_commands
@@ -13,7 +14,7 @@ Var = V()
 class GiveawayDB:
     def __init__(self) -> None:
         # change this to /data/credentials.json
-        gc = pygsheets.authorize(service_file='./data/credentials.json')
+        gc = pygsheets.authorize(service_file='./credentials.json')
 
         sh = gc.open("Mandrills Discord Server: Giveaway")
 
@@ -24,71 +25,8 @@ class GiveawayDB:
         self.df = pd.DataFrame(self.wsh.get_all_records())
         self.raw_df = self.df.copy(deep=True)
 
-        # Convert Date and Time columns to datetime format
-        self.df['Date'] = pd.to_datetime(self.df['Date'], format=r'%d/%m/%Y')
-        self.df['Time'] = pd.to_datetime(
-            self.df['Time'][:6], format=r'%H:%M:%S').dt.time
-
-        # Combine Date and Time columns into a single datetime column
-        self.df['datetime'] = pd.to_datetime(
-            self.df['Date'].astype(str) + ' ' + self.df['Time'].astype(str))
-
-        print(self.df)
-
-    def get_upcoming_occurance(self):
-        """Gets the latest upcoming occurance of the giveaway from the google sheet."""
-
-        # Get the current UTC time
-        current_time = datetime.utcnow()
-
-        # Filter the DataFrame to include only rows with datetime values after the current time
-        future_df = self.df[self.df['datetime'] > current_time]
-
-        # If there are no rows with datetime values after the current time, return -1
-        if future_df.empty:
-            result = -1
-
-        else:
-            # Get the row with the smallest datetime value (i.e., the most upcoming datetime)
-            upcoming_row = future_df.loc[future_df['datetime'].idxmin()]
-
-            # Convert the row to a dictionary
-            result = upcoming_row.to_dict()
-
-        return result
-
-    def get_previous_occurrence(self):
-        """Gets the most recent occurrence of the giveaway from the Google Sheet."""
-
-        # Get the current UTC time
-        current_time = datetime.utcnow()
-
-        # Filter the DataFrame to include only rows with datetime values before the current time
-        past_df = self.df[self.df['datetime'] < current_time]
-
-        # If there are no rows with datetime values before the current time, return -1
-        if past_df.empty:
-            result = -1
-
-        else:
-            # Get the row with the largest datetime value (i.e., the most recent datetime)
-            previous_row = past_df.loc[past_df['datetime'].idxmax()]
-
-            # Convert the row to a dictionary
-            result = previous_row.to_dict()
-
-        return result
-
-    def update_winner(self, questionid: int, winner_user: str):
-        """Updates the winners username in the google sheet. (given the question id)"""
-        self.raw_df.loc[self.df['ID'].astype(
-            int) == questionid, "User"] = winner_user
-
-        # TODO: fix small error -> remove datetime column from db
-
-        self.wsh.set_dataframe(self.raw_df, start='A1')
-
-        self.refresh_local()
+    def retrive_question(self, id_: int):
+        return self.df.loc[self.df['ID'] == id_].to_dict('records')[0]
 
 
 class GiveawayCog(commands.Cog):
@@ -110,17 +48,6 @@ class GiveawayCog(commands.Cog):
     @app_commands.command(name="giveaway", description="Send giveaway of latest (most upcoming) one in database.")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def giveaway(self, interaction: discord.Interaction):
-        previous_giveaway = self.db.get_previous_occurrence()
-
-        if not previous_giveaway['User']:
-            await interaction.response.send_message("The previous giveaway has not been responded to.", ephemeral=True)
-            return
-
-        newest_giveaway = self.db.get_upcoming_occurance()
-
-        if newest_giveaway == -1:
-            await interaction.response.send_message("No new giveaway in google sheet", ephemeral=True)
-            return
 
         embed1 = discord.Embed(
             title="Top 8 Participants",
@@ -162,7 +89,7 @@ class GiveawayCog(commands.Cog):
             title="Thank You for participating", color=Var.base_color
         )
         embed.add_field(
-            name="Your answer has been submitted", value=f"Keep an eye on the #<1081900787795496970> channel. The winner and new question will appear at a random time in this range: 12:00-12:00 UTC", inline=False
+            name="Your answer has been submitted", value=f"Keep an eye on the <#1081900787795496970> channel. The winner and new question will appear at a random time in this range: 12:00-12:00 UTC", inline=False
         )
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
