@@ -19,10 +19,10 @@ class GiveawayDB:
 
         self.wsh = sh.sheet1
         self.refresh_local()
-        print(self.df)
 
     def refresh_local(self):
         self.df = pd.DataFrame(self.wsh.get_all_records())
+        self.raw_df = self.df.copy(deep=True)
 
         # Convert Date and Time columns to datetime format
         self.df['Date'] = pd.to_datetime(self.df['Date'], format=r'%d/%m/%Y')
@@ -81,9 +81,12 @@ class GiveawayDB:
 
     def update_winner(self, questionid: int, winner_user: str):
         """Updates the winners username in the google sheet. (given the question id)"""
-        self.df.loc[self.df['ID'].astype(
+        self.raw_df.loc[self.df['ID'].astype(
             int) == questionid, "User"] = winner_user
-        self.wsh.set_dataframe(self.df, start='A1')
+
+        # TODO: fix small error -> remove datetime column from db
+
+        self.wsh.set_dataframe(self.raw_df, start='A1')
 
         self.refresh_local()
 
@@ -93,21 +96,23 @@ class GiveawayCog(commands.Cog):
         self.bot = bot
         self.db = GiveawayDB()
 
-        self.view = ui.View(timeout=None)
+        self.views = ui.View(timeout=None)
 
         button_data = [("A", "giveaway:A"), ("B", "giveaway:B"),
                        ("C", "giveaway:C"), ("D", "giveaway:D")]
 
         for label, custom_id in button_data:
-            self.view.add_item(
-                ui.Button(label=label, custom_id=custom_id, style=discord.ButtonStyle.green))
+            button = ui.Button(label=label, custom_id=custom_id,
+                               style=discord.ButtonStyle.green)
+            button.callback = self.giveaway_interaction
+            self.views.add_item(button)
 
     @app_commands.command(name="giveaway", description="Send giveaway of latest (most upcoming) one in database.")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def giveaway(self, interaction: discord.Interaction):
         previous_giveaway = self.db.get_previous_occurrence()
 
-        if previous_giveaway['User'] == "":
+        if not previous_giveaway['User']:
             await interaction.response.send_message("The previous giveaway has not been responded to.", ephemeral=True)
             return
 
@@ -118,15 +123,13 @@ class GiveawayCog(commands.Cog):
             return
 
         embed1 = discord.Embed(
-            title="Previous Question & Right Answer",
-            description=f"- {previous_giveaway['Question']}\n- {previous_giveaway['Correct']}"
-        )
-
-        # TODO: participants thingy idk
+            title="Top 8 Participants",
+            description=f"{previous_giveaway['User']} **Winner**", color=Var.base_color
+        )  # TODO: Rayan
 
         embed = discord.Embed(
             title="Reward: 1 Mineral",
-            description="First User Who Will Choose The Right Answer"
+            description="First User Who Will Choose The Right Answer", color=Var.base_color
         )
         embed.add_field(
             name=f"Question #{newest_giveaway['ID']}",
@@ -139,7 +142,30 @@ class GiveawayCog(commands.Cog):
             inline=False
         )
 
-        await interaction.response.send_message(embeds=[embed1, embed], view=self.view)
+        await interaction.channel.send(embeds=[embed1, embed], view=self.views)
+
+    async def giveaway_interaction(self, interaction: discord.Interaction):
+        # get correct answer of latest sent giveaway
+        newest_giveaway = self.db.get_upcoming_occurance()
+        correct_answer = newest_giveaway['Correct']
+        chosen_answer = interaction.data['custom_id']
+
+        # check if answer has been responded correctly
+        if chosen_answer == f"giveaway:{correct_answer}":
+            # answer is correct
+            self.db.update_winner(
+                newest_giveaway['ID'], interaction.user.display_name)
+
+        # TODO: implement top 8
+
+        embed = discord.Embed(
+            title="Thank You for participating", color=Var.base_color
+        )
+        embed.add_field(
+            name="Your answer has been submitted", value=f"Keep an eye on the #<1081900787795496970> channel. The winner and new question will appear at a random time in this range: 12:00-12:00 UTC", inline=False
+        )
+
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 async def setup(bot):
