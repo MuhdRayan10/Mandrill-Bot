@@ -136,13 +136,15 @@ class Games(commands.Cog):
     @app_commands.command(name="giveaway-box")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def giveaway_box(self, interaction, channel: discord.TextChannel):
-        id_ = 0
+        # add role exceptions here
+        ID = 1
+
         embed = discord.Embed(
-            title='Answer first - Win 1 Mineral', color=Var.base_color)
-        embed.add_field(name=f"Question #{id_}",
-                        value="Question goes here!", inline=False)
-        embed.add_field(
-            name="Options", value="(A)\n(B)\n(C)\n(D)", inline=False)
+            title="Reward: 1 Mineral (First User Who Will Choose The Right Answer)", color=Var.base_color
+        )
+        embed.add_field(name=f"Question #{ID}", value="Question")
+        embed.add_field(name="Choose Your Answer Carefully...",
+                        value="(A)\n(B)\n(C)\n(D)", inline=False)
 
         await channel.send(embed=embed, view=self.views1)
         await interaction.response.send_message(f"Added `Mystery Box` interface, to <#{channel.id}>")
