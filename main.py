@@ -35,8 +35,8 @@ class MandrillBot(commands.Bot):
             from cogs.genesis import Genesis
             from cogs.giveaway import GiveawayCog
 
-            views = (GiveawayCog(self), Verification(self), Criteria(self), TwitterCog(self), Games(self),
-                     Tickets(self), Collaborations(self), Roles(self), Genesis(self))
+            views = (GiveawayCog(self), Genesis(self), Verification(self), Criteria(self), TwitterCog(self), Games(self),
+                     Tickets(self), Collaborations(self), Roles(self))
 
             for view in views:
                 self.add_view(view.views)
@@ -45,7 +45,6 @@ class MandrillBot(commands.Bot):
             self.add_view(views[-2].view2)  # collaborations 2
             self.add_view(views[-2].view3)  # collaborations 3
             self.add_view(views[-2].view4)
-            self.add_view(views[-5].views1)  # games- giveaway
 
             del views
 

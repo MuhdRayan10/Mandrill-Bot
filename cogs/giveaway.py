@@ -1,11 +1,11 @@
 import pygsheets
 import pandas as pd
-from pandas import Timestamp
-from datetime import datetime
 import discord
 from discord import app_commands
 from discord.ext import commands
 from discord import ui
+
+import json
 
 from helpers import Var as V
 Var = V()
@@ -14,7 +14,7 @@ Var = V()
 class GiveawayDB:
     def __init__(self) -> None:
         # change this to /data/credentials.json
-        gc = pygsheets.authorize(service_file='./credentials.json')
+        gc = pygsheets.authorize(service_file='./data/credentials.json')
 
         sh = gc.open("Mandrills Discord Server: Giveaway")
 
@@ -26,10 +26,45 @@ class GiveawayDB:
         self.raw_df = self.df.copy(deep=True)
 
     def retrive_question(self, id_: int):
+        self.refresh_local()
         try:
             return self.df.loc[self.df['ID'] == id_].to_dict('records')[0]
         except IndexError:
             return -1
+
+    def get_CIP(self):
+        self.refresh_local()
+
+        return self.df.loc[self.df['CIP'] == 1].to_dict('records')[0]
+
+    def update_CIP(self, question_id, val=1 or 0):
+        self.refresh_local()
+
+        # Find the row with the specified question_id
+        row_index = self.df.index[self.df['ID'] == question_id].tolist()
+
+        if not row_index:
+            return -1
+
+        row_index = row_index[0]  # Take the first index (should be unique)
+
+        # Update the value of the 'CIP' column for that row
+        self.raw_df.at[row_index, 'CIP'] = val
+
+        # Save the changes to the Google Sheet
+        self.wsh.set_dataframe(self.raw_df, start='A1',
+                               copy_index=False, copy_head=True)
+
+    def update_winner(self, questionid: int, winner_user: str):
+        """Updates the winners username in the google sheet. (given the question id)"""
+        self.refresh_local()
+
+        self.raw_df.loc[self.df['ID'].astype(
+            int) == questionid, "User"] = winner_user
+
+        self.wsh.set_dataframe(self.raw_df, start='A1')
+
+        self.refresh_local()
 
 
 class GiveawayCog(commands.Cog):
@@ -51,13 +86,13 @@ class GiveawayCog(commands.Cog):
     @app_commands.command(name="giveaway", description="Send giveaway of latest (most upcoming) one in database.")
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def giveaway(self, interaction: discord.Interaction, question_id: int, channel: discord.TextChannel):
+        # get cip
+        CIP = self.db.get_CIP()
+        self.db.update_CIP(CIP['ID'], 0)
+
         previous_giveaway = self.db.retrive_question(question_id-1)
         newest_giveaway = self.db.retrive_question(question_id)
-
-        embed1 = discord.Embed(
-            title="Top 8 Participants",
-            description=f"{previous_giveaway['User']} **Winner**", color=Var.base_color
-        )  # TODO: Rayan
+        self.db.update_CIP(newest_giveaway['ID'], 1)
 
         embed = discord.Embed(
             title="Reward: 1 Mineral",
@@ -74,21 +109,54 @@ class GiveawayCog(commands.Cog):
             inline=False
         )
 
-        await channel.send(embeds=[embed1, embed], view=self.views)
+        if type(previous_giveaway) == dict:
+            embed1 = discord.Embed(
+                title="Top 8 Participants",
+                description=f"{previous_giveaway['User']} **Winner**", color=Var.base_color
+            )  # TODO: Rayan
+
+            await channel.send(embeds=[embed1, embed], view=self.views)
+
+        else:
+            await channel.send(embed=embed, view=self.views)
 
     async def giveaway_interaction(self, interaction: discord.Interaction):
+
         # get correct answer of latest sent giveaway
-        newest_giveaway = self.db.get_upcoming_occurance()
-        correct_answer = newest_giveaway['Correct']
+        current_giveaway = self.db.get_CIP()
+
+        with open("./data/giveaway.json", "r") as f:
+            d = json.load(f)
+        d.setdefault(str(current_giveaway['ID']), [])
+        print(d, d[str(current_giveaway['ID'])])
+
+        if interaction.user.id in d[str(current_giveaway['ID'])]:
+            embed = discord.Embed(
+                title="Your answer is already submitted"
+            )
+            embed.add_field(
+                name="Thank You for your interest",
+                value="Keep an eye on the <#1081900787795496970> channel. The winner and new question will appear at a random time in this range: 12:00-12:00 UTC"
+            )
+
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
+            return
+
+        correct_answer = current_giveaway['Correct']
         chosen_answer = interaction.data['custom_id']
 
         # check if answer has been responded correctly
         if chosen_answer == f"giveaway:{correct_answer}":
             # answer is correct
             self.db.update_winner(
-                newest_giveaway['ID'], interaction.user.display_name)
+                current_giveaway['ID'], interaction.user.display_name)
 
-        # TODO: implement top 8
+        print(d)
+        d[str(current_giveaway['ID'])].append(interaction.user.id)
+
+        with open("./data/giveaway.json", "w") as f:
+            json.dump(d, f)
 
         embed = discord.Embed(
             title="Thank You for participating", color=Var.base_color
