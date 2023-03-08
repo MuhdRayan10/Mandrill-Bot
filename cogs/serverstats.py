@@ -32,7 +32,6 @@ class CryptoToUsd:
         response = self.session.get(self.url, params=parameters)
 
         info = json.loads(response.text)
-        print(info)
 
         if info:
             # other available options: percent_change_24h,percent_change_7d upto 90d
@@ -50,9 +49,9 @@ class ServerStats(commands.Cog):
         self.guild = self.bot.guilds[0]
         self.crypto_helper = CryptoToUsd()
 
-        self.update_mint_date.start()
+        # self.update_mint_date.start()
         self.update_crypto.start()
-        self.update_members.start()
+        # self.update_members.start()
 
     @tasks.loop(minutes=5)
     async def update_members(self):

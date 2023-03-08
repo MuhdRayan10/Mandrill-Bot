@@ -87,10 +87,9 @@ class GiveawayCog(commands.Cog):
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     async def giveaway(self, interaction: discord.Interaction, question_id: int, channel: discord.TextChannel):
         # get cip
-        CIP = self.db.get_CIP()
-        self.db.update_CIP(CIP['ID'], 0)
+        previous_giveaway = self.db.get_CIP()
+        self.db.update_CIP(previous_giveaway['ID'], 0)
 
-        previous_giveaway = self.db.retrive_question(question_id-1)
         newest_giveaway = self.db.retrive_question(question_id)
         self.db.update_CIP(newest_giveaway['ID'], 1)
 
@@ -109,10 +108,22 @@ class GiveawayCog(commands.Cog):
             inline=False
         )
 
+        with open("./data/giveaway.json", "r") as f:
+            d = json.load(f)
+        print(d)
+        users = d[str(previous_giveaway['ID'])]['correct']
+
+        str_ = f"""{previous_giveaway['User']} **Winner**"""
+        for i, user in enumerate(users):
+            str_ += "\n" + f"<@{user}>"
+
+            if i == 7:
+                break
+
         if type(previous_giveaway) == dict:
             embed1 = discord.Embed(
                 title="Top 8 Participants",
-                description=f"{previous_giveaway['User']} **Winner**", color=Var.base_color
+                description=str_, color=Var.base_color
             )  # TODO: Rayan
 
             await channel.send(embeds=[embed1, embed], view=self.views)
@@ -127,12 +138,13 @@ class GiveawayCog(commands.Cog):
 
         with open("./data/giveaway.json", "r") as f:
             d = json.load(f)
-        d.setdefault(str(current_giveaway['ID']), [])
+        d.setdefault(str(current_giveaway['ID']), {
+                     "interacted": [], "correct": []})
         print(d, d[str(current_giveaway['ID'])])
 
-        if interaction.user.id in d[str(current_giveaway['ID'])]:
+        if interaction.user.id in d[str(current_giveaway['ID'])]['interacted']:
             embed = discord.Embed(
-                title="Your answer is already submitted"
+                title="Your answer is already submitted", color=Var.base_color
             )
             embed.add_field(
                 name="Thank You for your interest",
@@ -151,9 +163,11 @@ class GiveawayCog(commands.Cog):
             # answer is correct
             self.db.update_winner(
                 current_giveaway['ID'], interaction.user.display_name)
+            d[str(current_giveaway['ID'])]['correct'].append(
+                interaction.user.id)
 
         print(d)
-        d[str(current_giveaway['ID'])].append(interaction.user.id)
+        d[str(current_giveaway['ID'])]['interacted'].append(interaction.user.id)
 
         with open("./data/giveaway.json", "w") as f:
             json.dump(d, f)

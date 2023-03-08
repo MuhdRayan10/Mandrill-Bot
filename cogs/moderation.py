@@ -128,6 +128,9 @@ class Moderation(commands.Cog):
         member = self.guild.get_member(user.id)
         if member.get_role(Var.liberator_role) is not None:
             return
+        
+        if "@everyone" in message.content:
+            await message.delete()
 
         if message.channel.id == Var.command_channel:
             await message.reply(content=f"**⛔ Sorry. Messages are not allowed in <#{Var.command_channel}>!**", delete_after=10)
