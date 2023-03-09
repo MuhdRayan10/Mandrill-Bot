@@ -181,6 +181,31 @@ class GiveawayCog(commands.Cog):
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+    @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
+    @app_commands.command(name="giveaway-copy", description="Inform users about the Giveaway")
+    async def giveaway_copy(self, interaction, question_id:int):
+        newest_giveaway = self.db.retrive_question(question_id)
+
+        embed = discord.Embed(
+            title="Reward: 1 Mineral",
+            description="First User Who Will Choose The Right Answer", color=Var.base_color
+        )
+        embed.add_field(
+            name=f"Question #{newest_giveaway['ID']}",
+            value=newest_giveaway['Question'],
+            inline=False
+        )
+        embed.add_field(
+            name=f"Choose your answer carefully...",
+            value=f"(A) {newest_giveaway['A']}\n(B) {newest_giveaway['B']}\n(C) {newest_giveaway['C']}\n(D) {newest_giveaway['D']}",
+            inline=False
+        )
+
+        embed.add_field(name="Answer the question in", value="<#1081900787795496970>")
+
+        await interaction.response.send_message(embed=embed)
+
+        
 
 async def setup(bot):
     await bot.add_cog(GiveawayCog(bot))
