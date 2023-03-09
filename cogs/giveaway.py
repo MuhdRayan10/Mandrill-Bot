@@ -60,7 +60,7 @@ class GiveawayDB:
         self.refresh_local()
 
         self.raw_df.loc[self.df['ID'].astype(
-            int) == questionid, "User"] = winner_user
+            str) == str(questionid), "User"] = winner_user
 
         self.wsh.set_dataframe(self.raw_df, start='A1')
 
@@ -111,16 +111,16 @@ class GiveawayCog(commands.Cog):
         with open("./data/giveaway.json", "r") as f:
             d = json.load(f)
         print(d)
-        users = d[str(previous_giveaway['ID'])]['correct']
+        users = d[str(previous_giveaway['ID'])]['correct'][1:]
 
         str_ = f"""{previous_giveaway['User']} **Winner**"""
         for i, user in enumerate(users):
-            str_ += "\n" + f"<@{user}>"
+            str_ += "\n" + f"{user}"
 
             if i == 7:
                 break
 
-        if type(previous_giveaway) == dict:
+        if (type(previous_giveaway) == dict) and (previous_giveaway['ID'] != 0):
             embed1 = discord.Embed(
                 title="Top 8 Participants",
                 description=str_, color=Var.base_color
@@ -159,7 +159,7 @@ class GiveawayCog(commands.Cog):
         chosen_answer = interaction.data['custom_id']
 
         # check if answer has been responded correctly
-        if chosen_answer == f"giveaway:{correct_answer}":
+        if (chosen_answer == f"giveaway:{correct_answer}") and (len(d[str(current_giveaway['ID'])]) == 0):
             # answer is correct
             self.db.update_winner(
                 current_giveaway['ID'], interaction.user.display_name)
