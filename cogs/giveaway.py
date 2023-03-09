@@ -148,7 +148,7 @@ class GiveawayCog(commands.Cog):
             )
             embed.add_field(
                 name="Thank You for your interest",
-                value="Keep an eye on the <#1081900787795496970> channel. The winner and new question will appear at a random time in this range: 12:00-12:00 UTC"
+                value=f"Keep an eye on the <#1081900787795496970> and <#{Var.general}> channels. The Winner and new question will appear at a random time in this range: 12:00-12:00 UTC"
             )
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -176,7 +176,7 @@ class GiveawayCog(commands.Cog):
             title="Thank You for participating", color=Var.base_color
         )
         embed.add_field(
-            name="Your answer has been submitted", value=f"Keep an eye on the <#1081900787795496970> channel. The winner and new question will appear at a random time in this range: 12:00-12:00 UTC", inline=False
+            name="Your answer has been submitted", value=f"Keep an eye on the <#1081900787795496970> and <#{Var.general}> channels. The Winner and new question will appear at a random time in this range: 12:00-12:00 UTC", inline=False
         )
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
