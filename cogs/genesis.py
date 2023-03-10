@@ -1,15 +1,21 @@
 from discord.ext import commands
 from discord import app_commands
 from helpers import Var as V
+
+import requests
+
+from discord import ui
 import discord
 
 Var = V()
+
 
 class Genesis(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        genesis_btn = discord.ui.Button(label="Get Genesis!", style=discord.ButtonStyle.blurple, custom_id="genesis:green")
+        genesis_btn = discord.ui.Button(
+            label="Get Genesis!", style=discord.ButtonStyle.blurple, custom_id="genesis:green")
         genesis_btn.callback = self.genesis_callback
 
         self.views = discord.ui.View(timeout=None)
@@ -17,16 +23,67 @@ class Genesis(commands.Cog):
 
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     @app_commands.command(name="setup-genesis", description="[MODS] Setup Genesis embed")
-    async def setup_genesis(self, interaction, channel:discord.TextChannel):
+    async def setup_genesis(self, interaction, channel: discord.TextChannel):
         await interaction.response.send_message(f"Sending in {channel.mention}", ephemeral=True)
 
-        embed = discord.Embed(title="Click the button to get your Genesis role", color=Var.base_color)
+        embed = discord.Embed(
+            title="Click the button to get your Genesis role", color=Var.base_color)
 
         await channel.send(embed=embed, view=self.views)
-        
+
     async def genesis_callback(self, interaction):
-        await interaction.response.send_message(embed=discord.Embed(title="Verifying Genesis role soon will be available", color=Var.base_color),
-                                                ephemeral=True)
+
+        # check if the user has the role Var.genisis_role
+        if interaction.user.get_role(Var.genesis_role):
+            embed = discord.Embed(title="Role already assigned", color=Var.base_color,
+                                  description="It looks like you already have the `Genisis` role. Thank you for your interest!")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        elif not interaction.user.get_role(Var.explorill_role):
+            embed = discord.Embed(
+                title="Required Role",
+                description=f"First you have to <#{Var.explorill_channel}> role to be a `Genisis`!"
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        # redirect the user to the link
+        embed = discord.Embed(
+            title="Click the button to verify", description="Note: You will need to use a web browser that has support for web3.", color=Var.base_color)
+
+        view = ui.View()
+        btn1 = ui.Button(
+            label="Connect", style=discord.ButtonStyle.green, url=f"https://www.themandrills.xyz/verify.php?discord={interaction.user.id}")
+        btn = ui.Button(
+            label="Press after Connection", style=discord.ButtonStyle.blurple)
+        btn.callback = self.verify_callback
+
+        view.add_item(btn1)
+        view.add_item(btn)
+
+        await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+    async def verify_callback(self, interaction):
+
+        bool_ = requests.get(
+            url=f"https://www.themandrills.xyz/verified.php?action=getverified&discord={interaction.user.id}")
+        bool_ = bool_.json()
+
+        if not bool_:
+            embed = discord.Embed(title="Genesis Role is not Assigned!", color=Var.base_color,
+                                  description="Unfortunately, Blue Mineral is not found on your connected address")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+
+        else:
+            embed = discord.Embed(
+                title="Congratulations!", color=Var.base_color, description="Now you have Genesis role ^‿^")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
+            # add role to user
+            role = interaction.guild.get_role(Var.genesis_role)
+            await interaction.user.add_roles(role)
 
 
 async def setup(bot):

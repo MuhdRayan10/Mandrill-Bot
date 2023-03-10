@@ -183,7 +183,7 @@ class GiveawayCog(commands.Cog):
 
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     @app_commands.command(name="giveaway-copy", description="Inform users about the Giveaway")
-    async def giveaway_copy(self, interaction, question_id:int):
+    async def giveaway_copy(self, interaction, question_id: int):
         newest_giveaway = self.db.retrive_question(question_id)
 
         embed = discord.Embed(
@@ -201,11 +201,11 @@ class GiveawayCog(commands.Cog):
             inline=False
         )
 
-        embed.add_field(name="Answer the question in", value="<#1081900787795496970>")
+        embed.add_field(name="Answer the question in",
+                        value="<#1081900787795496970>")
 
         await interaction.response.send_message(embed=embed)
 
-        
 
 async def setup(bot):
     await bot.add_cog(GiveawayCog(bot))
