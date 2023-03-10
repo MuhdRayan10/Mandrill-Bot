@@ -1,4 +1,4 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import app_commands
 from helpers import Var as V
 
@@ -21,6 +21,9 @@ class Genesis(commands.Cog):
         self.views = discord.ui.View(timeout=None)
         self.views.add_item(genesis_btn)
 
+        self.guild = self.bot.guilds[0]
+        self.role = self.guild.get_role(Var.genesis_role)
+
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     @app_commands.command(name="setup-genesis", description="[MODS] Setup Genesis embed")
     async def setup_genesis(self, interaction, channel: discord.TextChannel):
@@ -40,23 +43,23 @@ class Genesis(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
-        elif not interaction.user.get_role(Var.explorill_role):
+        elif not interaction.user.get_role(Var.purmarill_role):
             embed = discord.Embed(
                 title="Required Role",
-                description=f"First you have to <#{Var.explorill_channel}> role to be a `Genisis`!"
+                description=f"First you have to <#{Var.purmarill_channel}> role to be a `Genisis`!"
             )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         # redirect the user to the link
         embed = discord.Embed(
-            title="Click the button to verify", description="Note: You will need to use a web browser that has support for web3.", color=Var.base_color)
+            title="Click the button to verify", description="Note: Note: You have to open it in a web3 browser or with a web3 plugin", color=Var.base_color)
 
         view = ui.View()
         btn1 = ui.Button(
             label="Connect", style=discord.ButtonStyle.green, url=f"https://www.themandrills.xyz/verify.php?discord={interaction.user.id}")
         btn = ui.Button(
-            label="Press after Connection", style=discord.ButtonStyle.blurple)
+            label="Get Genesis!", style=discord.ButtonStyle.blurple)
         btn.callback = self.verify_callback
 
         view.add_item(btn1)
@@ -82,8 +85,21 @@ class Genesis(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
             # add role to user
-            role = interaction.guild.get_role(Var.genesis_role)
-            await interaction.user.add_roles(role)
+
+            await interaction.user.add_roles(self.role)
+
+    @tasks.loop(minutes=5)
+    async def check_genesis(self):
+        members = self.role.members
+
+        for member in members:
+            bool_ = requests.get(
+                url=f"https://www.themandrills.xyz/verified.php?action=getinfo&discord={member.id}"
+            )
+            bool_ = bool_.json()
+
+            if not bool_:
+                await member.remove_roles(self.role)
 
 
 async def setup(bot):
