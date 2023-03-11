@@ -1,11 +1,14 @@
+from helpers import Var as V
+import discord
+from discord import ui
 from discord.ext import commands, tasks
 from discord import app_commands
-from helpers import Var as V
 
 import requests
+import logging
+logging.basicConfig(filename="./logs/genesis.log", filemode="w",
+                    format="%(name)s - %(levelname)s - %(message)s", level=logging.DEBUG)
 
-from discord import ui
-import discord
 
 Var = V()
 
@@ -24,6 +27,8 @@ class Genesis(commands.Cog):
         self.guild = self.bot.guilds[0]
         self.role = self.guild.get_role(Var.genesis_role)
 
+        self.check_genesis.start()
+
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     @app_commands.command(name="setup-genesis", description="[MODS] Setup Genesis embed")
     async def setup_genesis(self, interaction, channel: discord.TextChannel):
@@ -39,7 +44,7 @@ class Genesis(commands.Cog):
         # check if the user has the role Var.genisis_role
         if interaction.user.get_role(Var.genesis_role):
             embed = discord.Embed(title="Role already assigned", color=Var.base_color,
-                                  description="It looks like you already have the `Genisis` role. Thank you for your interest!")
+                                  description="Thank You for your interest!")
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
@@ -53,7 +58,7 @@ class Genesis(commands.Cog):
 
         # redirect the user to the link
         embed = discord.Embed(
-            title="Click the button to verify", description="Note: Note: You have to open it in a web3 browser or with a web3 plugin", color=Var.base_color)
+            title="Click the button to verify", color=Var.base_color)
 
         view = ui.View()
         btn1 = ui.Button(
@@ -81,7 +86,7 @@ class Genesis(commands.Cog):
 
         else:
             embed = discord.Embed(
-                title="Congratulations!", color=Var.base_color, description="Now you have Genesis role ^‿^")
+                title="Now you have the Genesis role ^‿^", color=Var.base_color)
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
             # add role to user
@@ -97,6 +102,8 @@ class Genesis(commands.Cog):
                 url=f"https://www.themandrills.xyz/verified.php?action=getinfo&discord={member.id}"
             )
             bool_ = bool_.json()
+
+            logging.debug(f"{member.id}, {member.name}, {bool_}")
 
             if not bool_:
                 await member.remove_roles(self.role)

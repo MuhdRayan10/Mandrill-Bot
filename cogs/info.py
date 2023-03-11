@@ -49,6 +49,7 @@ menu_pages = [
     }
 ]
 
+
 class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -74,8 +75,9 @@ __Exchange Minerals into the Mandrills:__
 - Minerals are gaining its progressive utility in the **'Wild Network's'** life."""
 
         embed.add_field(name="Stage 1: Minting Minerals", value=lines)
-        
-        file = discord.File(fp="./data/images/roadmap_stage1.jpg", filename="roadmap.jpg")
+
+        file = discord.File(
+            fp="./data/images/roadmap_stage1.jpg", filename="roadmap.jpg")
         embed.set_image(url="attachment://roadmap.jpg")
         embed.add_field(name="__Stage 2__", value="__Coming soon!__")
 
@@ -95,10 +97,11 @@ __Exchange Minerals into the Mandrills:__
 - **The primary language of this server is English.**
 - **Discord names and avatars must be appropriate.**
 - **Spamming in any form is not allowed.**"""
-        
-        embed.add_field(name="The rules of our server.", value=rules, inline=True)
+
+        embed.add_field(name="The rules of our server.",
+                        value=rules, inline=True)
         await interaction.response.send_message(embed=embed, ephemeral=True)
-    
+
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
     @app_commands.command(name='role-info', description="Info about the custom roles.")
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
@@ -120,19 +123,27 @@ Rewards and Benefits:
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
         liberators_description = "The Liberators will lead the project for the rest of the journey."
 
-        embed.add_field(name="Explorills", value=explorills_description, inline=False)
-        embed.add_field(name="Genesis", value=purmarills_description, inline=False)
-        embed.add_field(name="Rendrills", value=rendrills_description, inline=False)
-        embed.add_field(name="Promdrills (available only 21 spots)", value=promdrills_description, inline=False)
-        embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
-        embed.add_field(name="Liberators", value=liberators_description, inline=False)
+        embed.add_field(name="Explorills",
+                        value=explorills_description, inline=False)
+        embed.add_field(
+            name="Genesis", value=purmarills_description, inline=False)
+        embed.add_field(name="Rendrills",
+                        value=rendrills_description, inline=False)
+        embed.add_field(name="Promdrills (available only 21 spots)",
+                        value=promdrills_description, inline=False)
+        embed.add_field(name="Guardrills",
+                        value=guardrills_description, inline=False)
+        embed.add_field(name="Liberators",
+                        value=liberators_description, inline=False)
 
         await interaction.channel.send(embed=embed)
 
     def create_help_menu_embed(self, page) -> discord.Embed:
-        embed = discord.Embed(title="Commands Info", description=page['title'], color=Var.base_color)
+        embed = discord.Embed(title="Commands Info",
+                              description=page['title'], color=Var.base_color)
         for field in page['fields']:
-            embed.add_field(name=field['name'], value=field['value'], inline=field['inline'])
+            embed.add_field(
+                name=field['name'], value=field['value'], inline=field['inline'])
         return embed
 
     @app_commands.command(name="help", description="List of all the server commands")
@@ -146,12 +157,13 @@ Rewards and Benefits:
 
         # Set the current page to the first page of the menu
         current_page = 0
-        
 
         menu_view = ui.View()
-        prev = ui.Button(style=discord.ButtonStyle.blurple, emoji="⬅️", custom_id="previous")
+        prev = ui.Button(style=discord.ButtonStyle.blurple,
+                         emoji="⬅️", custom_id="previous")
         menu_view.add_item(prev)
-        nxt = ui.Button(style=discord.ButtonStyle.blurple, emoji="➡️", custom_id="next")
+        nxt = ui.Button(style=discord.ButtonStyle.blurple,
+                        emoji="➡️", custom_id="next")
         menu_view.add_item(nxt)
 
         def check(i) -> bool:
@@ -163,7 +175,7 @@ Rewards and Benefits:
         # Send the embed message
         helpmsg = await interaction.followup.send(embed=embed, view=menu_view, ephemeral=True)
 
-        for _ in range(100): # buffer of 100 interactions
+        for _ in range(100):  # buffer of 100 interactions
             # Create the embed for the current page
             embed = self.create_help_menu_embed(menu_pages[current_page])
 
@@ -181,7 +193,7 @@ Rewards and Benefits:
                     interaction.response.defer()
 
                 current_page -= 1
-        
+
         return interaction
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
@@ -189,16 +201,24 @@ Rewards and Benefits:
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def link(self, interaction):
 
-    
         embed = discord.Embed(title="Official Links")
-        embed.add_field(name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)", inline=False)
-        embed.add_field(name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
-        embed.add_field(name="Path of the Wild Network", value="[themandrills.xyz/journey](https://themandrills.xyz/journey)", inline=False)
-        embed.add_field(name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
-        embed.add_field(name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
-        embed.add_field(name="Flarepedia", value="[the-mandrills](https://www.flarepedia.com/i/the-mandrills)")
-        embed.add_field(name="Medium", value="[@wildnetwork](https://medium.com/@wildnetwork)", inline=False)
-        embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
+        embed.add_field(
+            name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)", inline=False)
+        embed.add_field(name="Sparkles", value="[Minerals](https://sparklesnft.com/collection/flare/minerals/)")
+        embed.add_field(
+            name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
+        embed.add_field(name="Path of the Wild Network",
+                        value="[themandrills.xyz/journey](https://themandrills.xyz/journey)", inline=False)
+        embed.add_field(
+            name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
+        embed.add_field(
+            name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
+        embed.add_field(
+            name="Articles", value="[Wild Network on the Horizon](https://wildnetwork.medium.com/metaverse-the-mandrills-fbde7b484480)\n[Chronicles of the Ten unique Flowers](https://wildnetwork.medium.com/chronicles-of-the-ten-unique-flowers-prologue-da90ce362e22)", inline=False)
+        embed.add_field(
+            name="Flarepedia", value="[the-mandrills](https://www.flarepedia.com/i/the-mandrills)")
+        embed.add_field(name=":envelope: E-mail",
+                        value="info@themandrills.xyz")
 
         await interaction.channel.send(embed=embed)
 
@@ -227,7 +247,7 @@ Rewards and Benefits:
 5️⃣  Now you can go to the minting page, connect wallet and MINT 
 
 "Please only use <#{Var.official_links}> to navigate MINT page" (**Beware of the fishing links**)\nㅤㅤ"""
-        
+
         val2 = """1️⃣  Open your Bifrost Wallet
 
 2️⃣  Click on the 4-panel square icon to open the browser, navigate to our minting page
@@ -239,16 +259,19 @@ Rewards and Benefits:
 5️⃣  Click MINT on the mint page and approve the transaction within your Bifrost Wallet"""
 
         embed = discord.Embed(title="Minting")
-        embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
-        embed.add_field(name="How to mint using your Brifost wallet?", value=val2, inline=False)
+        embed.add_field(
+            name="How to mint using your Metamask wallet?", value=val1)
+        embed.add_field(
+            name="How to mint using your Brifost wallet?", value=val2, inline=False)
 
         await interaction.channel.send(embed=embed)
 
     @app_commands.command(name="members", description="Get Member Count")
     async def members(self, interaction):
-        embed = discord.Embed(title=f"Member Count: {interaction.guild.member_count}!")
+        embed = discord.Embed(
+            title=f"Member Count: {interaction.guild.member_count}!")
         await interaction.response.send_message(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(Info(bot))
-
