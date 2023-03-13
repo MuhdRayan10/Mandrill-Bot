@@ -96,17 +96,25 @@ class Genesis(commands.Cog):
     @tasks.loop(minutes=5)
     async def check_genesis(self):
         members = self.role.members
+        print(members)
+
+        loggingdata = ""
 
         for member in members:
+            print(member)
             bool_ = requests.get(
                 url=f"https://www.themandrills.xyz/verified.php?action=getinfo&discord={member.id}"
             )
             bool_ = bool_.json()
 
-            logging.debug(f"{member.id}, {member.name}, {bool_}")
+            loggingdata += f"{member.id}, {member.name}, {bool_}\n"
+            print(f"{member.id}, {member.name}, {bool_}")
 
             if not bool_:
                 await member.remove_roles(self.role)
+
+        logging.info(loggingdata)
+        # print(loggingdata)
 
 
 async def setup(bot):

@@ -83,16 +83,7 @@ class GiveawayCog(commands.Cog):
             button.callback = self.giveaway_interaction
             self.views.add_item(button)
 
-    @app_commands.command(name="giveaway", description="Send giveaway of latest (most upcoming) one in database.")
-    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    async def giveaway(self, interaction: discord.Interaction, question_id: int, channel: discord.TextChannel):
-        # get cip
-        previous_giveaway = self.db.get_CIP()
-        self.db.update_CIP(previous_giveaway['ID'], 0)
-
-        newest_giveaway = self.db.retrive_question(question_id)
-        self.db.update_CIP(newest_giveaway['ID'], 1)
-
+    def generate_question_embed(self, newest_giveaway) -> discord.Embed:
         embed = discord.Embed(
             title="Reward: 1 Mineral",
             description="First User Who Will Choose The Right Answer", color=Var.base_color
@@ -108,10 +99,26 @@ class GiveawayCog(commands.Cog):
             inline=False
         )
 
+        return embed
+
+    @app_commands.command(name="giveaway", description="Send giveaway of latest (most upcoming) one in database.")
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    async def giveaway(self, interaction: discord.Interaction, question_id: int, channel: discord.TextChannel):
+        await interaction.response.defer()
+
+        # get cip
+        previous_giveaway = self.db.get_CIP()
+        self.db.update_CIP(previous_giveaway['ID'], 0)
+
+        newest_giveaway = self.db.retrive_question(question_id)
+        self.db.update_CIP(newest_giveaway['ID'], 1)
+
         with open("./data/giveaway.json", "r") as f:
             d = json.load(f)
         print(d)
         users = d[str(previous_giveaway['ID'])]['correct'][1:]
+
+        embed = self.generate_question_embed(newest_giveaway)
 
         str_ = f"""{previous_giveaway['User']} **Winner**"""
         for i, user in enumerate(users):
@@ -130,6 +137,29 @@ class GiveawayCog(commands.Cog):
 
         else:
             await channel.send(embed=embed, view=self.views)
+
+    # command to send same giveaway, without the buttons in #chat
+    @app_commands.command(name="giveaway_chat", description="Send giveaway of latest (most upcoming) one in database.")
+    @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
+    async def giveaway_chat(self, interaction: discord.Interaction, question_id: int):
+        await interaction.response.defer()
+
+        # get cip
+        previous_giveaway = self.db.get_CIP()
+        self.db.update_CIP(previous_giveaway['ID'], 0)
+
+        newest_giveaway = self.db.retrive_question(question_id)
+        self.db.update_CIP(newest_giveaway['ID'], 1)
+
+        embed = self.generate_question_embed(newest_giveaway)
+
+        embed.add_field(
+            name=f"Go to <#{Var.giveaway_channel}> to answer!"
+        )
+
+        # get channel from Var.chat
+        channel = self.bot.get_channel(Var.chat_channel)
+        await channel.send(embed=embed)
 
     async def giveaway_interaction(self, interaction: discord.Interaction):
 
