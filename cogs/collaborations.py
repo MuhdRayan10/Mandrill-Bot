@@ -75,9 +75,8 @@ class FatCats(ui.Modal, title='The Fat Cats Gallery'):
     )
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        # bool_ = check_in_csv(str(self.wallet_id).lower(),
-        #                      "./data/fatcats.csv", 0)
-        bool_ = False
+        bool_ = check_in_csv(str(self.wallet_id).lower(), [f"./data/fatcats/{i}.csv" for i in range(3)], 2)
+        
         print(bool_, self.wallet_id)
         if bool_:
             role = interaction.guild.get_role(Var.clubx_role)

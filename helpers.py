@@ -26,10 +26,20 @@ class Var:
 
 
 def check_in_csv(item, fp, i):
-    with open(fp, "r") as f:
-        reader = csv.reader(f, delimiter=",")
 
-        if i == 0:
-            return item.lower() in [str(row[0]).lower() for row in reader]
-        elif i == 1:
-            return item.lower() in [row[0].lower().split(";")[1].strip('"') for row in reader]
+    if not isinstance(fp, list):
+        fp = [fp]
+
+    addresses = []
+    for file in fp:
+        with open(file, "r") as f:
+            reader = csv.reader(f, delimiter=",")
+
+            if i == 0:
+                addresses.extend([str(row[0]).lower() for row in reader])
+            elif i == 1:
+                addresses.extend([row[0].lower().split(";")[1].strip('"') for row in reader])
+            elif i == 2:
+                addresses.extend([row[1].lower() for row in reader])
+
+    return item.lower() in addresses
