@@ -36,10 +36,13 @@ def check_in_csv(item, fp, i):
             reader = csv.reader(f, delimiter=",")
 
             if i == 0:
-                addresses.extend([str(row[0]).lower() for row in reader])
+                addresses = addresses + [str(row[0]).lower() for row in reader]
             elif i == 1:
-                addresses.extend([row[0].lower().split(";")[1].strip('"') for row in reader])
+                s = [row[0].lower().split(";")[1].strip('"') for row in reader]
+                addresses = addresses + s
+                print(item.lower() in s)
+                print(s)
             elif i == 2:
                 addresses.extend([row[1].lower() for row in reader])
-
+	
     return item.lower() in addresses

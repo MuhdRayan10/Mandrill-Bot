@@ -114,14 +114,6 @@ class Verification(commands.Cog):
         # Updating invites
         await update_invites(member, Var)
 
-        no_members = len(self.guild.members)
-
-        members_channel = await self.guild.fetch_channel(Var.members_stat_channel)
-
-        await members_channel.edit(
-            name=f"👤| Members: {no_members}"
-        )
-
     # Sets up the interface for the Verification in a channel
     # Only for Moderators
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)

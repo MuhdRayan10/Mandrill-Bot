@@ -105,7 +105,7 @@ class TwitterCog(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
         
-        whitelisting = False
+        whitelisting = True
         if not whitelisting:
             await interaction.response.send_message(embed=discord.Embed(title="Unfortunately, Purmarill Whitelisting is already closed"), ephemeral=True)
             return

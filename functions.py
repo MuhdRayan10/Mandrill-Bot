@@ -1,5 +1,4 @@
 from easy_sqlite3 import *
-from datetime import datetime
 import discord
 
 async def update_criteria(inviter, guild, V):
@@ -83,14 +82,3 @@ async def update_invites(member, V):
     db.close()
 
     await update_criteria(inviter_[0], member.guild, V)
-
-def user_age(userid: int, check=None):
-    """Gets the age of the user in days and performs given check on them."""
-    def none_(x):
-        return x
-
-    check = none_ if check is None else check
-    date_created = discord.utils.snowflake_time(userid)
-    now = datetime.now(tz=date_created.tzinfo)
-
-    return check((now - date_created).days)
