@@ -74,9 +74,9 @@ class Games(commands.Cog):
 
         for interaction_ in interactions:
             interaction_time, interaction_user_id = interaction_
-            if interaction_user_id == interaction.user.id and now - interaction_time < 7 * 24 * 60 * 60:
+            if interaction_user_id == interaction.user.id and now - interaction_time < 21 * 24 * 60 * 60:
 
-                time_left_in_seconds = 7 * 24 * 60 * \
+                time_left_in_seconds = 21 * 24 * 60 * \
                     60 - (now - interaction_time)
                 time_left_in_days = time_left_in_seconds // (24 * 60 * 60)
                 time_left_in_hours = (time_left_in_seconds %
@@ -112,7 +112,7 @@ class Games(commands.Cog):
             color=Var.base_color)
 
         embed.add_field(name="ㅤ", value="Keep an eye on the <#1051064803025760346> channel, in order to be informed when you will get your prize(s)." if prize !=
-                        "Try Again in 7 Days" else 'Try again in 7 days')
+                        "Try Again in 7 Days" else 'Try again in 21 days')
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
