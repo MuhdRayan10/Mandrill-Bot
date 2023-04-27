@@ -10,24 +10,25 @@ import discord
 from discord.ext import commands, tasks
 
 from helpers import Var as V
+
 Var = V()
 
 
 class CryptoToUsd:
     def __init__(self) -> None:
         # Coinmarketcap API url
-        self.url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+        self.url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
 
         headers = {
-            'Accepts': 'application/json',
-            'X-CMC_PRO_API_KEY': os.getenv("COINMARKETCAPKEY")
+            "Accepts": "application/json",
+            "X-CMC_PRO_API_KEY": os.getenv("COINMARKETCAPKEY"),
         }
 
         self.session = Session()
         self.session.headers.update(headers)
 
     def flare(self):
-        parameters = {'symbol': 'FLR', 'convert': 'USD'}
+        parameters = {"symbol": "FLR", "convert": "USD"}
 
         response = self.session.get(self.url, params=parameters)
 
@@ -35,12 +36,12 @@ class CryptoToUsd:
 
         if info:
             # other available options: percent_change_24h,percent_change_7d upto 90d
-            if info['data']['FLR']['quote']['USD']['percent_change_1h'] > 0:
+            if info["data"]["FLR"]["quote"]["USD"]["percent_change_1h"] > 0:
                 trend = 1
             else:
                 trend = 0
 
-            return round(info['data']['FLR']['quote']['USD']['price'], 7), trend
+            return round(info["data"]["FLR"]["quote"]["USD"]["price"], 7), trend
 
 
 class ServerStats(commands.Cog):
@@ -59,13 +60,10 @@ class ServerStats(commands.Cog):
 
         members_channel = await self.guild.fetch_channel(Var.members_stat_channel)
 
-        await members_channel.edit(
-            name=f"👤| Members: {no_members}"
-        )
+        await members_channel.edit(name=f"👤| Members: {no_members}")
 
     @tasks.loop(minutes=5)
     async def update_mint_date(self):
-
         self.update_crypto.start()
 
     @tasks.loop(minutes=5)
@@ -79,15 +77,13 @@ class ServerStats(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def update_mint_date(self):
-
         mint_channel = await self.guild.fetch_channel(Var.mint_date_channel)
 
-        timezone = pytz.timezone('Etc/GMT-5')
+        timezone = pytz.timezone("Etc/GMT-5")
 
         def time_remaining():
             now = datetime.datetime.now(tz=timezone)
-            end_of_day = datetime.datetime(
-                now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
+            end_of_day = datetime.datetime(now.year, 2, 28, 21, 0, 0, tzinfo=timezone)
             end_of_day += datetime.timedelta(hours=5, minutes=21)
             delta = end_of_day - now
 
@@ -96,6 +92,7 @@ class ServerStats(commands.Cog):
             return f"MINT In {delta.days} Days, {delta.seconds//3600:02}:{(delta.seconds//60)%60:02}"
 
         await mint_channel.edit(name=f"{time_remaining()}")
+
 
 # Cog setup command
 

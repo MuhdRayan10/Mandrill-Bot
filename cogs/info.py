@@ -4,49 +4,42 @@ from discord import ui
 import discord
 
 from helpers import Var as V
+
 Var = V()
 
 menu_pages = [
     {
-        'title': 'Page 1',
-        'fields': [
+        "title": "Page 1",
+        "fields": [
             {
-                'name': '/req',
-                'value': 'View your criteria for gaining the **Rendrill** role',
-                'inline': False
+                "name": "/req",
+                "value": "View your criteria for gaining the **Rendrill** role",
+                "inline": False,
             },
             {
-                'name': '/level',
-                'value': 'Get your XP level card for the server',
-                'inline': False
+                "name": "/level",
+                "value": "Get your XP level card for the server",
+                "inline": False,
             },
             {
-                'name': '/leaderboard',
-                'value': 'Get the server\'s XP Leaderboard (Top 10 Users)',
-                'inline': False
-            }
-        ]
+                "name": "/leaderboard",
+                "value": "Get the server's XP Leaderboard (Top 10 Users)",
+                "inline": False,
+            },
+        ],
     },
     {
-        'title': 'Page 2',
-        'fields': [
+        "title": "Page 2",
+        "fields": [
+            {"name": "/roadmap", "value": "View the Mandrill roadmap", "inline": False},
+            {"name": "/rules", "value": "View the server rules", "inline": False},
             {
-                'name': '/roadmap',
-                'value': 'View the Mandrill roadmap',
-                'inline': False
+                "name": "/role-info",
+                "value": "Get information about the different roles in the server",
+                "inline": False,
             },
-            {
-                'name': '/rules',
-                'value': 'View the server rules',
-                'inline': False
-            },
-            {
-                'name': '/role-info',
-                'value': 'Get information about the different roles in the server',
-                'inline': False
-            }
-        ]
-    }
+        ],
+    },
 ]
 
 
@@ -57,7 +50,6 @@ class Info(commands.Cog):
     @app_commands.command(name="roadmap", description="Our Roadmap!")
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def roadmap(self, interaction):
-
         await interaction.response.defer()
 
         embed = discord.Embed(title="The Mandrills Roadmap", color=0x0000FF)
@@ -77,7 +69,8 @@ __Exchange Minerals into the Mandrills:__
         embed.add_field(name="Stage 1: Minting Minerals", value=lines)
 
         file = discord.File(
-            fp="./data/images/roadmap_stage1.jpg", filename="roadmap.jpg")
+            fp="./data/images/roadmap_stage1.jpg", filename="roadmap.jpg"
+        )
         embed.set_image(url="attachment://roadmap.jpg")
         embed.add_field(name="__Stage 2__", value="__Coming soon!__")
 
@@ -98,19 +91,19 @@ __Exchange Minerals into the Mandrills:__
 - **Discord names and avatars must be appropriate.**
 - **Spamming in any form is not allowed.**"""
 
-        embed.add_field(name="The rules of our server.",
-                        value=rules, inline=True)
+        embed.add_field(name="The rules of our server.", value=rules, inline=True)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    @app_commands.command(name='role-info', description="Info about the custom roles.")
+    @app_commands.command(name="role-info", description="Info about the custom roles.")
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def role_info(self, interaction):
-
         embed = discord.Embed(title="Role Information", color=Var.base_color)
 
         explorills_description = f"Explorills are the members who have not received any kind of role yet and are able to interact with the server and community."
-        purmarills_description = f"Genesis are the members who own at least one Mineral from the collection."
+        purmarills_description = (
+            f"Genesis are the members who own at least one Mineral from the collection."
+        )
         rendrills_description = f"""Rendrills are the members who already gained Purmarill role and met the criteria to open the <#{Var.spinwheel_channel}> for a chance to win various prizes in every 7 days.
  
 """
@@ -121,36 +114,39 @@ Rewards and Benefits:
 \n
 """
         guardrills_description = "Guardrills are the Admins of the Discord, protectors and the most necessary figures."
-        liberators_description = "The Liberators will lead the project for the rest of the journey."
+        liberators_description = (
+            "The Liberators will lead the project for the rest of the journey."
+        )
 
-        embed.add_field(name="Explorills",
-                        value=explorills_description, inline=False)
+        embed.add_field(name="Explorills", value=explorills_description, inline=False)
+        embed.add_field(name="Genesis", value=purmarills_description, inline=False)
+        embed.add_field(name="Rendrills", value=rendrills_description, inline=False)
         embed.add_field(
-            name="Genesis", value=purmarills_description, inline=False)
-        embed.add_field(name="Rendrills",
-                        value=rendrills_description, inline=False)
-        embed.add_field(name="Promdrills (available only 21 spots)",
-                        value=promdrills_description, inline=False)
-        embed.add_field(name="Guardrills",
-                        value=guardrills_description, inline=False)
-        embed.add_field(name="Liberators",
-                        value=liberators_description, inline=False)
+            name="Promdrills (available only 21 spots)",
+            value=promdrills_description,
+            inline=False,
+        )
+        embed.add_field(name="Guardrills", value=guardrills_description, inline=False)
+        embed.add_field(name="Liberators", value=liberators_description, inline=False)
 
         await interaction.channel.send(embed=embed)
 
     def create_help_menu_embed(self, page) -> discord.Embed:
-        embed = discord.Embed(title="Commands Info",
-                              description=page['title'], color=Var.base_color)
-        for field in page['fields']:
+        embed = discord.Embed(
+            title="Commands Info", description=page["title"], color=Var.base_color
+        )
+        for field in page["fields"]:
             embed.add_field(
-                name=field['name'], value=field['value'], inline=field['inline'])
+                name=field["name"], value=field["value"], inline=field["inline"]
+            )
         return embed
 
     @app_commands.command(name="help", description="List of all the server commands")
     async def help(self, interaction):
-
         if interaction.channel.id != Var.command_channel:
-            await interaction.response.send_message(f"Please only use commands in <#{Var.command_channel}>")
+            await interaction.response.send_message(
+                f"Please only use commands in <#{Var.command_channel}>"
+            )
             return
 
         await interaction.response.defer()
@@ -159,32 +155,36 @@ Rewards and Benefits:
         current_page = 0
 
         menu_view = ui.View()
-        prev = ui.Button(style=discord.ButtonStyle.blurple,
-                         emoji="⬅️", custom_id="previous")
+        prev = ui.Button(
+            style=discord.ButtonStyle.blurple, emoji="⬅️", custom_id="previous"
+        )
         menu_view.add_item(prev)
-        nxt = ui.Button(style=discord.ButtonStyle.blurple,
-                        emoji="➡️", custom_id="next")
+        nxt = ui.Button(style=discord.ButtonStyle.blurple, emoji="➡️", custom_id="next")
         menu_view.add_item(nxt)
 
         def check(i) -> bool:
-            return i.data['component_type'] == 2 and i.user.id == interaction.user.id
+            return i.data["component_type"] == 2 and i.user.id == interaction.user.id
 
         # Create the embed for the current page
         embed = self.create_help_menu_embed(menu_pages[current_page])
 
         # Send the embed message
-        helpmsg = await interaction.followup.send(embed=embed, view=menu_view, ephemeral=True)
+        helpmsg = await interaction.followup.send(
+            embed=embed, view=menu_view, ephemeral=True
+        )
 
         for _ in range(100):  # buffer of 100 interactions
             # Create the embed for the current page
             embed = self.create_help_menu_embed(menu_pages[current_page])
 
-            await interaction.followup.edit_message(helpmsg.id, embed=embed, view=menu_view)
+            await interaction.followup.edit_message(
+                helpmsg.id, embed=embed, view=menu_view
+            )
 
             btn = await self.bot.wait_for("interaction", check=check, timeout=None)
 
-            if btn.data["custom_id"] == 'next':
-                if current_page == len(menu_pages)-1:
+            if btn.data["custom_id"] == "next":
+                if current_page == len(menu_pages) - 1:
                     interaction.response.defer()
 
                 current_page += 1
@@ -197,35 +197,60 @@ Rewards and Benefits:
         return interaction
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    @app_commands.command(name="official-links", description="List of all the official links")
+    @app_commands.command(
+        name="official-links", description="List of all the official links"
+    )
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def link(self, interaction):
-
         embed = discord.Embed(title="Official Links")
         embed.add_field(
-            name="Minting Page", value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)", inline=False)
-        embed.add_field(name="Sparkles", value="[Minerals](https://sparklesnft.com/collection/flare/minerals/)")
+            name="Minting Page",
+            value="[themandrills.xyz/mint](https://www.themandrills.xyz/mint)",
+            inline=False,
+        )
         embed.add_field(
-            name="Website", value="[themandrills.xyz](https://www.themandrills.xyz)", inline=False)
-        embed.add_field(name="Path of the Wild Network",
-                        value="[themandrills.xyz/journey](https://themandrills.xyz/journey)", inline=False)
+            name="Sparkles",
+            value="[Minerals](https://sparklesnft.com/collection/flare/minerals/)",
+        )
         embed.add_field(
-            name="Twitter", value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)", inline=False)
+            name="Website",
+            value="[themandrills.xyz](https://www.themandrills.xyz)",
+            inline=False,
+        )
         embed.add_field(
-            name="YouTube", value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)", inline=False)
+            name="Path of the Wild Network",
+            value="[themandrills.xyz/journey](https://themandrills.xyz/journey)",
+            inline=False,
+        )
         embed.add_field(
-            name="Articles", value="[Wild Network on the Horizon](https://wildnetwork.medium.com/metaverse-the-mandrills-fbde7b484480)\n[Chronicles of the Ten unique Flowers](https://wildnetwork.medium.com/chronicles-of-the-ten-unique-flowers-prologue-da90ce362e22)", inline=False)
+            name="Twitter",
+            value="[@TheMandrillsNFT](https://twitter.com/TheMandrillsNFT)",
+            inline=False,
+        )
         embed.add_field(
-            name="Flarepedia", value="[the-mandrills](https://www.flarepedia.com/i/the-mandrills)")
-        embed.add_field(name=":envelope: E-mail",
-                        value="info@themandrills.xyz")
+            name="YouTube",
+            value="[@TheMandrillsNFT](https://youtube.com/@TheMandrillsNFT)",
+            inline=False,
+        )
+        embed.add_field(
+            name="Articles",
+            value="[Wild Network on the Horizon](https://wildnetwork.medium.com/metaverse-the-mandrills-fbde7b484480)\n[Chronicles of the Ten unique Flowers](https://wildnetwork.medium.com/chronicles-of-the-ten-unique-flowers-prologue-da90ce362e22)",
+            inline=False,
+        )
+        embed.add_field(
+            name="Flarepedia",
+            value="[the-mandrills](https://www.flarepedia.com/i/the-mandrills)",
+        )
+        embed.add_field(name=":envelope: E-mail", value="info@themandrills.xyz")
 
         await interaction.channel.send(embed=embed)
 
         return
 
     @app_commands.checks.has_any_role(Var.guardrill_role, Var.liberator_role)
-    @app_commands.command(name="how-to-mint", description="Shows information on how to mint")
+    @app_commands.command(
+        name="how-to-mint", description="Shows information on how to mint"
+    )
     @app_commands.checks.has_any_role(Var.liberator_role, Var.guardrill_role)
     async def how_to_mint(self, interaction):
         val1 = f"""You will need to add the Flare Network to your wallet first. 
@@ -259,17 +284,16 @@ Rewards and Benefits:
 5️⃣  Click MINT on the mint page and approve the transaction within your Bifrost Wallet"""
 
         embed = discord.Embed(title="Minting")
+        embed.add_field(name="How to mint using your Metamask wallet?", value=val1)
         embed.add_field(
-            name="How to mint using your Metamask wallet?", value=val1)
-        embed.add_field(
-            name="How to mint using your Brifost wallet?", value=val2, inline=False)
+            name="How to mint using your Brifost wallet?", value=val2, inline=False
+        )
 
         await interaction.channel.send(embed=embed)
 
     @app_commands.command(name="members", description="Get Member Count")
     async def members(self, interaction):
-        embed = discord.Embed(
-            title=f"Member Count: {interaction.guild.member_count}!")
+        embed = discord.Embed(title=f"Member Count: {interaction.guild.member_count}!")
         await interaction.response.send_message(embed=embed)
 
 

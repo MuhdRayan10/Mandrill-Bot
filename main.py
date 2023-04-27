@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from helpers import Var as V
+
 Var = V()
 
 # Getting required intents
@@ -13,9 +14,9 @@ intents.message_content = True
 
 class MandrillBot(commands.Bot):
     def __init__(self):
-
-        super().__init__(intents=intents, command_prefix='+',
-                         application_id="1059476420977504378")
+        super().__init__(
+            intents=intents, command_prefix="+", application_id="1059476420977504378"
+        )
         self.added = False
 
     async def on_ready(self) -> None:
@@ -24,7 +25,6 @@ class MandrillBot(commands.Bot):
         await bot.change_presence(activity=discord.Game(name="Exploring..."))
 
         if not self.added:
-
             from cogs.verification import Verification
             from cogs.criteria import Criteria
             from cogs.twitter import TwitterCog
@@ -33,10 +33,19 @@ class MandrillBot(commands.Bot):
             from cogs.ticket import Tickets
             from cogs.collaborations import Collaborations
             from cogs.genesis import Genesis
-            from cogs.giveaway import GiveawayCog
+            from cogs.giveaway import Giveaway
 
-            views = (GiveawayCog(self), Genesis(self), Verification(self), Criteria(self), TwitterCog(self), Games(self),
-                     Tickets(self), Collaborations(self), Roles(self))
+            views = (
+                Giveaway(self).dashboard,
+                Genesis(self),
+                Verification(self),
+                Criteria(self),
+                TwitterCog(self),
+                Games(self),
+                Tickets(self),
+                Collaborations(self),
+                Roles(self),
+            )
 
             for view in views:
                 self.add_view(view.views)
@@ -55,12 +64,12 @@ bot = MandrillBot()
 
 
 async def load_cogs():
-    for file in os.listdir('./cogs'):
-        if file.endswith('.py'):
-            await bot.load_extension(f'cogs.{file[:-3]}')
+    for file in os.listdir("./cogs"):
+        if file.endswith(".py"):
+            await bot.load_extension(f"cogs.{file[:-3]}")
 
 
 # Getting the token and runnning the bot
 load_dotenv()
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("TOKEN")
 bot.run(TOKEN)
